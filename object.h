@@ -20,6 +20,6 @@ typedef struct OBJ
 object* obj_create ( );
 void obj_rotate( object* obj, GLfloat rad );
 void obj_translate( object* obj, GLfloat x, GLfloat y, GLfloat z);
-void obj_destroy ( object* obj, bool free_ver) ;
+void obj_destroy ( object* obj ) ;
 void obj_render ( object* obj );
 

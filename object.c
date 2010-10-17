@@ -24,7 +24,7 @@ void obj_translate( object* obj, GLfloat x, GLfloat y, GLfloat z)
 
 }
 
-void obj_destroy( object* obj, bool free_ver )
+void obj_destroy( object* obj )
 {
 	
 	free(obj);

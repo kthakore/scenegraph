@@ -21,7 +21,7 @@ all: myprog
 
 myprog: $(OBJFILES)
 
-	$(CC) -o SceneGraph $(OBJFILES) $(LIBS)
+	$(CC) -o SceneGraph main.cc $(OBJFILES) $(LIBS)
 
 
 
@@ -32,9 +32,9 @@ myprog: $(OBJFILES)
 %.o: %.cc
 	$(COMPILE) -o $@ $<
 
-test: $(TFILES)
-	$(CC) -o ObjTest $(TFILES) $(LIBS)
+test: $(TFILES) $(OBJFILES)
+	$(CC) -o ObjTest $(TFILES) $(OBJFILES) $(LIBS)
 
 clean:
-	rm $(OBJFILES) SceneGraph
+	rm $(TFILES) $(OBJFILES) SceneGraph
 
