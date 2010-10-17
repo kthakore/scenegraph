@@ -20,7 +20,7 @@ all: myprog
 
 myprog: $(OBJFILES)
 
-	$(CC) -o SceneGraph $(OBJFILES)
+	$(CC) -o SceneGraph $(OBJFILES) $(LIBS)
 
 
 
