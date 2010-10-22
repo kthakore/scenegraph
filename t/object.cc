@@ -1,15 +1,98 @@
 #include <stdio.h>
+#include <string.h>
 #include "../object.h"
+
+static unsigned int test_count_f = 0;
+static unsigned int test_count_s = 0;
+static object* root;
+
+void diag( const char* message)
+{
+	fprintf(stderr, "%s\n", message);
+}
+
+void ok ( bool test, const char* test_name)
+{
+
+	if( test )
+		fprintf( stderr, "SU(%d) ..... %s \n", test_count_s++, test_name);
+	else
+		fprintf( stderr, "FA(%d) ..... %s \n", test_count_f++, test_name);
+}
+
+
+void done( )
+{
+
+	fprintf( stderr, "Sucess %d, Fail %d, Total %d \n", test_count_s, test_count_f, test_count_s + test_count_f );
+
+
+}
+
+void test_obj()
+{
+
+	diag("Root tests");
+	root = obj_create();
+
+	int obj_size = sizeof(object);
+
+	ok( sizeof(*root) == obj_size, "Memory allocated" );
+
+	printf( "Children %d \n", root->children_c );	
+
+	ok( root->children_c == 0, "No children attached" );
+
+	obj_destroy( root );
+	done();
+
+
+
+}
+
+void DisplayFunc(void)
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+
+	//Render our root, where the camera is at 10,10,10
+	obj_operate( root, RENDER, 10, 10, 10);
+
+	glFlush();
+	glutSwapBuffers();	
+}
+
+
 
 int main( int argc, char** argv)
 {
 
-	printf("Root tests\n");
-	object* test_root = obj_create();
+	/* Creation of the window */
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
+	glutInitWindowSize(500, 500);  // please don't mess with the window size for assignment.  It will still work obviously, but trying to stay limited in scope as it were.  
+	glutCreateWindow("CS4483a Assignment 3 Kartik Thakore");
 
-	obj_destroy( test_root );
-	printf("Can Destroy Object\n");
+	/* OpenGL settings */
+	glClearColor(0, 0, 0, 0);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glEnable(GL_DEPTH_TEST);
+
+	/* Declaration of the callbacks */
+	glutDisplayFunc(&DisplayFunc);
+	/*  glutReshapeFunc(&ReshapeFunc);
+	    glutKeyboardFunc(&KeyboardFunc);
+	    glutMouseFunc(&MouseFunc);
+	    glutMotionFunc(&MotionFunc);
+	 */
+
+	test_obj();
+
+	/* Loop */
+	glutMainLoop();
 
 
 	return 0;
 }
+
+

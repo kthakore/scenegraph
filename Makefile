@@ -10,6 +10,8 @@ LIBS = -lGL -lGLU -lglut
 
 COMPILE = $(CC) $(CFLAGS) -c $(LIBS)
 
+TCOMPILE = $(COMPILE) 
+
 OBJFILES := $(patsubst %.c,%.o,$(wildcard *.c))
 
 TFILES := $(patsubst %.cc,%.o,$(wildcard t/*.cc))
@@ -30,11 +32,11 @@ myprog: $(OBJFILES)
 	$(COMPILE) -o $@ $<
 
 %.o: %.cc
-	$(COMPILE) -o $@ $<
+	$(TCOMPILE) -o $@ $<
 
 test: $(TFILES) $(OBJFILES)
 	$(CC) -o ObjTest $(TFILES) $(OBJFILES) $(LIBS)
 
 clean:
-	rm $(TFILES) $(OBJFILES) SceneGraph
+	rm $(TFILES) $(OBJFILES) SceneGraph ObjTest
 
