@@ -22,17 +22,27 @@ void obj_translate( object* obj, GLfloat x, GLfloat y, GLfloat z)
 {
 
 	fprintf( stderr, "translate: %p from (%f,%f,%f) \n", obj , x,y,z );
+	obj->location.x = obj->location.x + x;
+	obj->location.y = obj->location.y + y;
+	obj->location.z = obj->location.z + z;
 }
 
 void obj_rotate( object* obj, GLfloat x, GLfloat y, GLfloat z)
 {
 	fprintf( stderr, "Rotate: %p from (%f,%f,%f) \n", obj , x,y,z );
+	obj->rotation.x = obj->rotation.x + x;
+	obj->rotation.y = obj->rotation.y + y;
+	obj->rotation.z = obj->rotation.z + z;
+
 }
 
 void obj_scale( object* obj, GLfloat x, GLfloat y, GLfloat z) 
 {
 
 	fprintf( stderr, "Scale: %p from (%f,%f,%f) \n", obj , x,y,z );
+	obj->scale.x = obj->scale.x + x;
+	obj->scale.y = obj->scale.y + y;
+	obj->scale.z = obj->scale.z + z;
 
 }
 
@@ -43,7 +53,7 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 	if( obj->polygon_count > 0 )
 	{
 		int i;
-		glColor3f( 1.0, 0, 0);
+		glColor3f( obj->polygon_color.x, obj->polygon_color.y, obj->polygon_color.z);
 		glBegin( obj->render_mode );	
 		for( i = 0; i < obj->polygon_count; i++ )
 		{
@@ -110,9 +120,9 @@ void obj_operate( object* parent, OBJ_OPERATION operation, GLfloat x, GLfloat y,
 
 	for( child = 0; child < parent->children_c; child++)
 	{
-
 		object* o =  ((object**)(parent->children))[child];
 
+		fprintf( stderr, "Operating on %p, child %d \n", o, child);
 		obj_operate( o, operation, x, y, z);
 
 	}

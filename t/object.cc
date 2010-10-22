@@ -48,7 +48,11 @@ void test_obj()
 	vertex* triangle = (vertex*)malloc( sizeof(vertex) * 3 );
 	triangle[0].x = -1; triangle[0].y = 1; triangle[0].z = 1;
 	triangle[1].x = 0.2; triangle[1].y = -1; triangle[1].z = 1;
-	triangle[2].x = 1; triangle[2].y = 1; triangle[2].z = 2;
+	triangle[2].x = 1; triangle[2].y = 1; triangle[2].z = -1;
+
+	root->polygon_color.x = 1;
+	root->polygon_color.y = 0;
+	root->polygon_color.z = 0;
 
 	obj_load( root, GL_TRIANGLES, (void*)triangle, 3);
 

@@ -23,6 +23,7 @@ typedef struct OBJ
 
   vertex* polygon_data;
   int polygon_count;
+  vertex  polygon_color;
 
   int render_mode;
 
