@@ -40,18 +40,21 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 {
 	fprintf( stderr, "Rendered: %p from (%f,%f,%f) \n", obj , x,y,z );
 
-	int i;
-	glColor3f( 1.0, 0, 0);
-	glBegin( obj->render_mode );	
-	for( i = 0; i < obj->polygon_count; i++ )
+	if( obj->polygon_count > 0 )
 	{
-	  vertex v = (obj->polygon_data)[i];
-	  glVertex3f( v.x, v.y, v.z);
-	  fprintf( stderr, "Rendered Polygon (%f,%f,%f) \n",  v.x, v.y, v.z);
+		int i;
+		glColor3f( 1.0, 0, 0);
+		glBegin( obj->render_mode );	
+		for( i = 0; i < obj->polygon_count; i++ )
+		{
+			vertex v = (obj->polygon_data)[i];
+			glVertex3f( v.x, v.y, v.z);
+			fprintf( stderr, "Rendered Polygon (%f,%f,%f) \n",  v.x, v.y, v.z);
 
-	} 
+		} 
 
-	glEnd();
+		glEnd();
+	}
 }
 
 void obj_switch_operation( OBJ_OPERATION op)
