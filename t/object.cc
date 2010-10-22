@@ -1,10 +1,15 @@
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glut.h>
+
+
 #include <stdio.h>
 #include <string.h>
 #include "../object.h"
 
 static unsigned int test_count_f = 0;
 static unsigned int test_count_s = 0;
-static object* root;
+static object* root = NULL;
 
 void diag( const char* message)
 {
@@ -39,14 +44,23 @@ void test_obj()
 
 	ok( sizeof(*root) == obj_size, "Memory allocated" );
 
-	printf( "Children %d \n", root->children_c );	
+	//vertex** triangle = (vertex**)malloc( sizeof(vertex*) * 3 );
+	vertex* triangle = (vertex*)malloc( sizeof(vertex) * 3 );
+	triangle[0].x = -1; triangle[0].y = 1; triangle[0].z = 1;
+	triangle[1].x = 0.2; triangle[1].y = -1; triangle[1].z = 1;
+	triangle[2].x = 1; triangle[2].y = 1; triangle[2].z = 2;
 
-	ok( root->children_c == 0, "No children attached" );
+	obj_load( root, GL_TRIANGLES, (void*)triangle, 3);
+
+}
+
+
+void finish_tests()
+{
 
 	obj_destroy( root );
+
 	done();
-
-
 
 }
 

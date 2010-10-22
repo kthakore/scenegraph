@@ -1,3 +1,7 @@
+#ifndef _OBJECT_H
+#define _OBJECT_H
+
+
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
@@ -17,7 +21,10 @@ typedef struct OBJ
   vertex    rotation;
   vertex    scale;
 
-  GLfloat* polygon_data;
+  vertex* polygon_data;
+  int polygon_count;
+
+  int render_mode;
 
   struct OBJ* parent; 
   struct OBJ** children; 
@@ -29,6 +36,6 @@ typedef struct OBJ
 object* obj_create ( );
 void obj_destroy ( object* obj ) ;
 void obj_operate( object* root, OBJ_OPERATION operation, GLfloat x, GLfloat y, GLfloat z);
-void (*op_func_ptr)(object* obj, GLfloat x, GLfloat y, GLfloat z) = NULL;     
-	
+void obj_load( object* obj, int MODE, void* data, int count );
 
+#endif

@@ -6,6 +6,8 @@
 
 #include "object.h"
 
+void (*op_func_ptr)(object* obj, GLfloat x, GLfloat y, GLfloat z) = NULL;     
+
 
 object* obj_create()
 {
@@ -19,24 +21,37 @@ object* obj_create()
 void obj_translate( object* obj, GLfloat x, GLfloat y, GLfloat z)
 {
 
-	fprintf( stderr, "translate: %p from (%f,%f,%f) ", obj , x,y,z );
+	fprintf( stderr, "translate: %p from (%f,%f,%f) \n", obj , x,y,z );
 }
 
 void obj_rotate( object* obj, GLfloat x, GLfloat y, GLfloat z)
 {
-	fprintf( stderr, "Rotate: %p from (%f,%f,%f) ", obj , x,y,z );
+	fprintf( stderr, "Rotate: %p from (%f,%f,%f) \n", obj , x,y,z );
 }
 
 void obj_scale( object* obj, GLfloat x, GLfloat y, GLfloat z) 
 {
 
-	fprintf( stderr, "Scale: %p from (%f,%f,%f) ", obj , x,y,z );
+	fprintf( stderr, "Scale: %p from (%f,%f,%f) \n", obj , x,y,z );
 
 }
 
 void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 {
-	fprintf( stderr, "Rendered: %p from (%f,%f,%f) ", obj , x,y,z );
+	fprintf( stderr, "Rendered: %p from (%f,%f,%f) \n", obj , x,y,z );
+
+	int i;
+	glColor3f( 1.0, 0, 0);
+	glBegin( obj->render_mode );	
+	for( i = 0; i < obj->polygon_count; i++ )
+	{
+	  vertex v = (obj->polygon_data)[i];
+	  glVertex3f( v.x, v.y, v.z);
+	  fprintf( stderr, "Rendered Polygon (%f,%f,%f) \n",  v.x, v.y, v.z);
+
+	} 
+
+	glEnd();
 }
 
 void obj_switch_operation( OBJ_OPERATION op)
@@ -58,13 +73,17 @@ void obj_switch_operation( OBJ_OPERATION op)
 			op_func_ptr = &obj_render;
 			break;
 		default:
+			op_func_ptr = &obj_render;
 			break;
 
 	}
 }
-void obj_load( object* obj, void* data)
+void obj_load( object* obj, int mode,  void* data, int count)
 {
-	obj->polygon_data = (GLfloat*)data;
+	obj->render_mode = mode;
+	obj->polygon_data = (vertex*)data;
+
+	obj->polygon_count = count;
 }
 
 void obj_closest( object* root, GLfloat x, GLfloat y, GLfloat z)
@@ -73,25 +92,29 @@ void obj_closest( object* root, GLfloat x, GLfloat y, GLfloat z)
 
 }
 
-void obj_destroy( object* obj )
+void obj_destroy( object* obj)
 {
-
+	if( obj->polygon_count > 0)
+		free( obj->polygon_data );
 	free( obj );
 }
 
 
 void obj_operate( object* parent, OBJ_OPERATION operation, GLfloat x, GLfloat y, GLfloat z)
 {
-
+	int child;
 	obj_switch_operation( operation );
 
-	(*op_func_ptr) ( parent, x,y,z);
+	for( child = 0; child < parent->children_c; child++)
+	{
 
-	//Apply rotate to our selves
+		object* o =  ((object**)(parent->children))[child];
 
-	//For all our children
-	//rotate on all of them
-	//return if parent = null;
+		obj_operate( o, operation, x, y, z);
+
+	}
+	(*op_func_ptr) ( parent, x,y,z );
+
 
 }
 
