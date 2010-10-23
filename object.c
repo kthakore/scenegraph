@@ -13,6 +13,9 @@ object* obj_create()
 {
 	object* obj = (object*) malloc( sizeof(object) );
 	obj->children_c = 0;
+	obj->scale.x = 1; obj->scale.y = 1; obj->scale.z = 1;
+	obj->location.x = 0, obj->location.y = 0; obj->location.z = 0;
+	obj->rotation.x = 0; obj->rotation.y = 0; obj->rotation.z = 0;
 	return obj;
 }
 
@@ -53,13 +56,24 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 	if( obj->polygon_count > 0 )
 	{
 		int i;
+
+		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
+		glTranslatef( obj->location.x, obj->location.y, obj->location.z );
+		glRotatef( obj->rotation.x, obj->rotation.y, obj->rotation.z, 0 );
+
+		fprintf(stderr, "Polygon Location (%f,%f,%f) \n", obj->location.x, obj->location.y, obj->location.z );
+		fprintf(stderr, "Polygon Rotate (%f,%f,%f) \n", obj->rotation.x, obj->rotation.y, obj->rotation.z );
+		fprintf(stderr, "Polygon Scale (%f,%f,%f) \n", obj->scale.x, obj->scale.y, obj->scale.z );
+
 		glColor3f( obj->polygon_color.x, obj->polygon_color.y, obj->polygon_color.z);
 		glBegin( obj->render_mode );	
+
+
 		for( i = 0; i < obj->polygon_count; i++ )
 		{
-			vertex v = (obj->polygon_data)[i];
-			glVertex3f( v.x, v.y, v.z);
-			fprintf( stderr, "Rendered Polygon (%f,%f,%f) \n",  v.x, v.y, v.z);
+			vertex p = (obj->polygon_data)[i];
+			glVertex3f( p.x, p.y, p.z);
+
 
 		} 
 
