@@ -24,7 +24,7 @@ object* obj_create()
 void obj_translate( object* obj, GLfloat x, GLfloat y, GLfloat z)
 {
 
-	fprintf( stderr, "translate: %p from (%f,%f,%f) \n", obj , x,y,z );
+	fprintf( stderr, "Translate: %p from (%f,%f,%f) \n", obj , x,y,z );
 	obj->location.x = obj->location.x + x;
 	obj->location.y = obj->location.y + y;
 	obj->location.z = obj->location.z + z;
