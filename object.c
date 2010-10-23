@@ -129,7 +129,7 @@ void obj_destroy( object* obj)
 
 void obj_operate( object* parent, OBJ_OPERATION operation, GLfloat x, GLfloat y, GLfloat z)
 {
-	int child;
+	unsigned int child;
 	obj_switch_operation( operation );
 
 	for( child = 0; child < parent->children_c; child++)

@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "../object.h"
+#include "../loader.h"
 
 static unsigned int test_count_f = 0;
 static unsigned int test_count_s = 0;
@@ -34,7 +35,7 @@ void done( )
 
 }
 
-void test_obj()
+void test_obj(int argc, char** argv)
 {
 
 	diag("Root tests");
@@ -44,6 +45,17 @@ void test_obj()
 
 	ok( sizeof(*root) == obj_size, "Memory allocated" );
 
+	object* t; 
+	if( argc > 1)
+	{
+	  const char* file_path = argv[1];
+	 t = load_object( file_path );
+
+	}
+	else
+	{
+	     t = load_object( "test.txt" );
+	}
 	//vertex** triangle = (vertex**)malloc( sizeof(vertex*) * 3 );
 	vertex* triangle = (vertex*)malloc( sizeof(vertex) * 3 );
 	triangle[0].x = 0; triangle[0].y = 1; triangle[0].z = 0;
@@ -107,7 +119,7 @@ int main( int argc, char** argv)
 	    glutMotionFunc(&MotionFunc);
 	 */
 
-	test_obj();
+	test_obj( argc,  argv);
 
 	/* Loop */
 	glutMainLoop();
