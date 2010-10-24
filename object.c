@@ -137,6 +137,31 @@ void obj_load( object* obj, int mode,  void* data, int count)
 		max.z = p.z;
 
 	}
+
+
+	obj->bounding_box[0].x = min.x; 
+	obj->bounding_box[0].y = min.y;
+	obj->bounding_box[0].z = min.z;
+
+	obj->bounding_box[1].x = max.x; 
+	obj->bounding_box[1].y = min.y;
+	obj->bounding_box[1].z = min.z;
+
+	obj->bounding_box[2].x = max.x; 
+	obj->bounding_box[2].y = min.y;
+	obj->bounding_box[2].z = max.z;
+
+	obj->bounding_box[3].x = max.x; 
+	obj->bounding_box[3].y = max.y;
+	obj->bounding_box[3].z = min.z;
+
+	obj->bounding_box[4].x = max.x; 
+	obj->bounding_box[4].y = max.y;
+	obj->bounding_box[4].z = max.z;
+
+	obj->bounding_box[5].x = min.x; 
+	obj->bounding_box[5].y = max.y;
+	obj->bounding_box[5].z = max.z;
 	
 }
 
