@@ -16,7 +16,7 @@ typedef struct vertex
 typedef struct OBJ
 {
 
-  vertex   bounding_box [4];
+  vertex    bounding_box [6];
   vertex    location; 
   vertex    rotation;
   vertex    scale;

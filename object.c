@@ -109,8 +109,35 @@ void obj_load( object* obj, int mode,  void* data, int count)
 {
 	obj->render_mode = mode;
 	obj->polygon_data = (vertex*)data;
-
 	obj->polygon_count = count;
+
+	//Iterate through the polygons to find the bounding box
+	vertex min;
+	vertex max; 
+
+	int i;
+	for( i = 0; i < count; i++ )
+	{
+	
+		vertex p = (obj->polygon_data)[i];
+		
+		if( p.x <= min.x)
+		min.x = p.x;
+		if( p.y <= min.y)
+		min.y = p.y;
+		if( p.z <= min.z)
+		min.z = p.z;
+
+		
+		if( p.x >= max.x)
+		max.x = p.x;
+		if( p.y >= max.y)
+		max.y = p.y;
+		if( p.z >= max.z)
+		max.z = p.z;
+
+	}
+	
 }
 
 void obj_closest( object* root, GLfloat x, GLfloat y, GLfloat z)

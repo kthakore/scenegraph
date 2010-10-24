@@ -45,17 +45,6 @@ void test_obj(int argc, char** argv)
 
 	ok( sizeof(*root) == obj_size, "Memory allocated" );
 
-	object* t; 
-	if( argc > 1)
-	{
-	  const char* file_path = argv[1];
-	 t = load_object( file_path );
-
-	}
-	else
-	{
-	     t = load_object( "test.txt" );
-	}
 	//vertex** triangle = (vertex**)malloc( sizeof(vertex*) * 3 );
 	vertex* triangle = (vertex*)malloc( sizeof(vertex) * 3 );
 	triangle[0].x = 0; triangle[0].y = 1; triangle[0].z = 0;
