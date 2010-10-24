@@ -118,7 +118,7 @@ void obj_load( object* obj, int mode,  void* data, int count)
 	max.x = 0; max.y = 0; max.z = 0;
 
 	int i;
-	for( i = 0; i < count; i++ )
+	for( i = 0; i < obj->polygon_count; i++ )
 	{
 	
 		vertex p = (obj->polygon_data)[i];
