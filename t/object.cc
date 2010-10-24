@@ -55,8 +55,8 @@ void test_obj(int argc, char** argv)
 	root->polygon_color.y = 0;
 	root->polygon_color.z = 0;
 
-	obj_load( root, GL_LINES, (void*)triangle, 3);
-	obj_operate( root, SCALE, 0,0,0);	
+	obj_load( root, GL_TRIANGLES, (void*)triangle, 3);
+	obj_operate( root, SCALE, 0.1,0.1,0.1);	
 	obj_operate( root, TRANSLATE, 0,0,0);
 	obj_operate( root, ROTATE, 0,0,0);
 
