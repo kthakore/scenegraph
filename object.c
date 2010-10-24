@@ -6,6 +6,9 @@
 
 #include "object.h"
 
+void (*op_func_ptr)(object* obj, GLfloat x, GLfloat y, GLfloat z) = NULL;     
+
+
 /*Create and initialize an object*/
 object* obj_create()
 {
@@ -48,6 +51,7 @@ void obj_scale( object* obj, GLfloat x, GLfloat y, GLfloat z)
 
 }
 
+/*Operation to render the objects */
 void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 {
 	fprintf( stderr, "Rendered: %p from (%f,%f,%f) \n", obj , x,y,z );
@@ -80,11 +84,10 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 	}
 }
 
+
+/*Convert the operation into a function pointer (Simple VTABLE implementation) */
 void obj_switch_operation( OBJ_OPERATION op)
 {
-
-
-void (*op_func_ptr)(object* obj, GLfloat x, GLfloat y, GLfloat z) = NULL;     
 
 
 	switch( op )
@@ -107,8 +110,20 @@ void (*op_func_ptr)(object* obj, GLfloat x, GLfloat y, GLfloat z) = NULL;
 
 	}
 }
+
+/* Load data (polygons), the mode to draw them with during render
+ *
+ * Additionally set the bounding box 
+ */
+
 void obj_load( object* obj, int mode,  void* data, int count)
 {
+
+	//We alread have data loaded
+	if( obj->polygon_count > 0 )
+	   //Lets throw it away :D
+	   free( obj->polygon_data );
+
 	obj->render_mode = mode;
 	obj->polygon_data = (vertex*)data;
 	obj->polygon_count = count;
