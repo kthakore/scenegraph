@@ -113,7 +113,9 @@ void obj_load( object* obj, int mode,  void* data, int count)
 
 	//Iterate through the polygons to find the bounding box
 	vertex min;
+	min.x = 0; min.y = 0; min.z = 0;
 	vertex max; 
+	max.x = 0; max.y = 0; max.z = 0;
 
 	int i;
 	for( i = 0; i < count; i++ )
