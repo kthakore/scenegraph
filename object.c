@@ -128,7 +128,7 @@ void obj_load( object* obj, int mode,  void* data, int count)
 	obj->polygon_data = (vertex*)data;
 	obj->polygon_count = count;
 
-	//Iterate through the polygons to find the bounding box
+	//Iterate through the polygons to find the min and max x,y,z
 	vertex min;
 	min.x = 0; min.y = 0; min.z = 0;
 	vertex max; 
@@ -157,7 +157,7 @@ void obj_load( object* obj, int mode,  void* data, int count)
 
 	}
 
-
+	// Use the min and max vertices to generate a bounding box
 	obj->bounding_box[0].x = min.x; 
 	obj->bounding_box[0].y = min.y;
 	obj->bounding_box[0].z = min.z;
@@ -190,6 +190,7 @@ void obj_closest( object* root, GLfloat x, GLfloat y, GLfloat z)
 
 }
 
+// Destroy the object and the polygon data
 void obj_destroy( object* obj)
 {
 	if( obj->polygon_count > 0)
@@ -197,7 +198,7 @@ void obj_destroy( object* obj)
 	free( obj );
 }
 
-
+/* Perform the operation, recursively on all children */
 void obj_operate( object* parent, OBJ_OPERATION operation, GLfloat x, GLfloat y, GLfloat z)
 {
 	unsigned int child;
