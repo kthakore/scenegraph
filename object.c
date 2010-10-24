@@ -121,8 +121,8 @@ void obj_load( object* obj, int mode,  void* data, int count)
 
 	//We alread have data loaded
 	if( obj->polygon_count > 0 )
-	   //Lets throw it away :D
-	   free( obj->polygon_data );
+		//Lets throw it away :D
+		free( obj->polygon_data );
 
 	obj->render_mode = mode;
 	obj->polygon_data = (vertex*)data;
@@ -137,23 +137,23 @@ void obj_load( object* obj, int mode,  void* data, int count)
 	int i;
 	for( i = 0; i < obj->polygon_count; i++ )
 	{
-	
-		vertex p = (obj->polygon_data)[i];
-		
-		if( p.x <= min.x)
-		min.x = p.x;
-		if( p.y <= min.y)
-		min.y = p.y;
-		if( p.z <= min.z)
-		min.z = p.z;
 
-		
+		vertex p = (obj->polygon_data)[i];
+
+		if( p.x <= min.x)
+			min.x = p.x;
+		if( p.y <= min.y)
+			min.y = p.y;
+		if( p.z <= min.z)
+			min.z = p.z;
+
+
 		if( p.x >= max.x)
-		max.x = p.x;
+			max.x = p.x;
 		if( p.y >= max.y)
-		max.y = p.y;
+			max.y = p.y;
 		if( p.z >= max.z)
-		max.z = p.z;
+			max.z = p.z;
 
 	}
 
@@ -181,7 +181,7 @@ void obj_load( object* obj, int mode,  void* data, int count)
 	obj->bounding_box[5].x = min.x; 
 	obj->bounding_box[5].y = max.y;
 	obj->bounding_box[5].z = max.z;
-	
+
 }
 
 void obj_closest( object* root, GLfloat x, GLfloat y, GLfloat z)
