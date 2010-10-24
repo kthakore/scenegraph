@@ -6,9 +6,7 @@
 
 #include "object.h"
 
-void (*op_func_ptr)(object* obj, GLfloat x, GLfloat y, GLfloat z) = NULL;     
-
-
+/*Create and initialize an object*/
 object* obj_create()
 {
 	object* obj = (object*) malloc( sizeof(object) );
@@ -19,8 +17,7 @@ object* obj_create()
 	return obj;
 }
 
-
-
+/*Operation to set the translate values of the object*/
 void obj_translate( object* obj, GLfloat x, GLfloat y, GLfloat z)
 {
 
@@ -30,6 +27,7 @@ void obj_translate( object* obj, GLfloat x, GLfloat y, GLfloat z)
 	obj->location.z = z;
 }
 
+/*Operation to set the rotation values of the object*/
 void obj_rotate( object* obj, GLfloat x, GLfloat y, GLfloat z)
 {
 	fprintf( stderr, "Rotate: %p from (%f,%f,%f) \n", obj , x,y,z );
@@ -39,6 +37,7 @@ void obj_rotate( object* obj, GLfloat x, GLfloat y, GLfloat z)
 
 }
 
+/*Operation to set the scale values of the object*/
 void obj_scale( object* obj, GLfloat x, GLfloat y, GLfloat z) 
 {
 
@@ -83,6 +82,9 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 
 void obj_switch_operation( OBJ_OPERATION op)
 {
+
+
+void (*op_func_ptr)(object* obj, GLfloat x, GLfloat y, GLfloat z) = NULL;     
 
 
 	switch( op )
