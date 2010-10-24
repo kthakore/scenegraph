@@ -25,17 +25,17 @@ void obj_translate( object* obj, GLfloat x, GLfloat y, GLfloat z)
 {
 
 	fprintf( stderr, "Translate: %p from (%f,%f,%f) \n", obj , x,y,z );
-	obj->location.x = obj->location.x + x;
-	obj->location.y = obj->location.y + y;
-	obj->location.z = obj->location.z + z;
+	obj->location.x = x;
+	obj->location.y = y;
+	obj->location.z = z;
 }
 
 void obj_rotate( object* obj, GLfloat x, GLfloat y, GLfloat z)
 {
 	fprintf( stderr, "Rotate: %p from (%f,%f,%f) \n", obj , x,y,z );
-	obj->rotation.x = obj->rotation.x + x;
-	obj->rotation.y = obj->rotation.y + y;
-	obj->rotation.z = obj->rotation.z + z;
+	obj->rotation.x = x;
+	obj->rotation.y = y;
+	obj->rotation.z = z;
 
 }
 
@@ -43,9 +43,9 @@ void obj_scale( object* obj, GLfloat x, GLfloat y, GLfloat z)
 {
 
 	fprintf( stderr, "Scale: %p from (%f,%f,%f) \n", obj , x,y,z );
-	obj->scale.x = obj->scale.x + x;
-	obj->scale.y = obj->scale.y + y;
-	obj->scale.z = obj->scale.z + z;
+	obj->scale.x = x;
+	obj->scale.y = y;
+	obj->scale.z = z;
 
 }
 
