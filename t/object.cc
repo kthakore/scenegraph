@@ -46,16 +46,19 @@ void test_obj(int argc, char** argv)
 	ok( sizeof(*root) == obj_size, "Memory allocated" );
 
 	//vertex** triangle = (vertex**)malloc( sizeof(vertex*) * 3 );
-	vertex* triangle = (vertex*)malloc( sizeof(vertex) * 3 );
+	vertex* triangle = (vertex*)malloc( sizeof(vertex) * 6 );
 	triangle[0].x = 0; triangle[0].y = 1; triangle[0].z = 0;
 	triangle[1].x =  1; triangle[1].y = 0; triangle[1].z = 0;
 	triangle[2].x = 1; triangle[2].y = 1; triangle[2].z = 0;
+	triangle[3].x = 3; triangle[3].y = 1; triangle[3].z = 3;
+	triangle[4].x =  4; triangle[4].y = 0; triangle[4].z = 0;
+	triangle[5].x = 1; triangle[5].y = 1; triangle[5].z = 0;
 
 	root->polygon_color.x = 1;
 	root->polygon_color.y = 0;
 	root->polygon_color.z = 0;
 
-	obj_load( root, GL_TRIANGLES, (void*)triangle, 3);
+	obj_load( root, GL_TRIANGLE_STRIP, (void*)triangle, 6);
 	obj_operate( root, SCALE, 0.1,0.1,0.1);	
 	obj_operate( root, TRANSLATE, 0,0,0);
 	obj_operate( root, ROTATE, 0,0,0);
