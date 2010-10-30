@@ -2,13 +2,13 @@
 
 
 
-CC = g++
+CC = clang
 
 CFLAGS = -Wall -O2
 
 LIBS = -lGL -lGLU -lglut
 
-COMPILE = $(CC) $(CFLAGS) -c $(LIBS)
+COMPILE = $(CC) $(CFLAGS) -c 
 
 TCOMPILE = $(COMPILE) 
 
