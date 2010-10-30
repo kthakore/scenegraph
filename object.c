@@ -1,10 +1,4 @@
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glut.h>
-
-#include <stdio.h>
-
-#include "object.h"
+#include "scenegraph.h"
 
 void (*op_func_ptr)(object* obj, GLfloat x, GLfloat y, GLfloat z) = NULL;     
 
@@ -86,7 +80,7 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 
 
 /*Convert the operation into a function pointer (Simple VTABLE implementation) */
-void obj_switch_operation( OBJ_OPERATION op)
+void obj_switch_operation( enum OBJ_OPERATION op)
 {
 
 
@@ -199,7 +193,7 @@ void obj_destroy( object* obj)
 }
 
 /* Perform the operation, recursively on all children */
-void obj_operate( object* parent, OBJ_OPERATION operation, GLfloat x, GLfloat y, GLfloat z)
+void obj_operate( object* parent, enum OBJ_OPERATION operation, GLfloat x, GLfloat y, GLfloat z)
 {
 	unsigned int child;
 	obj_switch_operation( operation );

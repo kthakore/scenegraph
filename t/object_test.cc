@@ -1,12 +1,6 @@
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glut.h>
-
-
-#include <stdio.h>
 #include <string.h>
+#include "../scenegraph.h"
 #include "../object.h"
-#include "../loader.h"
 
 static unsigned int test_count_f = 0;
 static unsigned int test_count_s = 0;
@@ -34,6 +28,7 @@ void done( )
 
 
 }
+
 
 void test_obj(int argc, char** argv)
 {

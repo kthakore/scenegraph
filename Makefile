@@ -4,6 +4,8 @@
 
 CC = clang
 
+LINKER = ld
+
 CFLAGS = -Wall -O2
 
 LIBS = -lGL -lGLU -lglut
@@ -26,17 +28,20 @@ myprog: $(OBJFILES)
 	$(CC) -o SceneGraph main.cc $(OBJFILES) $(LIBS)
 
 
+lib: $(OBJFILES)
+	
+	$(LINKER) -G $(OBJFILES) -o libscenegraph.so
+
 
 %.o: %.c
 
-	$(COMPILE) -o $@ $<
+	$(COMPILE) -fPIC -o $@ $<
 
 %.o: %.cc
 	$(TCOMPILE) -o $@ $<
 
-test: $(TFILES) $(OBJFILES)
-	$(CC) -o ObjTest $(TFILES) $(OBJFILES) $(LIBS)
-
+test: $(TFILES) lib
+	$(CC) $(OBJFILES) $(LIBS) -o ObjTest $(TFILES) 
 clean:
 	rm $(TFILES) $(OBJFILES) SceneGraph ObjTest
 
