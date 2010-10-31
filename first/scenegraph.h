@@ -1,6 +1,9 @@
 #ifndef _SCENEGRAPH_H_
 #define _SCENEGRAPH_H_
 
+#include <stdio.h>
+#include <string.h>
+
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
@@ -60,6 +63,10 @@ typedef struct SM
 
 
 } scene_manager;
+
+
+#include "scene.h"
+#include "object.h"
 
 
 #endif

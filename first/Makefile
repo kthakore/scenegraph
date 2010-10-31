@@ -1,2 +1,4 @@
 all:
-	g++ -o SceneGraph main.cc scenegraph.c -lGL -lGLU -lglut
+	clang -o SceneGraph main.cc scene.c -lGL -lGLU -lglut
+clean:
+	rm SceneGraph
