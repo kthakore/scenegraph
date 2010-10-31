@@ -51,11 +51,11 @@ linked_object* sc_get_rm_object( scene_manager* sm, int id )
 }
 
 
-void sc_render( scene_manager* sm, vertex camera )
+void sc_render( scene_manager* sm)
 {
 	object* root = sc_get_object( sm, sm->root_object_id );
 	
-	obj_operate( sm, root, RENDER, camera.x, camera.y, camera.z );
+	obj_operate( sm, root, RENDER, sm->camera.x, sm->camera.y, sm->camera.z );
 
 }
 
@@ -88,7 +88,7 @@ void sc_update_frustum( scene_manager* Scene )
 	  &(Scene->camera.x) ,&(Scene->camera.y) ,&(Scene->camera.z) 
 	);
 
-	fprintf(stderr, "Camera at %d %d %d", Scene->camera.x, Scene->camera.y, Scene->camera.z );
+	fprintf(stderr, "Camera at %f %f %f", Scene->camera.x, Scene->camera.y, Scene->camera.z );
 
 	/* Combine the two matrices (multiply projection_matrixection by modelview)    */
 	clip_matrix[ 0] = model_matrix[ 0] * projection_matrix[ 0] + model_matrix[ 1] * projection_matrix[ 4] + model_matrix[ 2] * projection_matrix[ 8] +    model_matrix[ 3] * projection_matrix[12];

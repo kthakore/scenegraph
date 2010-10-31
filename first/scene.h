@@ -13,6 +13,8 @@ int sc_obj_in_frustum( scene_manager* Scene, object* obj );
 
 void sc_update_frustum( scene_manager* scene );
 
+void sc_render(scene_manager* sm); 
+
 void sc_destroy(scene_manager* sm);
 
 #endif 

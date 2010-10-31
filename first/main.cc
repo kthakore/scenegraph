@@ -47,20 +47,28 @@ static scene_manager* Scene;
 void make_obj_data( object* root )
 {
 
-	vertex* triangle = (vertex*)malloc( sizeof(vertex) * 6 );
-	triangle[0].x = 0; triangle[0].y = 1; triangle[0].z = 0;
-	triangle[1].x =  1; triangle[1].y = 0; triangle[1].z = 0;
+	vertex* triangle = (vertex*)malloc( sizeof(vertex) * 12 );
+	triangle[0].x = 0; triangle[0].y = 0; triangle[0].z = 0;
+	triangle[1].x =  2; triangle[1].y = 0; triangle[1].z = 0;
 	triangle[2].x = 1; triangle[2].y = 1; triangle[2].z = 0;
 
 	triangle[3].x = 1; triangle[3].y = 1; triangle[3].z = 0;
-	triangle[4].x =  0; triangle[4].y = 0; triangle[4].z = 2;
-	triangle[5].x = 0; triangle[5].y = 1; triangle[5].z = 0;
+	triangle[4].x =  0.5; triangle[4].y = 0.5; triangle[4].z = 1;
+	triangle[5].x = 2; triangle[5].y = 0; triangle[5].z = 0;
+
+	triangle[6].x = 2; triangle[6].y = 0; triangle[6].z = 0;
+        triangle[7].x = 0.5; triangle[7].y = 0.5; triangle[7].z = 1;
+        triangle[8].x =  0; triangle[8].y = 0; triangle[8].z = 0;
+
+	triangle[9].x = 0; triangle[9].y = 0; triangle[9].z = 0;
+        triangle[10].x = 0.5; triangle[10].y = 0.5; triangle[10].z = 1;
+        triangle[11].x =  1; triangle[11].y = 1; triangle[11].z = 0;
 
 	root->polygon_color.x = 1;
 	root->polygon_color.y = 0;
 	root->polygon_color.z = 0;
 
-	obj_load( root, GL_TRIANGLE_STRIP, (void*)triangle, 6);
+	obj_load( root, GL_TRIANGLE_STRIP, (void*)triangle, 12);
 
 }
 
@@ -140,7 +148,7 @@ void		DisplayFunc(void)
 
 	//could also set these to 3 for an easier to see scene or 5 so there's definitely stuff off screen.  Up to you guys
 	// there will be one of the objects that's black, and therefore hard to see.  
-	dim =4;
+/*	dim =4;
 	for (i = 0; i < dim; ++i)
 		for (j = 0; j < dim; ++j)
 			for (k = 0; k < dim; ++k)
@@ -153,7 +161,8 @@ void		DisplayFunc(void)
 
 				glPopMatrix();
 			}
-
+*/
+	sc_render( Scene );
 	/* End */
 	glFlush();
 	glutSwapBuffers();
@@ -264,7 +273,7 @@ int		main(int argc, char **argv)
 
 	make_obj(argc, argv);
 	
-
+	sc_render( Scene );
 
 	/* Declaration of the callbacks */
 	glutDisplayFunc(&DisplayFunc);
