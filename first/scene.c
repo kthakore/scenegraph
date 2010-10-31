@@ -72,7 +72,6 @@ void sc_update_frustum( scene_manager* Scene )
 
 	/* Get the current VIEWPORT plane */
 	glGetIntegerv(GL_VIEWPORT, viewport);
-
 	
 	/* Get the current PROJECTION matrix from OpenGL */
 	glGetDoublev( GL_PROJECTION_MATRIX, projection_matrix );
@@ -88,6 +87,8 @@ void sc_update_frustum( scene_manager* Scene )
 	  model_matrix, projection_matrix, viewport,  
 	  &(Scene->camera.x) ,&(Scene->camera.y) ,&(Scene->camera.z) 
 	);
+
+	fprintf(stderr, "Camera at %d %d %d", Scene->camera.x, Scene->camera.y, Scene->camera.z );
 
 	/* Combine the two matrices (multiply projection_matrixection by modelview)    */
 	clip_matrix[ 0] = model_matrix[ 0] * projection_matrix[ 0] + model_matrix[ 1] * projection_matrix[ 4] + model_matrix[ 2] * projection_matrix[ 8] +    model_matrix[ 3] * projection_matrix[12];
