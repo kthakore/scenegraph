@@ -163,9 +163,16 @@ void sc_update_frustum( scene_manager* Scene )
 	Scene->frustum[5][1] /= t;
 	Scene->frustum[5][2] /= t;
 	Scene->frustum[5][3] /= t;
-
-
 }
+
+
+int sc_bb_in_frustum( scene_manager* scene, object* obj )
+{
+  int face; int c; int c2;
+  vertex* bb = obj->bounding_box; 
+ 
+  return 0; 
+} 
 
 
 void sc_destroy( scene_manager* sm )
