@@ -42,8 +42,11 @@ typedef struct OBJ
   int render_mode; /* GL_TRIANGLE_STRIPS ... so on */
 
   int children_id[8]; /*Limit children of a node to 8, which allows easier implementation of octree later*/
- 
-  unsigned int children; /*Number of childern*/  
+
+  bool root;
+  int parent; 
+
+  unsigned int children; /*Number of children*/  
  
 } object;
 

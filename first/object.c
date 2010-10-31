@@ -3,8 +3,9 @@
 object* obj_create( scene_manager* sm)
 {
 
-	object* obj = sc_get_object( sm, sm->registered++  );
+	object* obj = sc_get_object( sm, sm->registered  );
 
+	obj->id = sm->registered++;
 	// Store the bounding sphere 
 	obj->bound_sphere_rad = 0;
 	obj->bound_sphere_loc.x = 0;
@@ -16,6 +17,15 @@ object* obj_create( scene_manager* sm)
 	obj->rotation.x = 0; obj->rotation.y = 0; obj->rotation.z = 0;
 	obj->polygon_count = 0;
 	return obj;
+}
+
+void obj_add( object* parent, object* child )
+{
+	if( parent->children == 7 )
+		return;
+
+	parent->children_id[ parent->children++ ] = child->id;
+	child->parent = parent->id;
 }
 
 
@@ -67,20 +77,20 @@ void obj_update_bounding_sphere( object* obj)
 	}
 
 	// Calculate the middle point and place the bounding sphere there
-        GLfloat diff_x = max.x - min.x;
-        GLfloat diff_y = max.y - max.y;
-        GLfloat diff_z = max.z - max.z;
+	GLfloat diff_x = max.x - min.x;
+	GLfloat diff_y = max.y - max.y;
+	GLfloat diff_z = max.z - max.z;
 
-        obj->bound_sphere_loc.x = diff_x/2.0;
+	obj->bound_sphere_loc.x = diff_x/2.0;
 	obj->bound_sphere_loc.y = diff_y/2.0;
- 	obj->bound_sphere_loc.z = diff_z/2.0;
+	obj->bound_sphere_loc.z = diff_z/2.0;
 
 	obj->bound_sphere_rad = diff_x/2.0;
-	
+
 	if( diff_y >= diff_x && diff_y >= diff_z )
-	   obj->bound_sphere_rad = diff_y/2.0;
+		obj->bound_sphere_rad = diff_y/2.0;
 	else if ( diff_z >= diff_y && diff_z >= diff_x )
-	   obj->bound_sphere_rad = diff_z/2.0;
-	
+		obj->bound_sphere_rad = diff_z/2.0;
+
 }
 
