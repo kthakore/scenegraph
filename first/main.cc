@@ -83,7 +83,7 @@ void make_obj(int argc, char **argv)
 	make_obj_data( second );	
 
 	object* third =  obj_create( Scene );  
-	third->location.y = -1.522;
+	third->location.y = 1.822;
 	make_obj_data( third );	
 
 

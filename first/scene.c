@@ -61,6 +61,8 @@ linked_object* sc_get_rm_object( scene_manager* sm, int id )
 
 void sc_render( scene_manager* sm)
 {
+
+//	sc_update_frustum( sm );
 	object* root = sc_get_object( sm, sm->root_object_id );
 	
 	obj_operate( sm, root, RENDER, sm->camera.x, sm->camera.y, sm->camera.z );
@@ -205,9 +207,14 @@ int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 	int p;
 	int c = 0;
 	GLfloat d;
-	GLfloat x = obj->bound_sphere_loc.x;
-	GLfloat y = obj->bound_sphere_loc.y;
-	GLfloat z = obj->bound_sphere_loc.z;
+
+
+	vertex relative_bs;
+	add_vertex( &relative_bs, obj->r_location, obj->bound_sphere_loc );
+
+	GLfloat x = relative_bs.x;
+	GLfloat y = relative_bs.y;
+	GLfloat z = relative_bs.z;
 	GLfloat radius = obj->bound_sphere_rad;
 
 	for( p = 0; p < 6; p++ )

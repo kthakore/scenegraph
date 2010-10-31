@@ -55,7 +55,7 @@ void obj_load( object* obj, int mode, void* data, int count)
 	obj_update_bounding_sphere( obj );
 }
 
-void obj_update_bounding_sphere( object* obj, vertex* relative = NULL)
+void obj_update_bounding_sphere( object* obj)
 {	
 	if( obj->polygon_count <= 0) 
 		return;
@@ -140,7 +140,7 @@ void obj_scale( object* obj, GLfloat x, GLfloat y, GLfloat z)
 /*Operation to render the objects */
 void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 {
-	fprintf( stderr, "Rendered: %p from (%f,%f,%f) \n", obj , x,y,z );
+	//fprintf( stderr, "Rendered: %p from (%f,%f,%f) \n", obj , x,y,z );
 
 	if( obj->polygon_count > 0 )
 	{
@@ -151,7 +151,7 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 		glTranslatef( obj->r_location.x, obj->r_location.y, obj->r_location.z );
 		glRotatef( obj->rotation.x, obj->rotation.y, obj->rotation.z, 0 );
 
-		fprintf(stderr, "\n Object Location %p (%f,%f,%f) \n", obj, obj->r_location.x, obj->r_location.y, obj->r_location.z );
+		fprintf(stderr, "Object Location %p (%f,%f,%f) \n", obj, obj->r_location.x, obj->r_location.y, obj->r_location.z );
 		//fprintf(stderr, "Polygon Rotate (%f,%f,%f) \n", obj->rotation.x, obj->rotation.y, obj->rotation.z );
 		//fprintf(stderr, "Polygon Scale (%f,%f,%f) \n", obj->scale.x, obj->scale.y, obj->scale.z );
 
@@ -214,6 +214,7 @@ void increment_relative_mats( object* p, object* c )
 	add_vertex(&(c->r_rotation), p->r_rotation, c->rotation);
 }
 
+
 /* Perform the operation, recursively on all children */
 void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operation, GLfloat x, GLfloat y, GLfloat z)
 {
@@ -221,12 +222,16 @@ void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operati
 
 	obj_switch_operation( operation );
 
+	if( operation == RENDER && sc_obj_in_frustum( sm, parent ) == 0 )
+	   {
+		return;
+	   }
+
 	for( child = 0; child < parent->children; child++)
 	{
 		object* o =  sc_get_object(sm, parent->children_id[child]);
 		increment_relative_mats( parent, o );
-		fprintf( stderr, "\tOperating on %p, child %d\n", o, child);
-
+		
 		obj_operate( sm, o, operation, x, y, z);
 
 	}
