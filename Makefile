@@ -2,7 +2,7 @@
 
 
 
-CC = clang
+CC = g++
 
 LINKER = ld
 
@@ -14,10 +14,13 @@ COMPILE = $(CC) $(CFLAGS) -c
 
 TCOMPILE = $(COMPILE) 
 
+COBJFILES := $(wildcard *.c)
+
 OBJFILES := $(patsubst %.c,%.o,$(wildcard *.c))
 
 TFILES := $(patsubst %.cc,%.o,$(wildcard t/*.cc))
 
+TFILES := $(wildcard t/*.cc)
 
 all: myprog
 
@@ -35,13 +38,14 @@ lib: $(OBJFILES)
 
 %.o: %.c
 
-	$(COMPILE) -fPIC -o $@ $<
+	$(COMPILE)  -o $@ $<
 
 %.o: %.cc
 	$(TCOMPILE) -o $@ $<
 
-test: $(TFILES) lib
-	$(CC) $(OBJFILES) $(LIBS) -o ObjTest $(TFILES) 
+test: $(TFILES) $(OBJFILES) 
+	$(CC) -o ObjTest $(TFILES) $(COBJFILES) $(LIBS)
+
 clean:
 	rm $(TFILES) $(OBJFILES) SceneGraph ObjTest
 

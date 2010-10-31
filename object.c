@@ -11,6 +11,7 @@ object* obj_create()
 	obj->scale.x = 1; obj->scale.y = 1; obj->scale.z = 1;
 	obj->location.x = 0, obj->location.y = 0; obj->location.z = 0;
 	obj->rotation.x = 0; obj->rotation.y = 0; obj->rotation.z = 0;
+	obj->polygon_count = 0;
 	return obj;
 }
 

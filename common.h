@@ -39,7 +39,7 @@ typedef struct linked_obj
 {
 
   struct linked_obj* next;
-  object* object;
+  struct OBJ* object;
 
 
 } linked_obj;
@@ -49,9 +49,9 @@ typedef struct scene_manager
 
   GLfloat frustum[6][4]; // The 6 planes of the frustum 
   int root;
-  object* obj_registry;
-  linked_obj* start;
-  linked_obj* end;
+  struct OBJ* obj_registry;
+  struct linked_obj* start;
+  struct linked_obj* end;
 
 } scene_manager;
 
