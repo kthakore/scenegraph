@@ -44,14 +44,35 @@ static float	beta = 10;
 
 static scene_manager* Scene;
 
+void make_obj_data( object* root )
+{
+
+	vertex* triangle = (vertex*)malloc( sizeof(vertex) * 6 );
+	triangle[0].x = 0; triangle[0].y = 1; triangle[0].z = 0;
+	triangle[1].x =  1; triangle[1].y = 0; triangle[1].z = 0;
+	triangle[2].x = 1; triangle[2].y = 1; triangle[2].z = 0;
+
+	triangle[3].x = 1; triangle[3].y = 1; triangle[3].z = 0;
+	triangle[4].x =  0; triangle[4].y = 0; triangle[4].z = 2;
+	triangle[5].x = 0; triangle[5].y = 1; triangle[5].z = 0;
+
+	root->polygon_color.x = 1;
+	root->polygon_color.y = 0;
+	root->polygon_color.z = 0;
+
+	obj_load( root, GL_TRIANGLE_STRIP, (void*)triangle, 6);
+
+}
 
 void make_obj(int argc, char **argv)
 {
 
 	object* first = obj_create( Scene );
-	object* second =  obj_create( Scene );  
-
 	Scene->root_object_id = first->id;
+	make_obj_data( first );
+
+	object* second =  obj_create( Scene );  
+	make_obj_data( second );	
 
 	obj_add( first, second);
 
