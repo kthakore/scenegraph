@@ -170,6 +170,7 @@ void sc_update_frustum( scene_manager* Scene )
 
 void sc_destroy( scene_manager* sm )
 {
+	free( sm->rm_all );
 	free( sm->object_registry );
 	free( sm );
 }
