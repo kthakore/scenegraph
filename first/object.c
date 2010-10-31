@@ -19,7 +19,7 @@ object* obj_create( scene_manager* sm)
 	obj->bound_sphere_loc.y = 0;
 	obj->bound_sphere_loc.z = 0; 
 	obj->children = 0;
-	obj->scale.x = 1; obj->scale.y = 1; obj->scale.z = 1;
+	obj->scale.x = 0.5; obj->scale.y = 0.5; obj->scale.z = 0.5;
 	obj->location.x = 0, obj->location.y = 0; obj->location.z = 0;
 	obj->rotation.x = 0; obj->rotation.y = 0; obj->rotation.z = 0;
 	obj->polygon_count = 0;
@@ -224,6 +224,7 @@ void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operati
 
 	if( operation == RENDER && sc_obj_in_frustum( sm, parent ) == 0 )
 	   {
+		fprintf(stderr, "Not printing %p \n", parent);
 		return;
 	   }
 
