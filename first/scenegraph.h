@@ -44,7 +44,7 @@ typedef struct LOBJ
 
   struct LOBJ* next;
   struct LOBJ* previous;
-  int object; /*This is the array value in SM.object_register */
+  object* object_ptr; /*This is the array value in SM.object_register */
   
 
 } linked_object; 
@@ -52,12 +52,14 @@ typedef struct LOBJ
 
 typedef struct SM
 {
-
+ 
+  int objects;
   /*We keep an array of objects so we have locality on this data*/
-  struct OBJ* object_registry;
+  object* object_registry;
   /*A linked list implementation for quick sorting of closest objects will help us with maintaining a ploygon limit*/
-  struct LOBJ* rm_first; 
-  struct LOBJ* rm_last;
+  linked_object* rm_all;
+  linked_object* rm_first; 
+  linked_object* rm_last;
 
   GLfloat frustum[6][4];
 

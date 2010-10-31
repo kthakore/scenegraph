@@ -3,6 +3,9 @@
 
 scene_manager* sc_init(int objects);
 void set_scene(scene_manager* scene, int );
-object* get_scene_object( int object_id );
+object* sc_get_object( scene_manager* scene, int object_id );
+linked_object* sc_get_rm_object( scene_manager* sm, int id );
+
+void sc_destroy(scene_manager* sm);
 
 #endif 
