@@ -75,8 +75,6 @@ void make_obj(int argc, char **argv)
 	make_obj_data( second );	
 
 	obj_add( first, second);
-
-
 }
 
 
@@ -265,6 +263,9 @@ int		main(int argc, char **argv)
 	Scene = sc_init( 4*4*4 ); 
 
 	make_obj(argc, argv);
+	
+
+
 	/* Declaration of the callbacks */
 	glutDisplayFunc(&DisplayFunc);
 	glutReshapeFunc(&ReshapeFunc);

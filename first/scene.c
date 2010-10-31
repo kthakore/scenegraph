@@ -51,19 +51,43 @@ linked_object* sc_get_rm_object( scene_manager* sm, int id )
 }
 
 
+void sc_render( scene_manager* sm, vertex camera )
+{
+	object* root = sc_get_object( sm, sm->root_object_id );
+	
+	obj_operate( sm, root, RENDER, camera.x, camera.y, camera.z );
+
+}
+
+
 void sc_update_frustum( scene_manager* Scene )
 {
 
-	GLfloat model_matrix[16];
-	GLfloat projection_matrix[16];
-	GLfloat clip_matrix[16];
-	GLfloat t;
+	GLdouble model_matrix[16];
+	GLdouble projection_matrix[16];
+	GLdouble clip_matrix[16];
 
+	GLint viewport[4];
+	GLdouble t;
+
+	/* Get the current VIEWPORT plane */
+	glGetIntegerv(GL_VIEWPORT, viewport);
+
+	
 	/* Get the current PROJECTION matrix from OpenGL */
-	glGetFloatv( GL_PROJECTION_MATRIX, projection_matrix );
+	glGetDoublev( GL_PROJECTION_MATRIX, projection_matrix );
 
 	/* Get the current MODELVIEW matrix from OpenGL */
-	glGetFloatv( GL_MODELVIEW_MATRIX, model_matrix );
+	glGetDoublev( GL_MODELVIEW_MATRIX, model_matrix );
+
+
+
+	gluUnProject( 
+	  (viewport[2]-viewport[0])/2 , (viewport[3]-viewport[1])/2, 
+	  0.0,  
+	  model_matrix, projection_matrix, viewport,  
+	  &(Scene->camera.x) ,&(Scene->camera.y) ,&(Scene->camera.z) 
+	);
 
 	/* Combine the two matrices (multiply projection_matrixection by modelview)    */
 	clip_matrix[ 0] = model_matrix[ 0] * projection_matrix[ 0] + model_matrix[ 1] * projection_matrix[ 4] + model_matrix[ 2] * projection_matrix[ 8] +    model_matrix[ 3] * projection_matrix[12];

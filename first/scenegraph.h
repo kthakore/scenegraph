@@ -14,7 +14,7 @@ enum OBJ_OPERATION{ TRANSLATE = 0, ROTATE = 1, SCALE = 2, RENDER = 3, DESTROY = 
 
 typedef struct VER
 {
-   GLfloat x, y, z;
+   GLdouble x, y, z;
 } vertex;
 
 typedef struct OBJ
@@ -80,6 +80,8 @@ typedef struct SM
   int root_object_id;
 
   GLfloat frustum[6][4];
+
+  vertex camera;
 
 
 } scene_manager;
