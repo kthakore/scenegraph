@@ -8,7 +8,7 @@ LINKER = ld
 
 CFLAGS = -Wall -O2
 
-LIBS = -lGL -lGLU -lglut
+LIBS = -lGL -lGLU -lglut -lm
 
 COMPILE = $(CC) $(CFLAGS) -c 
 

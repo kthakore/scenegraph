@@ -61,6 +61,9 @@ typedef struct SM
   linked_object* rm_first; 
   linked_object* rm_last;
 
+  /* Our root object */
+  int root_object_id;
+
   GLfloat frustum[6][4];
 
 
