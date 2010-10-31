@@ -166,12 +166,26 @@ void sc_update_frustum( scene_manager* Scene )
 }
 
 
-int sc_bb_in_frustum( scene_manager* scene, object* obj )
+int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 {
-  int face; int c; int c2;
-  vertex* bb = obj->bounding_box; 
- 
-  return 0; 
+
+	int p;
+	int c = 0;
+	GLfloat d;
+	GLfloat x = obj->bound_sphere_loc.x;
+	GLfloat y = obj->bound_sphere_loc.y;
+	GLfloat z = obj->bound_sphere_loc.z;
+	GLfloat radius = obj->bound_sphere_rad;
+
+	for( p = 0; p < 6; p++ )
+	{
+		d = Scene->frustum[p][0] * x + Scene->frustum[p][1] * y + Scene->frustum[p][2] * z + Scene->frustum[p][3];
+		if( d <= -radius )
+			return 0;
+		if( d > radius )
+			c++;
+	}
+	return (c == 6) ? 2 : 1;
 } 
 
 

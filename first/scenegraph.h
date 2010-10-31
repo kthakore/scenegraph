@@ -1,6 +1,7 @@
 #ifndef _SCENEGRAPH_H_
 #define _SCENEGRAPH_H_
 
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -21,13 +22,21 @@ typedef struct OBJ
 
   int id; /*This is the array value in SM.object_registry*/
 
-  vertex    bounding_box [6];
+  /* We are using a sphere, as we only have to recalculate on translate 
+     and not rotate. Also it takes less memory to hold a bounding sphere.
+     Additionally it takes less checks to do the frustum intersections. */
+  vertex    bound_sphere_loc;
+  GLfloat   bound_sphere_rad;  
+
   vertex    location; 
   vertex    rotation;
   vertex    scale;
 
   vertex* polygon_data;
   vertex  polygon_color;
+
+  int render_callist;
+
 
   int polygon_count; /* Number of polygons */
   int render_mode; /* GL_TRIANGLE_STRIPS ... so on */
@@ -56,10 +65,13 @@ typedef struct SM
   int objects;
   /*We keep an array of objects so we have locality on this data*/
   object* object_registry;
+  int registered; //Value of objects registered so far 
+
   /*A linked list implementation for quick sorting of closest objects will help us with maintaining a ploygon limit*/
   linked_object* rm_all;
   linked_object* rm_first; 
   linked_object* rm_last;
+
 
   /* Our root object */
   int root_object_id;
