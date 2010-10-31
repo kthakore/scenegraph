@@ -55,7 +55,7 @@ void obj_load( object* obj, int mode, void* data, int count)
 	obj_update_bounding_sphere( obj );
 }
 
-void obj_update_bounding_sphere( object* obj)
+void obj_update_bounding_sphere( object* obj, vertex* relative = NULL)
 {	
 	if( obj->polygon_count <= 0) 
 		return;
@@ -211,7 +211,7 @@ void increment_relative_mats( object* p, object* c )
 {
 
  	add_vertex(&(c->r_location), p->r_location, c->location);
-
+	add_vertex(&(c->r_rotation), p->r_rotation, c->rotation);
 }
 
 /* Perform the operation, recursively on all children */
