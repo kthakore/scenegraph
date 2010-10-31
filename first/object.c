@@ -1,5 +1,12 @@
 #include "scenegraph.h"
 
+
+
+void (*op_func_ptr)(object* obj, GLfloat x, GLfloat y, GLfloat z) = NULL;     
+
+
+
+
 object* obj_create( scene_manager* sm)
 {
 
@@ -29,7 +36,10 @@ void obj_add( object* parent, object* child )
 }
 
 
-
+/* Load data (polygons), the mode to draw them with during render
+ *
+ * Additionally set the bounding box 
+ */
 void obj_load( object* obj, int mode, void* data, int count)
 {
 	//We alread have data loaded
@@ -93,4 +103,123 @@ void obj_update_bounding_sphere( object* obj)
 		obj->bound_sphere_rad = diff_z/2.0;
 
 }
+
+/*Operation to set the translate values of the object*/
+void obj_translate( object* obj, GLfloat x, GLfloat y, GLfloat z)
+{
+
+	fprintf( stderr, "Translate: %p from (%f,%f,%f) \n", obj , x,y,z );
+	obj->location.x = x;
+	obj->location.y = y;
+	obj->location.z = z;
+}
+
+/*Operation to set the rotation values of the object*/
+void obj_rotate( object* obj, GLfloat x, GLfloat y, GLfloat z)
+{
+	fprintf( stderr, "Rotate: %p from (%f,%f,%f) \n", obj , x,y,z );
+	obj->rotation.x = x;
+	obj->rotation.y = y;
+	obj->rotation.z = z;
+
+}
+
+/*Operation to set the scale values of the object*/
+void obj_scale( object* obj, GLfloat x, GLfloat y, GLfloat z) 
+{
+
+	fprintf( stderr, "Scale: %p from (%f,%f,%f) \n", obj , x,y,z );
+	obj->scale.x = x;
+	obj->scale.y = y;
+	obj->scale.z = z;
+
+}
+
+/*Operation to render the objects */
+void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
+{
+	fprintf( stderr, "Rendered: %p from (%f,%f,%f) \n", obj , x,y,z );
+
+	if( obj->polygon_count > 0 )
+	{
+		int i;
+
+		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
+		glTranslatef( obj->location.x, obj->location.y, obj->location.z );
+		glRotatef( obj->rotation.x, obj->rotation.y, obj->rotation.z, 0 );
+
+		fprintf(stderr, "Polygon Location (%f,%f,%f) \n", obj->location.x, obj->location.y, obj->location.z );
+		fprintf(stderr, "Polygon Rotate (%f,%f,%f) \n", obj->rotation.x, obj->rotation.y, obj->rotation.z );
+		fprintf(stderr, "Polygon Scale (%f,%f,%f) \n", obj->scale.x, obj->scale.y, obj->scale.z );
+
+		glColor3f( obj->polygon_color.x, obj->polygon_color.y, obj->polygon_color.z);
+		glBegin( obj->render_mode );	
+
+
+		for( i = 0; i < obj->polygon_count; i++ )
+		{
+			vertex p = (obj->polygon_data)[i];
+			glVertex3f( p.x, p.y, p.z);
+
+
+		} 
+
+		glEnd();
+	}
+}
+
+
+/*Convert the operation into a function pointer (Simple VTABLE implementation) */
+void obj_switch_operation( enum OBJ_OPERATION op)
+{
+
+
+	switch( op )
+	{
+		case TRANSLATE:
+			op_func_ptr = &obj_translate;
+			break;
+		case ROTATE:
+			op_func_ptr = &obj_rotate;
+			break;
+		case SCALE:
+			op_func_ptr = &obj_scale;
+			break;
+		case RENDER:
+			op_func_ptr = &obj_render;
+			break;
+		default:
+			op_func_ptr = &obj_render;
+			break;
+
+	}
+}
+
+// Destroy the object and the polygon data
+void obj_destroy( object* obj)
+{
+	if( obj->polygon_count > 0)
+		free( obj->polygon_data );
+	free( obj );
+}
+
+/* Perform the operation, recursively on all children */
+void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operation, GLfloat x, GLfloat y, GLfloat z)
+{
+	unsigned int child;
+	obj_switch_operation( operation );
+
+	for( child = 0; child < parent->children; child++)
+	{
+		object* o =  sc_get_object(sm, parent->children_id[child]);
+
+		fprintf( stderr, "Operating on %p, child %d \n", o, child);
+		obj_operate( sm, o, operation, x, y, z);
+
+	}
+	(*op_func_ptr) ( parent, x,y,z );
+
+
+}
+
 
