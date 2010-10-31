@@ -22,12 +22,8 @@
  
 ** ========================================================================= */
 
-//#include <Windows.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glut.h>
-
 #include "scenegraph.h"
+#include "scene.h"
 
 static int	rotate_list_id = 0;
 static int	rotate_teapot_list_id = 0;
@@ -40,6 +36,13 @@ static float	rotate_x = -30;
 static float	rotate_y = 15;
 static float	alpha = 0;
 static float	beta = 10;
+
+
+/*
+	 SCENEGRAPH
+*/
+
+static scene_manager* Scene;
 
 /*
 ** The instructions to rotate each teapot, according to the mouse
@@ -205,7 +208,7 @@ int		main(int argc, char **argv)
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
   glutInitWindowSize(500, 500);  // please don't mess with the window size for assignment.  It will still work obviously, but trying to stay limited in scope as it were.  
-  glutCreateWindow("CS4483a Assignment 3 Yourname");
+  glutCreateWindow("CS4483a Assignment 3 Kartik Thakore");
 
   /* OpenGL settings */
   glClearColor(0, 0, 0, 0);
@@ -219,6 +222,11 @@ int		main(int argc, char **argv)
   compile_rotate_list();
   //compile_rotate_teapot_list();
   compile_teapot_list();
+
+  /* Initialize the Scenegraph */
+
+  Scene = sc_init( 4*4*4 ); 
+ 
 
   /* Declaration of the callbacks */
   glutDisplayFunc(&DisplayFunc);
