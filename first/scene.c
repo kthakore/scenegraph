@@ -29,6 +29,14 @@ scene_manager* sc_init(int objects) {
 	return Scene;
 }
 
+void  sc_set_root( scene_manager* scene, object* root)
+{
+	scene->root_object_id = root->id;
+	root->is_root = true;	
+
+	copy_vertex( &(root->r_location) , &(root->location) ); 	
+}
+
 object* sc_get_object( scene_manager* sm, int id )
 {
 	if( id < 0 || id > sm->objects )

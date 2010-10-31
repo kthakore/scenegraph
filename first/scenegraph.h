@@ -32,6 +32,11 @@ typedef struct OBJ
   vertex    rotation;
   vertex    scale;
 
+  /* relative vertexes to hold state of scenegraph traversal so far */
+  vertex    r_location; 
+  vertex    r_rotation;
+  vertex    r_scale;
+
   vertex* polygon_data;
   vertex  polygon_color;
 
@@ -43,7 +48,7 @@ typedef struct OBJ
 
   int children_id[8]; /*Limit children of a node to 8, which allows easier implementation of octree later*/
 
-  bool root;
+  bool is_root;
   int parent; 
 
   unsigned int children; /*Number of children*/  
@@ -89,6 +94,6 @@ typedef struct SM
 
 #include "scene.h"
 #include "object.h"
-
+#include "vertex.h"
 
 #endif

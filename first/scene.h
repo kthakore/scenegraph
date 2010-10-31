@@ -3,7 +3,7 @@
 
 scene_manager* sc_init(int objects);
 
-void set_scene(scene_manager* scene, int );
+void sc_set_root( scene_manager* scene, object* root);
 
 object* sc_get_object( scene_manager* scene, int object_id );
 

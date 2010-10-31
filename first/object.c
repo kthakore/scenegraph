@@ -23,6 +23,8 @@ object* obj_create( scene_manager* sm)
 	obj->location.x = 0, obj->location.y = 0; obj->location.z = 0;
 	obj->rotation.x = 0; obj->rotation.y = 0; obj->rotation.z = 0;
 	obj->polygon_count = 0;
+
+	obj->is_root = false;
 	return obj;
 }
 
@@ -144,18 +146,19 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 	{
 		int i;
 
+		glPushMatrix();
 		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
-		glTranslatef( obj->location.x, obj->location.y, obj->location.z );
+		glTranslatef( obj->r_location.x, obj->r_location.y, obj->r_location.z );
 		glRotatef( obj->rotation.x, obj->rotation.y, obj->rotation.z, 0 );
 
-		fprintf(stderr, "Polygon Location (%f,%f,%f) \n", obj->location.x, obj->location.y, obj->location.z );
-		fprintf(stderr, "Polygon Rotate (%f,%f,%f) \n", obj->rotation.x, obj->rotation.y, obj->rotation.z );
-		fprintf(stderr, "Polygon Scale (%f,%f,%f) \n", obj->scale.x, obj->scale.y, obj->scale.z );
+		fprintf(stderr, "\n Object Location %p (%f,%f,%f) \n", obj, obj->r_location.x, obj->r_location.y, obj->r_location.z );
+		//fprintf(stderr, "Polygon Rotate (%f,%f,%f) \n", obj->rotation.x, obj->rotation.y, obj->rotation.z );
+		//fprintf(stderr, "Polygon Scale (%f,%f,%f) \n", obj->scale.x, obj->scale.y, obj->scale.z );
 
 		glColor3f( obj->polygon_color.x, obj->polygon_color.y, obj->polygon_color.z);
 		glBegin( obj->render_mode );	
-
-
+		
+	
 		for( i = 0; i < obj->polygon_count; i++ )
 		{
 			vertex p = (obj->polygon_data)[i];
@@ -165,6 +168,7 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 		} 
 
 		glEnd();
+		glPopMatrix();
 	}
 }
 
@@ -203,17 +207,26 @@ void obj_destroy( object* obj)
 	free( obj );
 }
 
+void increment_relative_mats( object* p, object* c )
+{
+
+ 	add_vertex(&(c->r_location), p->r_location, c->location);
+
+}
+
 /* Perform the operation, recursively on all children */
 void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operation, GLfloat x, GLfloat y, GLfloat z)
 {
 	unsigned int child;
+
 	obj_switch_operation( operation );
 
 	for( child = 0; child < parent->children; child++)
 	{
 		object* o =  sc_get_object(sm, parent->children_id[child]);
+		increment_relative_mats( parent, o );
+		fprintf( stderr, "\tOperating on %p, child %d\n", o, child);
 
-		fprintf( stderr, "Operating on %p, child %d \n", o, child);
 		obj_operate( sm, o, operation, x, y, z);
 
 	}

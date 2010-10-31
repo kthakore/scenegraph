@@ -75,14 +75,22 @@ void make_obj_data( object* root )
 void make_obj(int argc, char **argv)
 {
 
-	object* first = obj_create( Scene );
-	Scene->root_object_id = first->id;
+	object* first = obj_create( Scene );	
 	make_obj_data( first );
 
 	object* second =  obj_create( Scene );  
+	second->location.z = 1.122;
 	make_obj_data( second );	
 
-	obj_add( first, second);
+	object* third =  obj_create( Scene );  
+	third->location.y = -1.522;
+	make_obj_data( third );	
+
+
+	obj_add( first, second );
+	obj_add( first, third );
+	
+	sc_set_root( Scene, first );
 }
 
 
@@ -162,6 +170,8 @@ void		DisplayFunc(void)
 				glPopMatrix();
 			}
 */
+
+	fprintf( stderr, "\nDoing ROOT\n" );
 	sc_render( Scene );
 	/* End */
 	glFlush();
