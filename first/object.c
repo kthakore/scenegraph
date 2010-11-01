@@ -237,6 +237,9 @@ void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operati
 		return;
 	   }
 
+	(*op_func_ptr) ( parent, x,y,z );
+
+
 	for( child = 0; child < parent->children; child++)
 	{
 		object* o =  sc_get_object(sm, parent->children_id[child]);
@@ -245,8 +248,6 @@ void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operati
 		obj_operate( sm, o, operation, x, y, z);
 
 	}
-	(*op_func_ptr) ( parent, x,y,z );
-
 
 }
 
