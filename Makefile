@@ -8,25 +8,15 @@ LINKER = ld
 
 CFLAGS = -Wall -O2
 
-LIBS = -lGL -lGLU -lglut
+LIBS = -lGL -lGLU -lglut -lm
 
 COMPILE = $(CC) $(CFLAGS) -c 
 
-TCOMPILE = $(COMPILE) 
-
-COBJFILES := $(wildcard *.c)
-
 OBJFILES := $(patsubst %.c,%.o,$(wildcard *.c))
 
-TFILES := $(patsubst %.cc,%.o,$(wildcard t/*.cc))
+all: scenegraph
 
-TFILES := $(wildcard t/*.cc)
-
-all: myprog
-
-
-
-myprog: $(OBJFILES)
+scenegraph: $(OBJFILES)
 
 	$(CC) -o SceneGraph main.cc $(OBJFILES) $(LIBS)
 
@@ -40,12 +30,6 @@ lib: $(OBJFILES)
 
 	$(COMPILE)  -o $@ $<
 
-%.o: %.cc
-	$(TCOMPILE) -o $@ $<
-
-test: $(TFILES) $(OBJFILES) 
-	$(CC) -o ObjTest $(TFILES) $(COBJFILES) $(LIBS)
-
 clean:
-	rm $(TFILES) $(OBJFILES) SceneGraph ObjTest
+	rm $(OBJFILES) SceneGraph
 

@@ -1,16 +1,12 @@
 #ifndef _OBJECT_H
 #define _OBJECT_H
 
+object* obj_create ( scene_manager* sm);
+void obj_load( object* obj, int mode, void* data, int vert_count, int poly_count);
+void obj_update_bounding_sphere( object* obj);
+void obj_add( object* parent, object* child);
+void obj_calculate_bounding_sphere( object* obj );
+void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operation, GLfloat x, GLfloat y, GLfloat z);
 
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glut.h>
-
-#include "common.h"
-
-object* obj_create ( );
-void obj_destroy ( object* obj ) ;
-void obj_operate( object* root, enum OBJ_OPERATION operation, GLfloat x, GLfloat y, GLfloat z);
-void obj_load( object* obj, int MODE, void* data, int count );
 
 #endif
