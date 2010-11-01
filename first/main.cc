@@ -76,16 +76,18 @@ void make_obj(int argc, char **argv)
 {
 
 	object* first = obj_create( Scene );	
+	first->location.x =  0.5;
+        first->location.y = -0.5;
 	make_obj_data( first );
 
 	object* second =  obj_create( Scene );  
-	second->location.x = -1;
-	second->location.y = 1;
+	second->location.x = -0.75;
+	second->location.y = -0.75;
 	make_obj_data( second );	
 
 	object* third =  obj_create( Scene );  
-	third->location.x =  1;
-	third->location.y =  1;	
+	third->location.x =  0.75;
+	third->location.y = -0.75;	
 	make_obj_data( third );	
 
 
@@ -146,6 +148,8 @@ void		compile_teapot_list(void)
  */
 void		DisplayFunc(void)
 {
+
+	sc_update_frustum( Scene );
 	int i;
 	int j;
 	int k;
@@ -229,6 +233,7 @@ void		MouseFunc(int button, int state, int x, int y)
  */
 void		MotionFunc(int x, int y)
 {
+
 	if (GLUT_DOWN == left_click)
 	{
 		rotate_y = rotate_y + (y - yold) / 5.f;
@@ -255,6 +260,8 @@ void		MotionFunc(int x, int y)
 	}
 	xold = x;
 	yold = y;
+
+
 }
 
 

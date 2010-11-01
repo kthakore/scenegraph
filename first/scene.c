@@ -203,7 +203,6 @@ void sc_update_frustum( scene_manager* Scene )
 
 int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 {
-
 	int p;
 	int c = 0;
 	GLfloat d;
@@ -216,6 +215,8 @@ int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 	GLfloat y = relative_bs.y;
 	GLfloat z = relative_bs.z;
 	GLfloat radius = obj->bound_sphere_rad;
+
+//	fprintf( stderr, "Rad %f, %f %f %f", radius, x, y, z );
 
 	for( p = 0; p < 6; p++ )
 	{
