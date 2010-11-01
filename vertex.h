@@ -6,6 +6,7 @@ void sub_vertex(vertex* sum, vertex a, vertex b );
 void squared_vertex( vertex* a );
 void divide_vertex( vertex* a, GLfloat b);
 void copy_vertex(vertex* a, vertex* b );
+void multiply_vertex(vertex* c, vertex a, vertex b);
 
 void debug_vertex_p( vertex* a, const char* );
 void  debug_vertex( vertex b, const char* );

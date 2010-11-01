@@ -74,15 +74,16 @@ void make_obj_data( object* root )
 
 void make_obj(int argc, char **argv)
 {
-/*
-	vertex* s = (vertex*)( malloc( sizeof(vertex) * 448 ) ); 
+
+	vertex* s = (vertex*)( malloc( sizeof(vertex) * 1224 ) ); 
 	int pol;
 	int a = read_poly_file( "ba", s, &pol );
-	object* root = obj_create( Scene );
+	object* bot = obj_create( Scene );
 	int i ;
-	obj_load( root, GL_TRIANGLES, (void*)s, pol, 448/3);
-	//exit(1);
-*/
+	bot->polygon_color.x = 0; bot->polygon_color.y = 1; bot->polygon_color.z =0;
+	obj_load( bot, GL_POINTS, (void*)s, pol, 1224/3);
+	bot->scale.x = 0.2;  bot->scale.y = 0.2;  bot->scale.z = 0.2;
+
 	object* first = obj_create( Scene );	
 
 	first->location.x =  -0.74;
@@ -98,12 +99,13 @@ void make_obj(int argc, char **argv)
 	third->location.x =  4;
 	third->location.y = -2;	
 	make_obj_data( third );	
+//	bot->location.y = -2;
 
-
+	obj_add( bot, first );
 	obj_add( first, second );
 	obj_add( first, third );
 
-	sc_set_root( Scene, first );
+	sc_set_root( Scene, bot );
 }
 
 

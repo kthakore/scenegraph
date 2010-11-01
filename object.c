@@ -90,7 +90,7 @@ void obj_update_bounding_sphere( object* obj)
 
 	}
 		
-	debug_vertex( min, "Min Vertex" );
+//	debug_vertex( min, "Min Vertex" );
 //	debug_vertex( max, "Max Vertex" );
 
 	// Calculate the middle point and place the bounding sphere there
@@ -154,31 +154,17 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 	{
 		int i;
 
-		if( DEBUG )
-		{
-			glPushMatrix();
-			glTranslatef( obj->r_location.x, obj->r_location.y, obj->r_location.z );
-			glutWireSphere(obj->bound_sphere_rad, 8, 8);
-			glPopMatrix();
-		}
 		glPushMatrix();
-//		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
-		//debug_vertex( obj->r_location, "Root relative location" );
-		vertex r_bound; add_vertex( &r_bound, obj->bound_sphere_loc, obj->r_location );
-		//debug_vertex( r_bound, "Relative Bounds" );
-		glTranslate_vertex( r_bound );
+		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
+		glTranslate_vertex( obj->r_location);
 		glRotatef( obj->r_rotation.x, obj->r_rotation.y, obj->r_rotation.z, 0 );
 	
 		if( DEBUG )
 		fprintf(stderr, "Object Location %p (%f,%f,%f) \n", obj, obj->r_location.x, obj->r_location.y, obj->r_location.z );
-		//fprintf(stderr, "Polygon Rotate (%f,%f,%f) \n", obj->rotation.x, obj->rotation.y, obj->rotation.z );
-		//fprintf(stderr, "Polygon Scale (%f,%f,%f) \n", obj->scale.x, obj->scale.y, obj->scale.z );
-
 		glColor3f( obj->polygon_color.x, obj->polygon_color.y, obj->polygon_color.z);
 		glBegin( obj->render_mode );	
 		
-	
-		for( i = 0; i < obj->vertex_count; i++ )
+			for( i = 0; i < obj->vertex_count; i++ )
 		{
 			vertex p = (obj->polygon_data)[i];
 			glVertex3f( p.x, p.y, p.z);

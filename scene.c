@@ -213,7 +213,9 @@ int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 
 	vertex relative_bs;
 	
+	
 	add_vertex( &relative_bs, obj->r_location, obj->bound_sphere_loc );
+	multiply_vertex( &relative_bs, obj->scale, relative_bs );	
 
 	GLfloat x = relative_bs.x;
 	GLfloat y = relative_bs.y;

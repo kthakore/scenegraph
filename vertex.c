@@ -50,6 +50,14 @@ GLfloat vertex_dist( vertex a, vertex b)
 
 }
 
+void multiply_vertex(vertex* c, vertex a, vertex b)
+{
+
+    c->x = a.x * b.x;
+    c->y = a.y * b.y;
+    c->z = a.z * b.z;
+}
+
 void debug_vertex_p( vertex* a, const char* c )
 {
 	fprintf( stderr, "%s (%f,%f,%f) \n", c, a->x, a->y, a->z );
