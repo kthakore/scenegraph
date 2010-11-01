@@ -146,11 +146,19 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 	{
 		int i;
 
+		if( DEBUG )
+		{
+			glPushMatrix();
+			glTranslatef( obj->r_location.x, obj->r_location.y, obj->r_location.z );
+			glutWireSphere(obj->bound_sphere_rad, 8, 8);
+			glPopMatrix();
+		}
 		glPushMatrix();
-		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
+		//glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
 		glTranslatef( obj->r_location.x, obj->r_location.y, obj->r_location.z );
-		glRotatef( obj->rotation.x, obj->rotation.y, obj->rotation.z, 0 );
-
+		glRotatef( obj->r_rotation.x, obj->r_rotation.y, obj->r_rotation.z, 0 );
+	
+		if( DEBUG )
 		fprintf(stderr, "Object Location %p (%f,%f,%f) \n", obj, obj->r_location.x, obj->r_location.y, obj->r_location.z );
 		//fprintf(stderr, "Polygon Rotate (%f,%f,%f) \n", obj->rotation.x, obj->rotation.y, obj->rotation.z );
 		//fprintf(stderr, "Polygon Scale (%f,%f,%f) \n", obj->scale.x, obj->scale.y, obj->scale.z );
@@ -224,6 +232,7 @@ void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operati
 
 	if( operation == RENDER && sc_obj_in_frustum( sm, parent ) == 0 )
 	   {
+		if( DEBUG )
 		fprintf(stderr, "Not printing %p \n", parent);
 		return;
 	   }

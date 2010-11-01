@@ -98,6 +98,7 @@ void sc_update_frustum( scene_manager* Scene )
 	  &(Scene->camera.x) ,&(Scene->camera.y) ,&(Scene->camera.z) 
 	);
 
+	if( DEBUG )
 	fprintf(stderr, "Camera at %f %f %f", Scene->camera.x, Scene->camera.y, Scene->camera.z );
 
 	/* Combine the two matrices (multiply projection_matrixection by modelview)    */

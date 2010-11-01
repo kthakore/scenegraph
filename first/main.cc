@@ -68,7 +68,7 @@ void make_obj_data( object* root )
 	root->polygon_color.y = 0;
 	root->polygon_color.z = 0;
 
-	obj_load( root, GL_TRIANGLE_STRIP, (void*)triangle, 12);
+	obj_load( root, GL_LINE_LOOP, (void*)triangle, 12);
 
 }
 
@@ -76,18 +76,17 @@ void make_obj(int argc, char **argv)
 {
 
 	object* first = obj_create( Scene );	
-	first->location.x =  0.5;
-        first->location.y = -0.5;
+	first->location.z =  0.5;
 	make_obj_data( first );
 
 	object* second =  obj_create( Scene );  
-	second->location.x = -0.75;
-	second->location.y = -0.75;
+	second->location.x = -1;
+	second->location.y = -1;
 	make_obj_data( second );	
 
 	object* third =  obj_create( Scene );  
-	third->location.x =  0.75;
-	third->location.y = -0.75;	
+	third->location.x =  1.00;
+	third->location.y = -1;	
 	make_obj_data( third );	
 
 
@@ -176,7 +175,7 @@ void		DisplayFunc(void)
 				glPopMatrix();
 			}
 */
-
+	if( DEBUG )
 	fprintf( stderr, "\nDoing ROOT\n" );
 	sc_render( Scene );
 	/* End */
@@ -293,6 +292,8 @@ int		main(int argc, char **argv)
 	make_obj(argc, argv);
 	
 	sc_render( Scene );
+
+	sc_update_frustum( Scene );
 
 	/* Declaration of the callbacks */
 	glutDisplayFunc(&DisplayFunc);
