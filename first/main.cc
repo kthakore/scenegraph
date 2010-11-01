@@ -50,19 +50,19 @@ void make_obj_data( object* root )
 	vertex* triangle = (vertex*)malloc( sizeof(vertex) * 12 );
 	triangle[0].x = 0; triangle[0].y = 0; triangle[0].z = 0;
 	triangle[1].x =  2; triangle[1].y = 0; triangle[1].z = 0;
-	triangle[2].x = 1; triangle[2].y = 1; triangle[2].z = 0;
+	triangle[2].x = 1; triangle[2].y = 2; triangle[2].z = 0;
 
-	triangle[3].x = 1; triangle[3].y = 1; triangle[3].z = 0;
-	triangle[4].x =  0.5; triangle[4].y = 0.5; triangle[4].z = 1;
+	triangle[3].x = 1; triangle[3].y = 2; triangle[3].z = 0;
+	triangle[4].x =  1; triangle[4].y = 1; triangle[4].z = 1;
 	triangle[5].x = 2; triangle[5].y = 0; triangle[5].z = 0;
 
 	triangle[6].x = 2; triangle[6].y = 0; triangle[6].z = 0;
-        triangle[7].x = 0.5; triangle[7].y = 0.5; triangle[7].z = 1;
-        triangle[8].x =  0; triangle[8].y = 0; triangle[8].z = 0;
+	triangle[7].x = 1; triangle[7].y = 1; triangle[7].z = 1;
+	triangle[8].x =  0; triangle[8].y = 0; triangle[8].z = 0;
 
 	triangle[9].x = 0; triangle[9].y = 0; triangle[9].z = 0;
-        triangle[10].x = 0.5; triangle[10].y = 0.5; triangle[10].z = 1;
-        triangle[11].x =  1; triangle[11].y = 1; triangle[11].z = 0;
+	triangle[10].x = 1; triangle[10].y = 1; triangle[10].z = 1;
+	triangle[11].x =  1; triangle[11].y = 2; triangle[11].z = 0;
 
 	root->polygon_color.x = 1;
 	root->polygon_color.y = 0;
@@ -76,23 +76,24 @@ void make_obj(int argc, char **argv)
 {
 
 	object* first = obj_create( Scene );	
-	first->location.z =  0.5;
+	first->location.x =  -0.74;
+	first->location.y =  -0.74;
 	make_obj_data( first );
 
 	object* second =  obj_create( Scene );  
 	second->location.x = -1;
-	second->location.y = -1;
+	second->location.y = -2;
 	make_obj_data( second );	
 
 	object* third =  obj_create( Scene );  
-	third->location.x =  1.00;
-	third->location.y = -1;	
+	third->location.x =  4;
+	third->location.y = -2;	
 	make_obj_data( third );	
 
 
 	obj_add( first, second );
 	obj_add( first, third );
-	
+
 	sc_set_root( Scene, first );
 }
 
@@ -161,22 +162,22 @@ void		DisplayFunc(void)
 
 	//could also set these to 3 for an easier to see scene or 5 so there's definitely stuff off screen.  Up to you guys
 	// there will be one of the objects that's black, and therefore hard to see.  
-/*	dim =4;
-	for (i = 0; i < dim; ++i)
+	/*	dim =4;
+		for (i = 0; i < dim; ++i)
 		for (j = 0; j < dim; ++j)
-			for (k = 0; k < dim; ++k)
-			{
-				glPushMatrix();
-				glTranslatef(i - 1, j - 1, k - 1);
-				glColor3f(i / 2., j / 2., k / 2.);
+		for (k = 0; k < dim; ++k)
+		{
+		glPushMatrix();
+		glTranslatef(i - 1, j - 1, k - 1);
+		glColor3f(i / 2., j / 2., k / 2.);
 
-				glCallList(teapot_list_id);
+		glCallList(teapot_list_id);
 
-				glPopMatrix();
-			}
-*/
+		glPopMatrix();
+		}
+	 */
 	if( DEBUG )
-	fprintf( stderr, "\nDoing ROOT\n" );
+		fprintf( stderr, "\nDoing ROOT\n" );
 	sc_render( Scene );
 	/* End */
 	glFlush();
@@ -208,8 +209,6 @@ void		KeyboardFunc(unsigned char key, int x, int y)
 	if ('q' == key || 'Q' == key || 27 == key)
 	{
 		glDeleteLists(rotate_list_id, 1);
-		glDeleteLists(rotate_teapot_list_id, 1);
-		glDeleteLists(teapot_list_id, 1);
 		exit(0);
 	}
 }
@@ -279,18 +278,18 @@ int		main(int argc, char **argv)
 
 	/* Compilation of the instructions lists */
 	rotate_list_id = glGenLists(1);
-	rotate_teapot_list_id = glGenLists(1);
-	teapot_list_id = glGenLists(1);
+	//rotate_teapot_list_id = glGenLists(1);
+	//teapot_list_id = glGenLists(1);
 	compile_rotate_list();
 	//compile_rotate_teapot_list();
-	compile_teapot_list();
+	//compile_teapot_list();
 
 	/* Initialize the Scenegraph */
 
 	Scene = sc_init( 4*4*4 ); 
 
 	make_obj(argc, argv);
-	
+
 	sc_render( Scene );
 
 	sc_update_frustum( Scene );
@@ -301,6 +300,8 @@ int		main(int argc, char **argv)
 	glutKeyboardFunc(&KeyboardFunc);
 	glutMouseFunc(&MouseFunc);
 	glutMotionFunc(&MotionFunc);
+
+	
 
 	/* Loop */
 	glutMainLoop();

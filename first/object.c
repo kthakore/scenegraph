@@ -70,7 +70,8 @@ void obj_update_bounding_sphere( object* obj)
 	{
 
 		vertex p = (obj->polygon_data)[i];
-
+		//add_vertex( &p, (obj->polygon_data)[i], obj->r_location);
+		
 		if( p.x <= min.x)
 			min.x = p.x;
 		if( p.y <= min.y)
@@ -87,22 +88,28 @@ void obj_update_bounding_sphere( object* obj)
 			max.z = p.z;
 
 	}
+		
+//	debug_vertex( min, "Min Vertex" );
+//	debug_vertex( max, "Max Vertex" );
 
 	// Calculate the middle point and place the bounding sphere there
-	GLfloat diff_x = max.x - min.x;
-	GLfloat diff_y = max.y - max.y;
-	GLfloat diff_z = max.z - max.z;
+	vertex diff;
+	sub_vertex(&diff, max, min );
+	// debug_vertex( diff, "Diff Vertex");
+	//divide_vertex(diff, 2);
+	obj->bound_sphere_loc.x = diff.x/2.0;
+	obj->bound_sphere_loc.y = diff.y/2.0;
+	obj->bound_sphere_loc.z = diff.z/2.0;
+	// debug_vertex( obj->bound_sphere_loc, "Diff/2 vertex");
 
-	obj->bound_sphere_loc.x = diff_x/2.0;
-	obj->bound_sphere_loc.y = diff_y/2.0;
-	obj->bound_sphere_loc.z = diff_z/2.0;
+	 
 
-	obj->bound_sphere_rad = diff_x/2.0;
+	obj->bound_sphere_rad = diff.x/2.0;
 
-	if( diff_y >= diff_x && diff_y >= diff_z )
-		obj->bound_sphere_rad = diff_y/2.0;
-	else if ( diff_z >= diff_y && diff_z >= diff_x )
-		obj->bound_sphere_rad = diff_z/2.0;
+	if( diff.y >= diff.x && diff.y >= diff.z )
+		obj->bound_sphere_rad = diff.y/2.0;
+	else if ( diff.z >= diff.y && diff.z >= diff.x )
+		obj->bound_sphere_rad = diff.z/2.0;
 
 }
 
@@ -155,7 +162,10 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 		}
 		glPushMatrix();
 		//glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
-		glTranslatef( obj->r_location.x, obj->r_location.y, obj->r_location.z );
+		debug_vertex( obj->r_location, "Root relative location" );
+		vertex r_bound; add_vertex( &r_bound, obj->bound_sphere_loc, obj->r_location );
+		debug_vertex( r_bound, "Relative Bounds" );
+		glTranslate_vertex( r_bound );
 		glRotatef( obj->r_rotation.x, obj->r_rotation.y, obj->r_rotation.z, 0 );
 	
 		if( DEBUG )
@@ -237,9 +247,17 @@ void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operati
 		return;
 	   }
 
+	if( sm->polygon_rendered >= MAX_POLYGONS )
+	{
+		fprintf(stderr, "MAX POLYGONS REACHED\n" );
+		return;
+	}
+
 	(*op_func_ptr) ( parent, x,y,z );
 
-
+	sm->polygon_rendered += parent->polygon_count;
+	if( DEBUG )
+	fprintf(stderr, "\n###############\nPolygon PRINTED: %d\n##############\n", sm->polygon_rendered );
 	for( child = 0; child < parent->children; child++)
 	{
 		object* o =  sc_get_object(sm, parent->children_id[child]);

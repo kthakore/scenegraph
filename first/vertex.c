@@ -29,6 +29,15 @@ void copy_vertex(vertex* a, vertex* b )
 	a->z = b->z;
 }
 
+void divide_vertex(vertex* diff, GLfloat div)
+{
+
+	diff->x /= div;
+	diff->y /= div;
+	diff->z /= div;
+
+}
+
 GLfloat vertex_dist( vertex a, vertex b)
 {
 	
@@ -39,4 +48,19 @@ GLfloat vertex_dist( vertex a, vertex b)
 	
 	return sqrt( val.x + val.y + val.z  );
 
+}
+
+void debug_vertex_p( vertex* a, const char* c )
+{
+	fprintf( stderr, "%s (%f,%f,%f) \n", c, a->x, a->y, a->z );
+}
+
+void  debug_vertex( vertex b, const char* c )
+{
+	debug_vertex_p( &b, c);	
+}
+
+void glTranslate_vertex( vertex a )
+{
+	glTranslatef( a.x, a.y, a.z );
 }

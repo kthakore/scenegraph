@@ -23,7 +23,6 @@ scene_manager* sc_init(int objects) {
 	}
 
 	Scene->root_object_id = 0; //Assuming this for now
-
 	sc_update_frustum(Scene); 
 
 	return Scene;
@@ -72,6 +71,8 @@ void sc_render( scene_manager* sm)
 
 void sc_update_frustum( scene_manager* Scene )
 {
+
+	Scene->polygon_rendered = 0;
 
 	GLdouble model_matrix[16];
 	GLdouble projection_matrix[16];
@@ -208,8 +209,10 @@ int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 	int c = 0;
 	GLfloat d;
 
+	obj_update_bounding_sphere( obj );
 
 	vertex relative_bs;
+	
 	add_vertex( &relative_bs, obj->r_location, obj->bound_sphere_loc );
 
 	GLfloat x = relative_bs.x;
