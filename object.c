@@ -72,7 +72,7 @@ void obj_update_bounding_sphere( object* obj)
 
 		vertex p = (obj->polygon_data)[i];
 		//add_vertex( &p, (obj->polygon_data)[i], obj->r_location);
-		
+	
 		if( p.x <= min.x)
 			min.x = p.x;
 		if( p.y <= min.y)
@@ -90,7 +90,7 @@ void obj_update_bounding_sphere( object* obj)
 
 	}
 		
-//	debug_vertex( min, "Min Vertex" );
+	debug_vertex( min, "Min Vertex" );
 //	debug_vertex( max, "Max Vertex" );
 
 	// Calculate the middle point and place the bounding sphere there
@@ -101,7 +101,7 @@ void obj_update_bounding_sphere( object* obj)
 	obj->bound_sphere_loc.x = diff.x/2.0;
 	obj->bound_sphere_loc.y = diff.y/2.0;
 	obj->bound_sphere_loc.z = diff.z/2.0;
-	// debug_vertex( obj->bound_sphere_loc, "Diff/2 vertex");
+//	debug_vertex( obj->bound_sphere_loc, "Diff/2 vertex");
 
 	 
 
@@ -162,7 +162,7 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 			glPopMatrix();
 		}
 		glPushMatrix();
-		//glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
+//		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
 		//debug_vertex( obj->r_location, "Root relative location" );
 		vertex r_bound; add_vertex( &r_bound, obj->bound_sphere_loc, obj->r_location );
 		//debug_vertex( r_bound, "Relative Bounds" );

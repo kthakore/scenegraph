@@ -11,7 +11,7 @@
 #include <GL/glut.h>
 
 #define DEBUG 0
-#define MAX_POLYGONS 6
+#define MAX_POLYGONS 16
 
 enum OBJ_OPERATION{ TRANSLATE = 0, ROTATE = 1, SCALE = 2, RENDER = 3, DESTROY = 4 };
 
@@ -100,5 +100,6 @@ typedef struct SM
 #include "scene.h"
 #include "object.h"
 #include "vertex.h"
+#include "loader.h"
 
 #endif

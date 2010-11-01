@@ -6,7 +6,7 @@ CC = g++
 
 LINKER = ld
 
-CFLAGS = -Wall -O2
+CFLAGS = -Wall -O2 -g
 
 LIBS = -lGL -lGLU -lglut -lm
 

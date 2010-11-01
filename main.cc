@@ -74,8 +74,17 @@ void make_obj_data( object* root )
 
 void make_obj(int argc, char **argv)
 {
-
+/*
+	vertex* s = (vertex*)( malloc( sizeof(vertex) * 448 ) ); 
+	int pol;
+	int a = read_poly_file( "ba", s, &pol );
+	object* root = obj_create( Scene );
+	int i ;
+	obj_load( root, GL_TRIANGLES, (void*)s, pol, 448/3);
+	//exit(1);
+*/
 	object* first = obj_create( Scene );	
+
 	first->location.x =  -0.74;
 	first->location.y =  -0.74;
 	make_obj_data( first );
@@ -293,6 +302,7 @@ int		main(int argc, char **argv)
 	sc_render( Scene );
 
 	sc_update_frustum( Scene );
+
 
 	/* Declaration of the callbacks */
 	glutDisplayFunc(&DisplayFunc);
