@@ -23,7 +23,7 @@ object* obj_create( scene_manager* sm)
 	obj->location.x = 0, obj->location.y = 0; obj->location.z = 0;
 	obj->rotation.x = 0; obj->rotation.y = 0; obj->rotation.z = 0;
 	obj->polygon_count = 0;
-
+	obj->vertex_count = 0;
 	obj->is_root = false;
 	return obj;
 }
@@ -42,7 +42,7 @@ void obj_add( object* parent, object* child )
  *
  * Additionally set the bounding box 
  */
-void obj_load( object* obj, int mode, void* data, int vert_count, int poly_count)
+void obj_load( object* obj, int mode, void* data, int vertex_count, int poly_count)
 {
 	//We alread have data loaded
 	if( obj->polygon_count > 0 )
@@ -52,6 +52,7 @@ void obj_load( object* obj, int mode, void* data, int vert_count, int poly_count
 	obj->render_mode = mode;
 	obj->polygon_data = (vertex*)data;
 	obj->polygon_count = poly_count;
+	obj->vertex_count = vertex_count;
 	obj_update_bounding_sphere( obj );
 }
 
@@ -66,7 +67,7 @@ void obj_update_bounding_sphere( object* obj)
 	max.x = 0; max.y = 0; max.z = 0;
 
 	int i;
-	for( i = 0; i < obj->polygon_count; i++ )
+	for( i = 0; i < obj->vertex_count; i++ )
 	{
 
 		vertex p = (obj->polygon_data)[i];
@@ -162,9 +163,9 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 		}
 		glPushMatrix();
 		//glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
-		debug_vertex( obj->r_location, "Root relative location" );
+		//debug_vertex( obj->r_location, "Root relative location" );
 		vertex r_bound; add_vertex( &r_bound, obj->bound_sphere_loc, obj->r_location );
-		debug_vertex( r_bound, "Relative Bounds" );
+		//debug_vertex( r_bound, "Relative Bounds" );
 		glTranslate_vertex( r_bound );
 		glRotatef( obj->r_rotation.x, obj->r_rotation.y, obj->r_rotation.z, 0 );
 	
@@ -177,7 +178,7 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 		glBegin( obj->render_mode );	
 		
 	
-		for( i = 0; i < obj->polygon_count; i++ )
+		for( i = 0; i < obj->vertex_count; i++ )
 		{
 			vertex p = (obj->polygon_data)[i];
 			glVertex3f( p.x, p.y, p.z);
@@ -240,6 +241,12 @@ void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operati
 
 	obj_switch_operation( operation );
 
+	if( sm->polygon_rendered >= MAX_POLYGONS )
+	{
+		fprintf(stderr, "MAX POLYGONS REACHED\n" );
+		return;
+	}
+
 	if( operation == RENDER && sc_obj_in_frustum( sm, parent ) == 0 )
 	   {
 		if( DEBUG )
@@ -247,16 +254,10 @@ void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operati
 		return;
 	   }
 
-	if( sm->polygon_rendered >= MAX_POLYGONS )
-	{
-		fprintf(stderr, "MAX POLYGONS REACHED\n" );
-		return;
-	}
-
 	(*op_func_ptr) ( parent, x,y,z );
 
 	sm->polygon_rendered += parent->polygon_count;
-	if( DEBUG )
+	//if( DEBUG )
 	fprintf(stderr, "\n###############\nPolygon PRINTED: %d\n##############\n", sm->polygon_rendered );
 	for( child = 0; child < parent->children; child++)
 	{

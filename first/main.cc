@@ -68,7 +68,7 @@ void make_obj_data( object* root )
 	root->polygon_color.y = 0;
 	root->polygon_color.z = 0;
 
-	obj_load( root, GL_LINE_LOOP, (void*)triangle, 12);
+	obj_load( root, GL_LINE_LOOP, (void*)triangle, 12, 3);
 
 }
 

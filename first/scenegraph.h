@@ -11,7 +11,7 @@
 #include <GL/glut.h>
 
 #define DEBUG 0
-#define MAX_POLYGONS 12
+#define MAX_POLYGONS 6
 
 enum OBJ_OPERATION{ TRANSLATE = 0, ROTATE = 1, SCALE = 2, RENDER = 3, DESTROY = 4 };
 
