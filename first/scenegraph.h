@@ -45,7 +45,7 @@ typedef struct OBJ
 
   int render_callist;
 
-
+  int vertex_count;
   int polygon_count; /* Number of polygons */
   int render_mode; /* GL_TRIANGLE_STRIPS ... so on */
 

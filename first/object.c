@@ -42,7 +42,7 @@ void obj_add( object* parent, object* child )
  *
  * Additionally set the bounding box 
  */
-void obj_load( object* obj, int mode, void* data, int count)
+void obj_load( object* obj, int mode, void* data, int vert_count, int poly_count)
 {
 	//We alread have data loaded
 	if( obj->polygon_count > 0 )
@@ -51,7 +51,7 @@ void obj_load( object* obj, int mode, void* data, int count)
 
 	obj->render_mode = mode;
 	obj->polygon_data = (vertex*)data;
-	obj->polygon_count = count;
+	obj->polygon_count = poly_count;
 	obj_update_bounding_sphere( obj );
 }
 
