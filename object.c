@@ -237,7 +237,6 @@ void increment_relative_mats( object* p, object* c )
 void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operation, GLfloat x, GLfloat y, GLfloat z)
 {
 
-	obj_update_bounding_sphere( parent );
 	unsigned int child;
 
 	if( parent->is_root )
