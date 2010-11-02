@@ -90,7 +90,7 @@ typedef struct SM
   linked_object* rm_all;
   linked_object* rm_first; 
   linked_object* rm_last;
-
+  unsigned int to_render;
 
   /* Our root object */
   int root_object_id;

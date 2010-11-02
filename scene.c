@@ -22,6 +22,8 @@ scene_manager* sc_init(int objects) {
 		Scene->rm_all[i].object_ptr = sc_get_object( Scene, i);
 	}
 
+	Scene->to_render = 0;
+
 	Scene->root_object_id = 0; //Assuming this for now
 	sc_update_frustum(Scene); 
 
@@ -61,6 +63,7 @@ linked_object* sc_get_rm_object( scene_manager* sm, int id )
 void sc_render( scene_manager* sm)
 {
 
+	sm->to_render = 0;
 	//	sc_update_frustum( sm );
 	object* root = sc_get_object( sm, sm->root_object_id );
 
@@ -249,6 +252,76 @@ int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 	return (c == 6) ? 2 : 1;
 } 
 
+
+void sc_traverse_rm( scene_manager* sm )
+{
+
+  linked_object* head = sm->rm_first;
+  do{
+
+	fprintf( stderr, "RM TRAVERSE %d\n", head->object_ptr->id );
+
+	head = head->next;
+    }
+   while( head != NULL );
+
+}
+
+void sc_set_object_to_render( scene_manager* sm, object* obj )
+{
+
+    //Check if obj is in frustrum
+    //Get the distance from the camera to obj
+       if( sm->to_render == 0 )
+	{
+		sm->rm_first = sc_get_rm_object( sm, obj->id );
+		sm->rm_first->next = NULL;
+		sm->rm_first->previous = NULL;
+	} 
+    else
+	{
+	 
+	    GLfloat distance = vertex_dist( sm->camera, obj->model_proj_bb ); 
+
+	    linked_object* head = sm->rm_first;
+	    do{
+		GLfloat head_d = vertex_dist( sm->camera, head->object_ptr->model_proj_bb );	
+		
+        	  		   linked_object* after  = head->next;
+
+		//Put the object before if it is less
+		if( distance <= head_d  )
+		{
+			linked_object* temp = sc_get_rm_object( sm, obj->id );
+		        linked_object* before = head->previous;
+
+			temp->previous = before;
+			if( before != NULL )
+				before->next = temp;
+			else
+				sm->rm_first = temp;
+
+			temp->next = head;
+			head->previous = temp;
+		
+
+			sm->to_render++;
+			return;
+		
+		}
+	
+		//Didn't find it yet so we go to next element 
+
+		head = after;	
+
+	       }
+	     while( !head != NULL );
+
+		//we got here 
+		//go through linked list and insert in right place
+
+	}
+}
 
 void sc_destroy( scene_manager* sm )
 {

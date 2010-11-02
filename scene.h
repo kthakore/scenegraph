@@ -15,6 +15,10 @@ void sc_update_frustum( scene_manager* scene );
 
 void sc_render(scene_manager* sm); 
 
+void sc_set_object_to_render(scene_manager* Scene, object* obj ); 
+
+void sc_traverse_rm( scene_manager* sm );
+
 void sc_destroy(scene_manager* sm);
 
 #endif 
