@@ -131,6 +131,14 @@ void obj_rotate( object* obj, GLfloat x, GLfloat y, GLfloat z)
 
 }
 
+void obj_color( object* obj, GLfloat x, GLfloat y, GLfloat z)
+{
+	obj->polygon_color.x = x;
+	obj->polygon_color.y = y;
+	obj->polygon_color.z = z;
+
+}
+
 /*Operation to set the scale values of the object*/
 void obj_scale( object* obj, GLfloat x, GLfloat y, GLfloat z) 
 {

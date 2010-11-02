@@ -82,9 +82,14 @@ void make_obj(int argc, char **argv)
 	obj_add( first, second );
 	obj_add( first, third );
 
-	first->scale.x = 0.5; first->scale.y = 0.5; first->scale.z = 0.5;
-	second->scale.x = 0.5; second->scale.y = 0.5; second->scale.z = 0.5;
-	third->scale.x = 0.5; third->scale.y = 0.5; third->scale.z = 0.5;
+	obj_color( first, 1, 0, 0 );
+	obj_color( second, 0, 1, 0);
+	obj_color( third, 0, 0, 1);
+
+	obj_scale( first, 0.5, 0.5, 0.5 );
+	obj_scale( second, 0.5, 0.5, 0.5);
+	obj_scale( third, 0.5, 0.5, 0.5);
+
 
 	sc_set_root( Scene, first );
 }

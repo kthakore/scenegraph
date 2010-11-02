@@ -8,5 +8,11 @@ void obj_add( object* parent, object* child);
 void obj_calculate_bounding_sphere( object* obj );
 void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operation, GLfloat x, GLfloat y, GLfloat z);
 
+void obj_color( object* obj, GLfloat x, GLfloat y, GLfloat z );
+void obj_scale( object* obj, GLfloat x, GLfloat y, GLfloat z );
+void obj_translate( object* obj, GLfloat x, GLfloat y, GLfloat z );
+void obj_rotate( object* obj, GLfloat x, GLfloat y, GLfloat z );
+
+
 
 #endif

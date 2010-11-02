@@ -219,12 +219,12 @@ int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 	GLfloat z = relative_bs.z;
 	GLfloat radius = obj->bound_sphere_rad;
 
-	if( obj->bound_sphere_rad == 0 )
+	if( obj->bound_rad_from == 0 )
 	{	
 		radius *= obj->scale.x;
 
 	}
-	else if( obj->bound_sphere_rad == 1 )
+	else if( obj->bound_rad_from == 1 )
 	{	
 		radius *= obj->scale.y;
 
