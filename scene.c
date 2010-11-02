@@ -210,7 +210,7 @@ int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 	GLfloat d;
 	vertex bb_plus_p_loc;
 
-/*	if( obj->is_root == 0 )
+	if( obj->is_root == 0 )
 	{
 
 		object* root = sc_get_object( Scene, obj->parent );
@@ -218,7 +218,7 @@ int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 		add_vertex(& bb_plus_p_loc, obj->r_bound_sphere_loc, obj->r_location );
 	}
 	else
-*/
+
 		copy_vertex(& bb_plus_p_loc, & obj->r_bound_sphere_loc);
 
 
@@ -244,7 +244,7 @@ int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 	if(DEBUG)
 	{
 		glPushMatrix();
-		draw_vertex_axis( & bb_plus_p_loc, radius );
+		draw_vertex_axis( & bb_plus_p_loc, radius, obj->polygon_color );
 		glPopMatrix();
 	}
 

@@ -126,25 +126,21 @@ void extract_vertex( vertex a, GLfloat* x, GLfloat* y, GLfloat* z)
 
 }
 
-void draw_vertex_axis( vertex* bb, GLfloat rad )
+void draw_vertex_axis( vertex* bb, GLfloat rad, vertex c )
 {
-	glColor3f ( 1, 1, 0 );
+	glColor3f ( c.x,c.y,c.z);
 	glBegin( GL_LINES );
 
 	glVertex3f( bb->x, bb->y, bb->z);		
 	glVertex3f( bb->x, bb->y, bb->z + rad);
 
 	glEnd();
-
-	glColor3f ( 0, 1, 1 );
 	glBegin( GL_LINES );
 
 	glVertex3f( bb->x, bb->y, bb->z);		
 	glVertex3f( bb->x + rad, bb->y, bb->z );
 
 	glEnd();
-
-	glColor3f ( 1, 0, 1 );
 	glBegin( GL_LINES );
 
 	glVertex3f( bb->x, bb->y, bb->z);		

@@ -169,7 +169,7 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 
 
 		if(DEBUG)
-			draw_vertex_axis( &obj->bound_sphere_loc, obj->bound_sphere_rad );
+			draw_vertex_axis( &obj->bound_sphere_loc, obj->bound_sphere_rad, obj->polygon_color );
 
 		if( DEBUG )
 			fprintf(stderr, "Object Location %p (%f,%f,%f) \n", obj, obj->r_location.x, obj->r_location.y, obj->r_location.z );
