@@ -155,6 +155,24 @@ object* obj_get_parent( object* obj )
 
 }
 
+
+void obj_displace_bb( object* obj, GLfloat x, GLfloat y, GLfloat z)
+{
+		vertex bb_plus_p_loc;
+		add_vertex(& bb_plus_p_loc, obj->r_location, obj->bound_sphere_loc );
+
+		glPushMatrix();
+		vertex displace;
+		add_vertex( &displace, obj->r_location, obj->bound_sphere_loc );
+		glTranslate_vertex( obj->r_location);
+		glRotate_vertex( obj->r_location, obj->r_rotation, obj->is_root);	
+		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
+		modelview_multiply( &obj->model_proj_bb, bb_plus_p_loc);
+		glPopMatrix();
+
+
+}
+
 /*Operation to render the objects */
 void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 {
@@ -235,7 +253,7 @@ void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operati
 		return;
 	}
 
-	if( sc_obj_in_frustum( sm, parent ) == 0 )
+	if( sc_obj_in_frustum( sm, parent ) == 0 && FRUSTUM )
 	{
 
 		fprintf(stderr, "\n##################################\nNot printing %d \n#################################\n", parent->id);
@@ -245,11 +263,16 @@ void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operati
 	obj_render( parent, x,y,z );
 
 	sm->polygon_rendered += parent->polygon_count;
+	
+	fprintf( stderr, "Parent %d, %d \n", parent->id, parent->children);
 	for( child = 0; child < parent->children; child++)
 	{
-		object* o =  sc_get_object(sm, parent->children_id[child]);
-		increment_relative_mats( parent, o );
+		
 
+		object* o =  sc_get_object(sm, parent->children_id[child]);
+		fprintf( stderr, "Parent %d, Child %d \n", parent->id, o->id );
+		increment_relative_mats( parent, o );
+	
 		obj_operate( sm, o, operation, x, y, z);
 
 	}

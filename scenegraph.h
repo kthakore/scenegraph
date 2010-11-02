@@ -10,6 +10,7 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 
+#define FRUSTUM 0
 #define DEBUG 1
 #define MAX_POLYGONS 10000
 
@@ -57,9 +58,9 @@ typedef struct OBJ
 
   unsigned int children; /*Number of children*/  
 
-
   vertex model_proj_bb;
-  
+
+  int render_call_list;  
 
   struct SM* scene;
  

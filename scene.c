@@ -212,9 +212,6 @@ int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 	
 	copy_vertex(& bb_plus_p_loc, &obj->model_proj_bb);
 
-
-
-
 	GLfloat x, y, z;
 	extract_vertex( bb_plus_p_loc, &x, &y, &z );
 
