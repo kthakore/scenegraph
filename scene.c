@@ -69,6 +69,8 @@ void sc_render( scene_manager* sm)
 
 	obj_operate( sm, root, RENDER, sm->camera.x, sm->camera.y, sm->camera.z );
 
+	sc_traverse_rm( sm );
+
 }
 
 
