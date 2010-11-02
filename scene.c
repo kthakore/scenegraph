@@ -210,7 +210,7 @@ int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 	GLfloat d;
 	vertex bb_plus_p_loc;
 
-	if( obj->is_root == 0 )
+/*	if( obj->is_root == 0 )
 	{
 
 		object* root = sc_get_object( Scene, obj->parent );
@@ -218,13 +218,11 @@ int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 		add_vertex(& bb_plus_p_loc, obj->r_bound_sphere_loc, obj->r_location );
 	}
 	else
+*/
 		copy_vertex(& bb_plus_p_loc, & obj->r_bound_sphere_loc);
 
 
 	GLfloat x, y, z;
-
-	if(DEBUG)
-		debug_vertex( bb_plus_p_loc, "CLIPPING AT");
 	extract_vertex( bb_plus_p_loc, &x, &y, &z );
 
 	GLfloat radius = obj->bound_sphere_rad;
