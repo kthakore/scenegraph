@@ -61,9 +61,9 @@ linked_object* sc_get_rm_object( scene_manager* sm, int id )
 void sc_render( scene_manager* sm)
 {
 
-//	sc_update_frustum( sm );
+	//	sc_update_frustum( sm );
 	object* root = sc_get_object( sm, sm->root_object_id );
-	
+
 	obj_operate( sm, root, RENDER, sm->camera.x, sm->camera.y, sm->camera.z );
 
 }
@@ -83,7 +83,7 @@ void sc_update_frustum( scene_manager* Scene )
 
 	/* Get the current VIEWPORT plane */
 	glGetIntegerv(GL_VIEWPORT, viewport);
-	
+
 	/* Get the current PROJECTION matrix from OpenGL */
 	glGetDoublev( GL_PROJECTION_MATRIX, projection_matrix );
 
@@ -93,14 +93,14 @@ void sc_update_frustum( scene_manager* Scene )
 
 
 	gluUnProject( 
-	  (viewport[2]-viewport[0])/2 , (viewport[3]-viewport[1])/2, 
-	  0.0,  
-	  model_matrix, projection_matrix, viewport,  
-	  &(Scene->camera.x) ,&(Scene->camera.y) ,&(Scene->camera.z) 
-	);
+			(viewport[2]-viewport[0])/2 , (viewport[3]-viewport[1])/2, 
+			0.0,  
+			model_matrix, projection_matrix, viewport,  
+			&(Scene->camera.x) ,&(Scene->camera.y) ,&(Scene->camera.z) 
+		    );
 
 	if( DEBUG )
-	fprintf(stderr, "Camera at %f %f %f", Scene->camera.x, Scene->camera.y, Scene->camera.z );
+		fprintf(stderr, "Camera at %f %f %f", Scene->camera.x, Scene->camera.y, Scene->camera.z );
 
 	/* Combine the two matrices (multiply projection_matrixection by modelview)    */
 	clip_matrix[ 0] = model_matrix[ 0] * projection_matrix[ 0] + model_matrix[ 1] * projection_matrix[ 4] + model_matrix[ 2] * projection_matrix[ 8] +    model_matrix[ 3] * projection_matrix[12];
@@ -208,18 +208,26 @@ int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 	int p;
 	int c = 0;
 	GLfloat d;
+	vertex bb_plus_p_loc;
 
-	obj_update_bounding_sphere( obj );
+	if( obj->is_root == 0 )
+	{
 
-	GLfloat x = obj->bound_sphere_loc.x;
-	GLfloat y = obj->bound_sphere_loc.y;
-	GLfloat z = obj->bound_sphere_loc.z;
+		object* root = sc_get_object( Scene, obj->parent );
+
+		add_vertex(& bb_plus_p_loc, obj->r_bound_sphere_loc, obj->r_location );
+	}
+	else
+		copy_vertex(& bb_plus_p_loc, & obj->r_bound_sphere_loc);
+
+
+	GLfloat x, y, z;
+
+	if(DEBUG)
+		debug_vertex( bb_plus_p_loc, "CLIPPING AT");
+	extract_vertex( bb_plus_p_loc, &x, &y, &z );
+
 	GLfloat radius = obj->bound_sphere_rad;
-
-	cop
-	/*vertex radius_bs;
-
-
 	if( obj->bound_rad_from == 0 )
 	{	
 		radius *= obj->scale.x;
@@ -232,17 +240,15 @@ int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 	}
 	else
 	{
-		 radius *= obj->scale.z;
+		radius *= obj->scale.z;
 	}
 
-	radius_bs.x = radius;
-	radius_bs.y = radius;
-	radius_bs.z = radius;
-	
-	
-	add_vertex( &relative_bs, obj->r_location, obj->bound_sphere_loc );
-	*/
-
+	if(DEBUG)
+	{
+		glPushMatrix();
+		draw_vertex_axis( & bb_plus_p_loc, radius );
+		glPopMatrix();
+	}
 
 	for( p = 0; p < 6; p++ )
 	{

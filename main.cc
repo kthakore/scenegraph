@@ -61,22 +61,12 @@ void make_obj(int argc, char **argv)
 {
 	object* first = obj_create( Scene );	
 
-	first->location.z = 0;
-	first->location.y = 0;
-	first->location.x = 0;
-
 	make_obj_data( first );
 
 	object* second =  obj_create( Scene );  
-	second->location.x = 1;
-	second->location.y = 1;
-	second->location.z = 1;
 	make_obj_data( second );	
 
 	object* third =  obj_create( Scene );  
-	third->location.x =  -1;
-	third->location.y = -1;	
-	third->location.z = -1;
 	make_obj_data( third );	
 
 	obj_add( first, second );
@@ -89,6 +79,12 @@ void make_obj(int argc, char **argv)
 	obj_scale( first, 0.5, 0.5, 0.5 );
 	obj_scale( second, 0.5, 0.5, 0.5);
 	obj_scale( third, 0.5, 0.5, 0.5);
+
+	obj_translate( first, 0, 0, 0 );
+	obj_translate( second, 1, -2, 0);
+	obj_translate( third, -6, -2, 0);
+
+
 
 
 	sc_set_root( Scene, first );

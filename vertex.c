@@ -101,3 +101,55 @@ void glRotate_vertex( vertex r_loc, vertex r_rot, int root)
 
 
 }
+
+
+void zero_vertex( vertex* z)
+{
+	flood_vertex(z , 0 );
+}
+
+void flood_vertex(  vertex* z, GLfloat v )
+{
+   z->x = v;
+   z->y = v;
+   z->z = v;
+
+}
+
+
+void extract_vertex( vertex a, GLfloat* x, GLfloat* y, GLfloat* z)
+{
+
+   *x = (GLfloat)a.x;
+   *y = (GLfloat)a.y;
+   *z = (GLfloat)a.z;
+
+}
+
+void draw_vertex_axis( vertex* bb, GLfloat rad )
+{
+	glColor3f ( 1, 1, 0 );
+	glBegin( GL_LINES );
+
+	glVertex3f( bb->x, bb->y, bb->z);		
+	glVertex3f( bb->x, bb->y, bb->z + rad);
+
+	glEnd();
+
+	glColor3f ( 0, 1, 1 );
+	glBegin( GL_LINES );
+
+	glVertex3f( bb->x, bb->y, bb->z);		
+	glVertex3f( bb->x + rad, bb->y, bb->z );
+
+	glEnd();
+
+	glColor3f ( 1, 0, 1 );
+	glBegin( GL_LINES );
+
+	glVertex3f( bb->x, bb->y, bb->z);		
+	glVertex3f( bb->x , bb->y + rad, bb->z );
+
+	glEnd();
+}
+

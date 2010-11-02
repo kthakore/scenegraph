@@ -9,13 +9,13 @@ object* obj_create( scene_manager* sm)
 	obj->id = sm->registered++;
 	// Store the bounding sphere 
 	obj->bound_sphere_rad = 0;
-	obj->bound_sphere_loc.x = 0;
-	obj->bound_sphere_loc.y = 0;
-	obj->bound_sphere_loc.z = 0; 
 	obj->children = 0;
-	obj->scale.x = 1; obj->scale.y = 1; obj->scale.z = 1;
-	obj->location.x = 0, obj->location.y = 0; obj->location.z = 0;
-	obj->rotation.x = 0; obj->rotation.y = 0; obj->rotation.z = 0;
+
+	zero_vertex( & obj->bound_sphere_loc );
+	zero_vertex( & obj->r_bound_sphere_loc );
+	zero_vertex( & obj->location );
+	zero_vertex( & obj->rotation );
+	flood_vertex( & obj->scale, 1 );
 	obj->polygon_count = 0;
 	obj->vertex_count = 0;
 	obj->is_root = 0;
@@ -65,8 +65,6 @@ void obj_update_bounding_sphere( object* obj)
 	{
 
 		vertex p = (obj->polygon_data)[i];
-		add_vertex( &p, (obj->polygon_data)[i], obj->r_location);
-
 		if( p.x <= min.x)
 			min.x = p.x;
 		if( p.y <= min.y)
@@ -95,8 +93,6 @@ void obj_update_bounding_sphere( object* obj)
 	obj->bound_sphere_loc.x = diff.x/2.0;
 	obj->bound_sphere_loc.y = diff.y/2.0;
 	obj->bound_sphere_loc.z = diff.z/2.0;
-	debug_vertex( obj->bound_sphere_loc, "Diff/2 vertex");	 
-
 	obj->bound_sphere_rad = diff.x/2.0;
 	obj->bound_rad_from = 0;
 
@@ -150,33 +146,6 @@ void obj_scale( object* obj, GLfloat x, GLfloat y, GLfloat z)
 
 
 
-void obj_show_bb( object* obj )
-{
-	glColor3f ( 1, 1, 0 );
-	glBegin( GL_LINES );
-
-	glVertex3f( obj->bound_sphere_loc.x, obj->bound_sphere_loc.y, obj->bound_sphere_loc.z);		
-	glVertex3f( obj->bound_sphere_loc.x, obj->bound_sphere_loc.y, obj->bound_sphere_loc.z + obj->bound_sphere_rad);
-
-	glEnd();
-
-	glColor3f ( 0, 1, 1 );
-	glBegin( GL_LINES );
-
-	glVertex3f( obj->bound_sphere_loc.x, obj->bound_sphere_loc.y, obj->bound_sphere_loc.z);		
-	glVertex3f( obj->bound_sphere_loc.x + obj->bound_sphere_rad, obj->bound_sphere_loc.y, obj->bound_sphere_loc.z );
-
-	glEnd();
-
-	glColor3f ( 1, 0, 1 );
-	glBegin( GL_LINES );
-
-	glVertex3f( obj->bound_sphere_loc.x, obj->bound_sphere_loc.y, obj->bound_sphere_loc.z);		
-	glVertex3f( obj->bound_sphere_loc.x , obj->bound_sphere_loc.y + obj->bound_sphere_rad, obj->bound_sphere_loc.z );
-
-	glEnd();
-}
-
 object* obj_get_parent( object* obj )
 {
 	if( obj->is_root )
@@ -200,7 +169,7 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 
 
 		if(DEBUG)
-			obj_show_bb( obj );
+			draw_vertex_axis( &obj->bound_sphere_loc, obj->bound_sphere_rad );
 
 		if( DEBUG )
 			fprintf(stderr, "Object Location %p (%f,%f,%f) \n", obj, obj->r_location.x, obj->r_location.y, obj->r_location.z );
@@ -233,19 +202,26 @@ void obj_destroy( object* obj)
 void increment_relative_mats( object* p, object* c )
 {
 
+	
 	add_vertex(&(c->r_location), p->r_location, c->location);
+	
 	add_vertex(&(c->r_rotation), p->r_rotation, c->rotation);
+	add_vertex(&(c->r_bound_sphere_loc), p->r_bound_sphere_loc, c->bound_sphere_loc);
+//	add_vertex(&(c->r_bound_sphere_loc), p->r_location, c->r_bound_sphere_loc);
 }
 
 
 /* Perform the operation, recursively on all children */
 void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operation, GLfloat x, GLfloat y, GLfloat z)
 {
+
+	obj_update_bounding_sphere( parent );
 	unsigned int child;
 
 	if( parent->is_root )
 	{
-		copy_vertex( & parent->r_location, & parent->location);
+		copy_vertex( & parent->r_location, & parent->location);		
+		copy_vertex( & parent->r_bound_sphere_loc, & parent->bound_sphere_loc);
 		copy_vertex( & parent->r_rotation, & parent->rotation);
 	}
 
@@ -258,15 +234,13 @@ void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operati
 	if( sc_obj_in_frustum( sm, parent ) == 0 )
 	{
 
-		fprintf(stderr, "Not printing %d \n", parent->id);
+		fprintf(stderr, "\n##################################\nNot printing %d \n#################################\n", parent->id);
 		return;
 	}
 
 	obj_render( parent, x,y,z );
 
 	sm->polygon_rendered += parent->polygon_count;
-	//if( DEBUG )
-	fprintf(stderr, "\n###############\nPolygon PRINTED: %d\n##############\n", sm->polygon_rendered );
 	for( child = 0; child < parent->children; child++)
 	{
 		object* o =  sc_get_object(sm, parent->children_id[child]);

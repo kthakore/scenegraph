@@ -41,6 +41,7 @@ typedef struct OBJ
   /* relative vertexes to hold state of scenegraph traversal so far */
   vertex    r_location; 
   vertex    r_rotation;
+  vertex    r_bound_sphere_loc;
 
   vertex* polygon_data;
   vertex  polygon_color;
