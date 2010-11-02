@@ -211,13 +211,14 @@ int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 
 	obj_update_bounding_sphere( obj );
 
-	vertex relative_bs;
-	vertex radius_bs;
-
-	GLfloat x = relative_bs.x;
-	GLfloat y = relative_bs.y;
-	GLfloat z = relative_bs.z;
+	GLfloat x = obj->bound_sphere_loc.x;
+	GLfloat y = obj->bound_sphere_loc.y;
+	GLfloat z = obj->bound_sphere_loc.z;
 	GLfloat radius = obj->bound_sphere_rad;
+
+	cop
+	/*vertex radius_bs;
+
 
 	if( obj->bound_rad_from == 0 )
 	{	
@@ -240,7 +241,7 @@ int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 	
 	
 	add_vertex( &relative_bs, obj->r_location, obj->bound_sphere_loc );
-	
+	*/
 
 
 	for( p = 0; p < 6; p++ )

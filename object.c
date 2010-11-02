@@ -65,7 +65,7 @@ void obj_update_bounding_sphere( object* obj)
 	{
 
 		vertex p = (obj->polygon_data)[i];
-//		add_vertex( &p, (obj->polygon_data)[i], obj->r_location);
+		add_vertex( &p, (obj->polygon_data)[i], obj->r_location);
 
 		if( p.x <= min.x)
 			min.x = p.x;
