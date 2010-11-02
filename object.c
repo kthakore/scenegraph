@@ -82,13 +82,13 @@ void obj_update_bounding_sphere( object* obj)
 
 	}
 
-//	debug_vertex( min, "\nMin Vertex" );
-//	debug_vertex( max, "Max Vertex" );
+	//	debug_vertex( min, "\nMin Vertex" );
+	//	debug_vertex( max, "Max Vertex" );
 
 	// Calculate the middle point and place the bounding sphere there
 	vertex diff;
 	sub_vertex(&diff, max, min );
-//	debug_vertex( diff, "Diff Vertex");
+	//	debug_vertex( diff, "Diff Vertex");
 	//	divide_vertex(&diff, 2);
 	obj->bound_sphere_loc.x = diff.x/2.0;
 	obj->bound_sphere_loc.y = diff.y/2.0;
@@ -97,15 +97,15 @@ void obj_update_bounding_sphere( object* obj)
 	obj->bound_rad_from = 0;
 
 	if( diff.y >= diff.x && diff.y >= diff.z )
-		{
-			obj->bound_sphere_rad = diff.y/2.0;
-			obj->bound_rad_from = 1;
-		}
+	{
+		obj->bound_sphere_rad = diff.y/2.0;
+		obj->bound_rad_from = 1;
+	}
 	else if ( diff.z >= diff.y && diff.z >= diff.x )
-		{
-			obj->bound_sphere_rad = diff.z/2.0;
-			obj->bound_rad_from = 2;
-		}
+	{
+		obj->bound_sphere_rad = diff.z/2.0;
+		obj->bound_rad_from = 2;
+	}
 
 
 }
@@ -162,14 +162,16 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 	{
 		int i;
 
+		vertex bb_plus_p_loc;
+		copy_vertex(& bb_plus_p_loc, & obj->r_bound_sphere_loc);
+
 		glPushMatrix();
-		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
-		glRotate_vertex( obj->r_location, obj->r_rotation, obj->is_root);	
+		vertex displace;
+		add_vertex( &displace, obj->r_location, obj->bound_sphere_loc );
 		glTranslate_vertex( obj->r_location);
+		glRotate_vertex( obj->r_location, obj->r_rotation, obj->is_root);	
+		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
 
-
-		if(DEBUG)
-			draw_vertex_axis( &obj->bound_sphere_loc, obj->bound_sphere_rad, obj->polygon_color );
 
 		if( DEBUG )
 			fprintf(stderr, "Object Location %p (%f,%f,%f) \n", obj, obj->r_location.x, obj->r_location.y, obj->r_location.z );
@@ -187,6 +189,10 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 
 		glEnd();
 		glPopMatrix();
+
+		modelview_multiply( &obj->model_proj_bb, bb_plus_p_loc );
+
+
 	}
 }
 
@@ -202,12 +208,12 @@ void obj_destroy( object* obj)
 void increment_relative_mats( object* p, object* c )
 {
 
-	
+
 	add_vertex(&(c->r_location), p->r_location, c->location);
-	
+
 	add_vertex(&(c->r_rotation), p->r_rotation, c->rotation);
-	add_vertex(&(c->r_bound_sphere_loc), p->r_bound_sphere_loc, c->bound_sphere_loc);
-//	add_vertex(&(c->r_bound_sphere_loc), p->r_location, c->r_bound_sphere_loc);
+	//	add_vertex(&(c->r_bound_sphere_loc), p->r_bound_sphere_loc, c->bound_sphere_loc);
+	//	add_vertex(&(c->r_bound_sphere_loc), p->r_location, c->bound_sphere_loc);
 }
 
 

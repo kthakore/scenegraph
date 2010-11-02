@@ -57,6 +57,10 @@ typedef struct OBJ
 
   unsigned int children; /*Number of children*/  
 
+
+  vertex model_proj_bb;
+  
+
   struct SM* scene;
  
 } object;

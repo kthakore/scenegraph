@@ -69,22 +69,30 @@ void make_obj(int argc, char **argv)
 	object* third =  obj_create( Scene );  
 	make_obj_data( third );	
 
+	object* fourth =  obj_create( Scene );  
+	make_obj_data( fourth );	
+
+
+
+	obj_add( fourth, second );
 	obj_add( first, second );
 	obj_add( first, third );
 
 	obj_color( first, 1, 0, 0 );
 	obj_color( second, 0, 1, 0);
 	obj_color( third, 0, 0, 1);
+	obj_color( fourth, 0.011,0.01, 0.1);
 
 	obj_scale( first, 0.5, 0.5, 0.5 );
-	obj_scale( second, 0.5, 0.5, 0.5);
-	obj_scale( third, 1, 0.5, 0.5);
+	obj_scale( second, 0.5, 0.5, 0.5 );
+	obj_scale( third, 0.5, 0.5, 0.5 );
 
 	obj_translate( first, 0, 0, 0 );
 	obj_translate( second, 1, -2, 0);
 	obj_translate( third, -6, -2, 0);
+	obj_translate( fourth, 0.1, 0.2, 0 );
 
-
+	
 
 
 	sc_set_root( Scene, first );
