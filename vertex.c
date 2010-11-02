@@ -152,24 +152,20 @@ void draw_vertex_axis( vertex* bb, GLfloat rad, vertex c )
 
 GLdouble modelview_multiply( vertex* s, vertex t)
 {
-/*
+
 GLdouble m[16];
 glGetDoublev( GL_MODELVIEW_MATRIX, m );
 
 GLdouble a = 1;
-GLdouble a,b,c,d;
-
-a = 
-
-c    = m[0]*t.x + m[1]*t.y + m[2]*t.z + m[3]*a;
-s->x = m[4]*t.x + m[5]*t.y + m[6]*t.z + m[7]*a;
-s->y = m[8]*t.x + m[9]*t.y + m[10]*t.z + m[11]*a;
-s->z = m[12]*t.x + m[13]*t.y + m[14]*t.z + m[15]*a;
+GLdouble b,c,d;
+s->z    = m[0]*t.x + m[1]*t.y + m[2]*t.z + m[3]*a;
+s->y = m[4]*t.x + m[5]*t.y + m[6]*t.z + m[7]*a;
+s->x = m[8]*t.x + m[9]*t.y + m[10]*t.z + m[11]*a;
+c = m[12]*t.x + m[13]*t.y + m[14]*t.z + m[15]*a;
 
 return c;
-*/
 
-
+/*
 GLdouble x,y,z,zdepth;
 GLdouble projection[16];
 GLdouble modelview[16];
@@ -180,12 +176,13 @@ glGetDoublev (GL_MODELVIEW_MATRIX , modelview);
 glGetIntegerv (GL_VIEWPORT ,viewport);
 
 //gluProject(GLdouble, GLdouble, GLdouble, const GLdouble*, const GLdouble*, const GLint*, GLdouble*, GLdouble*, GLdouble*)
-gluUnProject( t.x, t.y, t.z ,modelview,projection,viewport , &x, &y , &z);
+gluProject( t.x, t.y, t.z ,modelview,projection,viewport , &x, &y , &z);
 s->x = x;
 s->y = y;
 s->z = z;
 debug_vertex( t, "IN:" );
 debug_vertex_p( s, "OUT:");
 return 1.0;
+*/
 }
 

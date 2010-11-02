@@ -74,9 +74,9 @@ void make_obj(int argc, char **argv)
 
 
 
-	obj_add( fourth, second );
 	obj_add( first, second );
 	obj_add( first, third );
+	obj_add( fourth, second );
 
 	obj_color( first, 1, 0, 0 );
 	obj_color( second, 0, 1, 0);
@@ -86,6 +86,7 @@ void make_obj(int argc, char **argv)
 	obj_scale( first, 0.5, 0.5, 0.5 );
 	obj_scale( second, 0.5, 0.5, 0.5 );
 	obj_scale( third, 0.5, 0.5, 0.5 );
+
 
 	obj_translate( first, 0, 0, 0 );
 	obj_translate( second, 1, -2, 0);

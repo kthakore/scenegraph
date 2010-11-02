@@ -163,7 +163,7 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 		int i;
 
 		vertex bb_plus_p_loc;
-		copy_vertex(& bb_plus_p_loc, & obj->r_bound_sphere_loc);
+		add_vertex(& bb_plus_p_loc, obj->r_location, obj->bound_sphere_loc );
 
 		glPushMatrix();
 		vertex displace;
@@ -171,6 +171,8 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 		glTranslate_vertex( obj->r_location);
 		glRotate_vertex( obj->r_location, obj->r_rotation, obj->is_root);	
 		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
+		modelview_multiply( &obj->model_proj_bb, bb_plus_p_loc);
+
 
 
 		if( DEBUG )
@@ -189,10 +191,6 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 
 		glEnd();
 		glPopMatrix();
-
-		modelview_multiply( &obj->model_proj_bb, bb_plus_p_loc );
-
-
 	}
 }
 
