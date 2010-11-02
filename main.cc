@@ -78,7 +78,7 @@ void make_obj(int argc, char **argv)
 
 	obj_scale( first, 0.5, 0.5, 0.5 );
 	obj_scale( second, 0.5, 0.5, 0.5);
-	obj_scale( third, 0.5, 0.5, 0.5);
+	obj_scale( third, 1, 0.5, 0.5);
 
 	obj_translate( first, 0, 0, 0 );
 	obj_translate( second, 1, -2, 0);
