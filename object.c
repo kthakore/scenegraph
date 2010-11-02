@@ -174,7 +174,7 @@ void obj_displace_bb( object* obj, GLfloat x, GLfloat y, GLfloat z)
 }
 
 /*Operation to render the objects */
-void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
+void obj_render( object* obj)
 {
 	if( obj->polygon_count > 0 )
 	{
@@ -234,7 +234,7 @@ void increment_relative_mats( object* p, object* c )
 
 
 /* Perform the operation, recursively on all children */
-void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operation, GLfloat x, GLfloat y, GLfloat z)
+void obj_operate( scene_manager* sm,  object* parent)
 {
 
 	unsigned int child;
@@ -246,22 +246,7 @@ void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operati
 		copy_vertex( & parent->r_rotation, & parent->rotation);
 	}
 
-	if( sm->polygon_rendered >= MAX_POLYGONS )
-	{
-		fprintf(stderr, "MAX POLYGONS REACHED\n" );
-		return;
-	}
-
-	if( sc_obj_in_frustum( sm, parent ) == 0 && FRUSTUM )
-	{
-
-		fprintf(stderr, "\n##################################\nNot printing %d \n#################################\n", parent->id);
-		return;
-	}
-
-	obj_render( parent, x,y,z );
 	sc_set_object_to_render( sm, parent );
-	sm->polygon_rendered += parent->polygon_count;
 	
 	fprintf( stderr, "Parent %d, %d \n", parent->id, parent->children);
 	for( child = 0; child < parent->children; child++)
@@ -272,7 +257,7 @@ void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operati
 		fprintf( stderr, "Parent %d, Child %d \n", parent->id, o->id );
 		increment_relative_mats( parent, o );
 	
-		obj_operate( sm, o, operation, x, y, z);
+		obj_operate( sm, o);
 
 	}
 

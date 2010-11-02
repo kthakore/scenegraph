@@ -6,7 +6,8 @@ void obj_load( object* obj, int mode, void* data, int vert_count, int poly_count
 void obj_update_bounding_sphere( object* obj);
 void obj_add( object* parent, object* child);
 void obj_calculate_bounding_sphere( object* obj );
-void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operation, GLfloat x, GLfloat y, GLfloat z);
+void obj_operate( scene_manager* sm,  object* parent);
+void obj_render( object* o );
 
 void obj_color( object* obj, GLfloat x, GLfloat y, GLfloat z );
 void obj_scale( object* obj, GLfloat x, GLfloat y, GLfloat z );

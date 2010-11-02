@@ -69,7 +69,7 @@ void sc_render( scene_manager* sm)
 	//	sc_update_frustum( sm );
 	object* root = sc_get_object( sm, sm->root_object_id );
 
-	obj_operate( sm, root, RENDER, sm->camera.x, sm->camera.y, sm->camera.z );
+	obj_operate( sm, root);
 
 	sc_traverse_rm( sm );
 
@@ -269,6 +269,25 @@ void sc_traverse_rm( scene_manager* sm )
 
 	fprintf( stderr, "RM TRAVERSE %d\n", head->object_ptr->id );
 
+	object* object = head->object_ptr;
+
+	sm->polygon_rendered += object->polygon_count;
+
+	if( sm->polygon_rendered >= MAX_POLYGONS )
+	{
+		fprintf(stderr, "MAX POLYGONS REACHED\n" );
+		return;
+	}
+
+
+	if( sc_obj_in_frustum( sm, object ) == 0 && FRUSTUM )
+	{
+
+		fprintf(stderr, "\n##################################\nNot printing %d \n#################################\n", object->id);
+		return;
+	}
+
+	obj_render( object );
 	head = head->next;
    } 
 }
