@@ -261,7 +261,7 @@ void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operati
 	}
 
 	obj_render( parent, x,y,z );
-
+	sc_set_object_to_render( sm, parent );
 	sm->polygon_rendered += parent->polygon_count;
 	
 	fprintf( stderr, "Parent %d, %d \n", parent->id, parent->children);

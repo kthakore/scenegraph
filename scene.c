@@ -21,6 +21,8 @@ scene_manager* sc_init(int objects) {
 		Scene->rm_all[i].previous = NULL;
 		Scene->rm_all[i].object_ptr = sc_get_object( Scene, i);
 	}
+	
+	Scene->rm_first = &Scene->rm_all[0];
 
 	Scene->to_render = 0;
 
@@ -259,44 +261,51 @@ void sc_traverse_rm( scene_manager* sm )
 {
 
   linked_object* head = sm->rm_first;
-  do{
+
+  if( head == NULL )
+	return;
+
+  while(head != NULL) {
 
 	fprintf( stderr, "RM TRAVERSE %d\n", head->object_ptr->id );
 
 	head = head->next;
-    }
-   while( head != NULL );
-
+   } 
 }
 
 void sc_set_object_to_render( scene_manager* sm, object* obj )
 {
 
+
     //Check if obj is in frustrum
     //Get the distance from the camera to obj
        if( sm->to_render == 0 )
 	{
-		sm->rm_first = sc_get_rm_object( sm, obj->id );
+			sm->rm_first = sc_get_rm_object( sm, obj->id );
 		sm->rm_first->next = NULL;
 		sm->rm_first->previous = NULL;
+		sm->to_render++;
+		 fprintf( stderr, "SET RM FIRST TO %d %p \n", obj->id, sm->rm_first );
+
+		return;
 	} 
     else
 	{
 	 
 	    GLfloat distance = vertex_dist( sm->camera, obj->model_proj_bb ); 
 
+	    linked_object* temp = sc_get_rm_object( sm, obj->id );
 	    linked_object* head = sm->rm_first;
 	    do{
 		GLfloat head_d = vertex_dist( sm->camera, head->object_ptr->model_proj_bb );	
-		
-        	  		   linked_object* after  = head->next;
-
+			
+        	 linked_object* after  = head->next;
+	 	linked_object* before = head->previous;
+	
 		//Put the object before if it is less
 		if( distance <= head_d  )
 		{
-			linked_object* temp = sc_get_rm_object( sm, obj->id );
-		        linked_object* before = head->previous;
-
+		
 			temp->previous = before;
 			if( before != NULL )
 				before->next = temp;
@@ -305,20 +314,26 @@ void sc_set_object_to_render( scene_manager* sm, object* obj )
 
 			temp->next = head;
 			head->previous = temp;
-		
-
 			sm->to_render++;
 			return;
 		
 		}
-	
 		//Didn't find it yet so we go to next element 
 
-		head = after;	
+		if( head->next != NULL )
+		   head = head->next;
 
 	       }
-	     while( !head != NULL );
+	       while( head->next != NULL );
 
+		//WE are at the end of the list and still biggest
+
+		head->next = temp;
+		temp->previous = head;
+		temp->next = NULL; 
+	        sm->to_render++;
+		 fprintf( stderr, "%d ->  %d\n", temp->object_ptr->id, head->object_ptr->id );
+		return;
 		//we got here 
 		//go through linked list and insert in right place
 
