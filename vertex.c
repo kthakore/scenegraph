@@ -40,12 +40,12 @@ void divide_vertex(vertex* diff, GLfloat div)
 
 GLfloat vertex_dist( vertex a, vertex b)
 {
-	
+
 	vertex val;
 
 	sub_vertex( &val, a, b );
 	squared_vertex( &val );
-	
+
 	return sqrt( val.x + val.y + val.z  );
 
 }
@@ -53,9 +53,9 @@ GLfloat vertex_dist( vertex a, vertex b)
 void multiply_vertex(vertex* c, vertex a, vertex b)
 {
 
-    c->x = a.x * b.x;
-    c->y = a.y * b.y;
-    c->z = a.z * b.z;
+	c->x = a.x * b.x;
+	c->y = a.y * b.y;
+	c->z = a.z * b.z;
 }
 
 void debug_vertex_p( vertex* a, const char* c )
@@ -71,4 +71,33 @@ void  debug_vertex( vertex b, const char* c )
 void glTranslate_vertex( vertex a )
 {
 	glTranslatef( a.x, a.y, a.z );
+}
+
+
+void glRotate_vertex( vertex r_loc, vertex r_rot, int root)
+{
+	
+/*
+	if( root == 0 )	
+	{
+		divide_vertex( &r_loc, -1 );
+		glTranslate_vertex( r_loc );	
+	}
+*/
+	glRotated( r_rot.x, 1, 0, 0 );
+	glRotated( r_rot.y, 0, 1, 0 );
+	glRotated( r_rot.z, 0, 0, 1 ); 
+/*
+	if( root == 0 )	
+	{
+		divide_vertex( &r_loc, -1 );
+		glTranslate_vertex( r_loc );	
+	}
+
+
+*/
+//	if(root == 0 )
+	//glTranslate_vertex( p_loc );
+
+
 }

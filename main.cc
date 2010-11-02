@@ -46,66 +46,47 @@ static scene_manager* Scene;
 
 void make_obj_data( object* root )
 {
-
-	vertex* triangle = (vertex*)malloc( sizeof(vertex) * 12 );
-	triangle[0].x = 0; triangle[0].y = 0; triangle[0].z = 0;
-	triangle[1].x =  2; triangle[1].y = 0; triangle[1].z = 0;
-	triangle[2].x = 1; triangle[2].y = 2; triangle[2].z = 0;
-
-	triangle[3].x = 1; triangle[3].y = 2; triangle[3].z = 0;
-	triangle[4].x =  1; triangle[4].y = 1; triangle[4].z = 1;
-	triangle[5].x = 2; triangle[5].y = 0; triangle[5].z = 0;
-
-	triangle[6].x = 2; triangle[6].y = 0; triangle[6].z = 0;
-	triangle[7].x = 1; triangle[7].y = 1; triangle[7].z = 1;
-	triangle[8].x =  0; triangle[8].y = 0; triangle[8].z = 0;
-
-	triangle[9].x = 0; triangle[9].y = 0; triangle[9].z = 0;
-	triangle[10].x = 1; triangle[10].y = 1; triangle[10].z = 1;
-	triangle[11].x =  1; triangle[11].y = 2; triangle[11].z = 0;
-
+ 
+        int a;
+	int pol;
+	vertex* s = read_poly_file( "data/test_objects.txt", &a, &pol );
 	root->polygon_color.x = 1;
 	root->polygon_color.y = 0;
 	root->polygon_color.z = 0;
-
-	obj_load( root, GL_LINE_LOOP, (void*)triangle, 12, 3);
+	obj_load( root, GL_LINE_LOOP, (void*)s, a, pol);
 
 }
 
 void make_obj(int argc, char **argv)
 {
-
-	vertex* s = (vertex*)( malloc( sizeof(vertex) * 1224 ) ); 
-	int pol;
-	int a = read_poly_file( "ba", s, &pol );
-	object* bot = obj_create( Scene );
-	int i ;
-	bot->polygon_color.x = 0; bot->polygon_color.y = 1; bot->polygon_color.z =0;
-	obj_load( bot, GL_POINTS, (void*)s, pol, 1224/3);
-	bot->scale.x = 0.2;  bot->scale.y = 0.2;  bot->scale.z = 0.2;
-
 	object* first = obj_create( Scene );	
 
-	first->location.x =  -0.74;
-	first->location.y =  -0.74;
+	first->location.z = 0;
+	first->location.y = 0;
+	first->location.x = 0;
+
 	make_obj_data( first );
 
 	object* second =  obj_create( Scene );  
-	second->location.x = -1;
-	second->location.y = -2;
+	second->location.x = 1;
+	second->location.y = 1;
+	second->location.z = 1;
 	make_obj_data( second );	
 
 	object* third =  obj_create( Scene );  
-	third->location.x =  4;
-	third->location.y = -2;	
+	third->location.x =  -1;
+	third->location.y = -1;	
+	third->location.z = -1;
 	make_obj_data( third );	
-//	bot->location.y = -2;
 
-	obj_add( bot, first );
 	obj_add( first, second );
 	obj_add( first, third );
 
-	sc_set_root( Scene, bot );
+	first->scale.x = 0.5; first->scale.y = 0.5; first->scale.z = 0.5;
+	second->scale.x = 0.5; second->scale.y = 0.5; second->scale.z = 0.5;
+	third->scale.x = 0.5; third->scale.y = 0.5; third->scale.z = 0.5;
+
+	sc_set_root( Scene, first );
 }
 
 
@@ -222,6 +203,36 @@ void		KeyboardFunc(unsigned char key, int x, int y)
 		glDeleteLists(rotate_list_id, 1);
 		exit(0);
 	}
+	else if( 'w' == key || 'W' == key )
+	{
+		
+		object* root = sc_get_object (Scene, Scene->root_object_id);
+		root->location.z += 0.01;
+		glutPostRedisplay();	
+	}
+	else if( 's' == key || 'S' == key )
+	{
+		object* root = sc_get_object (Scene, Scene->root_object_id);
+		root->location.z -= 0.01;
+		glutPostRedisplay();	
+
+
+	}
+	else if( 'a' == key || 'A' == key )
+	{
+		
+		object* root = sc_get_object (Scene, Scene->root_object_id);
+		root->rotation.y += 1;
+		glutPostRedisplay();	
+	}
+	else if( 'd' == key || 'D' == key )
+	{
+		object* root = sc_get_object (Scene, Scene->root_object_id);
+		root->rotation.y -= 1;
+		glutPostRedisplay();	
+
+
+	}
 }
 
 /*
@@ -314,7 +325,7 @@ int		main(int argc, char **argv)
 	glutMotionFunc(&MotionFunc);
 
 	
-
+	glutPostRedisplay();
 	/* Loop */
 	glutMainLoop();
 

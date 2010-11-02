@@ -6,7 +6,7 @@ CC = g++
 
 LINKER = ld
 
-CFLAGS = -Wall -O2 -g
+CFLAGS = -Wall -g
 
 LIBS = -lGL -lGLU -lglut -lm
 
@@ -19,7 +19,6 @@ all: scenegraph
 scenegraph: $(OBJFILES)
 
 	$(CC) -o SceneGraph main.cc $(OBJFILES) $(LIBS)
-
 
 lib: $(OBJFILES)
 	

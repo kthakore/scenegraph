@@ -13,6 +13,8 @@
 #define DEBUG 1
 #define MAX_POLYGONS 10000
 
+struct SM;
+
 enum OBJ_OPERATION{ TRANSLATE = 0, ROTATE = 1, SCALE = 2, RENDER = 3, DESTROY = 4 };
 
 typedef struct VER
@@ -30,6 +32,7 @@ typedef struct OBJ
      Additionally it takes less checks to do the frustum intersections. */
   vertex    bound_sphere_loc;
   GLfloat   bound_sphere_rad;  
+  int	    bound_rad_from; /* Which axis is providing the radius, for scaling purposes */
 
   vertex    location; 
   vertex    rotation;
@@ -38,12 +41,9 @@ typedef struct OBJ
   /* relative vertexes to hold state of scenegraph traversal so far */
   vertex    r_location; 
   vertex    r_rotation;
-  vertex    r_scale;
 
   vertex* polygon_data;
   vertex  polygon_color;
-
-  int render_callist;
 
   int vertex_count;
   int polygon_count; /* Number of polygons */
@@ -51,10 +51,12 @@ typedef struct OBJ
 
   int children_id[8]; /*Limit children of a node to 8, which allows easier implementation of octree later*/
 
-  bool is_root;
+  int is_root;
   int parent; 
 
   unsigned int children; /*Number of children*/  
+
+  struct SM* scene;
  
 } object;
 

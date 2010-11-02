@@ -1,17 +1,11 @@
 #include "scenegraph.h"
 
 
-
-void (*op_func_ptr)(object* obj, GLfloat x, GLfloat y, GLfloat z) = NULL;     
-
-
-
-
 object* obj_create( scene_manager* sm)
 {
 
 	object* obj = sc_get_object( sm, sm->registered  );
-
+	obj->scene = sm;
 	obj->id = sm->registered++;
 	// Store the bounding sphere 
 	obj->bound_sphere_rad = 0;
@@ -19,12 +13,12 @@ object* obj_create( scene_manager* sm)
 	obj->bound_sphere_loc.y = 0;
 	obj->bound_sphere_loc.z = 0; 
 	obj->children = 0;
-	obj->scale.x = 0.5; obj->scale.y = 0.5; obj->scale.z = 0.5;
+	obj->scale.x = 1; obj->scale.y = 1; obj->scale.z = 1;
 	obj->location.x = 0, obj->location.y = 0; obj->location.z = 0;
 	obj->rotation.x = 0; obj->rotation.y = 0; obj->rotation.z = 0;
 	obj->polygon_count = 0;
 	obj->vertex_count = 0;
-	obj->is_root = false;
+	obj->is_root = 0;
 	return obj;
 }
 
@@ -71,8 +65,8 @@ void obj_update_bounding_sphere( object* obj)
 	{
 
 		vertex p = (obj->polygon_data)[i];
-		//add_vertex( &p, (obj->polygon_data)[i], obj->r_location);
-	
+//		add_vertex( &p, (obj->polygon_data)[i], obj->r_location);
+
 		if( p.x <= min.x)
 			min.x = p.x;
 		if( p.y <= min.y)
@@ -89,36 +83,40 @@ void obj_update_bounding_sphere( object* obj)
 			max.z = p.z;
 
 	}
-		
-//	debug_vertex( min, "Min Vertex" );
+
+//	debug_vertex( min, "\nMin Vertex" );
 //	debug_vertex( max, "Max Vertex" );
 
 	// Calculate the middle point and place the bounding sphere there
 	vertex diff;
 	sub_vertex(&diff, max, min );
-	// debug_vertex( diff, "Diff Vertex");
-	//divide_vertex(diff, 2);
+//	debug_vertex( diff, "Diff Vertex");
+	//	divide_vertex(&diff, 2);
 	obj->bound_sphere_loc.x = diff.x/2.0;
 	obj->bound_sphere_loc.y = diff.y/2.0;
 	obj->bound_sphere_loc.z = diff.z/2.0;
-//	debug_vertex( obj->bound_sphere_loc, "Diff/2 vertex");
-
-	 
+	debug_vertex( obj->bound_sphere_loc, "Diff/2 vertex");	 
 
 	obj->bound_sphere_rad = diff.x/2.0;
+	obj->bound_rad_from = 0;
 
 	if( diff.y >= diff.x && diff.y >= diff.z )
-		obj->bound_sphere_rad = diff.y/2.0;
+		{
+			obj->bound_sphere_rad = diff.y/2.0;
+			obj->bound_rad_from = 1;
+		}
 	else if ( diff.z >= diff.y && diff.z >= diff.x )
-		obj->bound_sphere_rad = diff.z/2.0;
+		{
+			obj->bound_sphere_rad = diff.z/2.0;
+			obj->bound_rad_from = 2;
+		}
+
 
 }
 
 /*Operation to set the translate values of the object*/
 void obj_translate( object* obj, GLfloat x, GLfloat y, GLfloat z)
 {
-
-	fprintf( stderr, "Translate: %p from (%f,%f,%f) \n", obj , x,y,z );
 	obj->location.x = x;
 	obj->location.y = y;
 	obj->location.z = z;
@@ -127,7 +125,6 @@ void obj_translate( object* obj, GLfloat x, GLfloat y, GLfloat z)
 /*Operation to set the rotation values of the object*/
 void obj_rotate( object* obj, GLfloat x, GLfloat y, GLfloat z)
 {
-	fprintf( stderr, "Rotate: %p from (%f,%f,%f) \n", obj , x,y,z );
 	obj->rotation.x = x;
 	obj->rotation.y = y;
 	obj->rotation.z = z;
@@ -137,34 +134,73 @@ void obj_rotate( object* obj, GLfloat x, GLfloat y, GLfloat z)
 /*Operation to set the scale values of the object*/
 void obj_scale( object* obj, GLfloat x, GLfloat y, GLfloat z) 
 {
-
-	fprintf( stderr, "Scale: %p from (%f,%f,%f) \n", obj , x,y,z );
 	obj->scale.x = x;
 	obj->scale.y = y;
 	obj->scale.z = z;
 
 }
 
+
+
+void obj_show_bb( object* obj )
+{
+	glColor3f ( 1, 1, 0 );
+	glBegin( GL_LINES );
+
+	glVertex3f( obj->bound_sphere_loc.x, obj->bound_sphere_loc.y, obj->bound_sphere_loc.z);		
+	glVertex3f( obj->bound_sphere_loc.x, obj->bound_sphere_loc.y, obj->bound_sphere_loc.z + obj->bound_sphere_rad);
+
+	glEnd();
+
+	glColor3f ( 0, 1, 1 );
+	glBegin( GL_LINES );
+
+	glVertex3f( obj->bound_sphere_loc.x, obj->bound_sphere_loc.y, obj->bound_sphere_loc.z);		
+	glVertex3f( obj->bound_sphere_loc.x + obj->bound_sphere_rad, obj->bound_sphere_loc.y, obj->bound_sphere_loc.z );
+
+	glEnd();
+
+	glColor3f ( 1, 0, 1 );
+	glBegin( GL_LINES );
+
+	glVertex3f( obj->bound_sphere_loc.x, obj->bound_sphere_loc.y, obj->bound_sphere_loc.z);		
+	glVertex3f( obj->bound_sphere_loc.x , obj->bound_sphere_loc.y + obj->bound_sphere_rad, obj->bound_sphere_loc.z );
+
+	glEnd();
+}
+
+object* obj_get_parent( object* obj )
+{
+	if( obj->is_root )
+		return NULL;
+
+	return sc_get_object( obj->scene, obj->parent );
+
+}
+
 /*Operation to render the objects */
 void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 {
-	//fprintf( stderr, "Rendered: %p from (%f,%f,%f) \n", obj , x,y,z );
-
 	if( obj->polygon_count > 0 )
 	{
 		int i;
 
 		glPushMatrix();
 		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
+		glRotate_vertex( obj->r_location, obj->r_rotation, obj->is_root);	
 		glTranslate_vertex( obj->r_location);
-		glRotatef( obj->r_rotation.x, obj->r_rotation.y, obj->r_rotation.z, 0 );
-	
+
+
+		if(DEBUG)
+			obj_show_bb( obj );
+
 		if( DEBUG )
-		fprintf(stderr, "Object Location %p (%f,%f,%f) \n", obj, obj->r_location.x, obj->r_location.y, obj->r_location.z );
+			fprintf(stderr, "Object Location %p (%f,%f,%f) \n", obj, obj->r_location.x, obj->r_location.y, obj->r_location.z );
+		debug_vertex( obj->r_rotation, "Rotation" );
 		glColor3f( obj->polygon_color.x, obj->polygon_color.y, obj->polygon_color.z);
 		glBegin( obj->render_mode );	
-		
-			for( i = 0; i < obj->vertex_count; i++ )
+
+		for( i = 0; i < obj->vertex_count; i++ )
 		{
 			vertex p = (obj->polygon_data)[i];
 			glVertex3f( p.x, p.y, p.z);
@@ -178,32 +214,6 @@ void obj_render( object* obj, GLfloat x, GLfloat y, GLfloat z )
 }
 
 
-/*Convert the operation into a function pointer (Simple VTABLE implementation) */
-void obj_switch_operation( enum OBJ_OPERATION op)
-{
-
-
-	switch( op )
-	{
-		case TRANSLATE:
-			op_func_ptr = &obj_translate;
-			break;
-		case ROTATE:
-			op_func_ptr = &obj_rotate;
-			break;
-		case SCALE:
-			op_func_ptr = &obj_scale;
-			break;
-		case RENDER:
-			op_func_ptr = &obj_render;
-			break;
-		default:
-			op_func_ptr = &obj_render;
-			break;
-
-	}
-}
-
 // Destroy the object and the polygon data
 void obj_destroy( object* obj)
 {
@@ -215,7 +225,7 @@ void obj_destroy( object* obj)
 void increment_relative_mats( object* p, object* c )
 {
 
- 	add_vertex(&(c->r_location), p->r_location, c->location);
+	add_vertex(&(c->r_location), p->r_location, c->location);
 	add_vertex(&(c->r_rotation), p->r_rotation, c->rotation);
 }
 
@@ -225,7 +235,11 @@ void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operati
 {
 	unsigned int child;
 
-	obj_switch_operation( operation );
+	if( parent->is_root )
+	{
+		copy_vertex( & parent->r_location, & parent->location);
+		copy_vertex( & parent->r_rotation, & parent->rotation);
+	}
 
 	if( sm->polygon_rendered >= MAX_POLYGONS )
 	{
@@ -233,14 +247,14 @@ void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operati
 		return;
 	}
 
-	if( operation == RENDER && sc_obj_in_frustum( sm, parent ) == 0 )
-	   {
-		if( DEBUG )
-		fprintf(stderr, "Not printing %p \n", parent);
-		return;
-	   }
+	if( sc_obj_in_frustum( sm, parent ) == 0 )
+	{
 
-	(*op_func_ptr) ( parent, x,y,z );
+		fprintf(stderr, "Not printing %d \n", parent->id);
+		return;
+	}
+
+	obj_render( parent, x,y,z );
 
 	sm->polygon_rendered += parent->polygon_count;
 	//if( DEBUG )
@@ -249,7 +263,7 @@ void obj_operate( scene_manager* sm,  object* parent, enum OBJ_OPERATION operati
 	{
 		object* o =  sc_get_object(sm, parent->children_id[child]);
 		increment_relative_mats( parent, o );
-		
+
 		obj_operate( sm, o, operation, x, y, z);
 
 	}

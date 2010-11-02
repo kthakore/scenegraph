@@ -31,7 +31,7 @@ scene_manager* sc_init(int objects) {
 void  sc_set_root( scene_manager* scene, object* root)
 {
 	scene->root_object_id = root->id;
-	root->is_root = true;	
+	root->is_root = 1;	
 
 	copy_vertex( &(root->r_location) , &(root->location) ); 	
 }
@@ -212,17 +212,36 @@ int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 	obj_update_bounding_sphere( obj );
 
 	vertex relative_bs;
-	
-	
-	add_vertex( &relative_bs, obj->r_location, obj->bound_sphere_loc );
-	multiply_vertex( &relative_bs, obj->scale, relative_bs );	
+	vertex radius_bs;
 
 	GLfloat x = relative_bs.x;
 	GLfloat y = relative_bs.y;
 	GLfloat z = relative_bs.z;
 	GLfloat radius = obj->bound_sphere_rad;
 
-//	fprintf( stderr, "Rad %f, %f %f %f", radius, x, y, z );
+	if( obj->bound_sphere_rad == 0 )
+	{	
+		radius *= obj->scale.x;
+
+	}
+	else if( obj->bound_sphere_rad == 1 )
+	{	
+		radius *= obj->scale.y;
+
+	}
+	else
+	{
+		 radius *= obj->scale.z;
+	}
+
+	radius_bs.x = radius;
+	radius_bs.y = radius;
+	radius_bs.z = radius;
+	
+	
+	add_vertex( &relative_bs, obj->r_location, obj->bound_sphere_loc );
+	
+
 
 	for( p = 0; p < 6; p++ )
 	{
