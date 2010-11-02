@@ -24,6 +24,8 @@ void flood_vertex( vertex* z, GLfloat v);
 void extract_vertex( vertex v, GLfloat* a, GLfloat* b, GLfloat* c);
 void draw_vertex_axis( vertex* bb, GLfloat rad, vertex c);
 
-GLdouble modelview_multiply( vertex* s, vertex t ) ;
+GLdouble modelview_multiply( vertex* s, GLdouble** inv, vertex t ) ;
+
+GLdouble* modelview_inv_get( ) ;
 
 #endif 

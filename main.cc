@@ -86,8 +86,8 @@ void make_obj(int argc, char **argv)
 	obj_scale( third, 0.5, 0.5, 0.5 );
 
 	obj_translate( first, 0, 0, 0 );
-	obj_translate( second, 1, -2, 0);
-	obj_translate( third, -6, -2, 0);
+	obj_translate( second, 0.5, 0.5, 0);
+	obj_translate( third, -1, -2, 0);
 //	obj_translate( fourth, 0.1, 0.2, 0 );
 
 	sc_set_root( Scene, first );

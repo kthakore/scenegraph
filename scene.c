@@ -245,6 +245,8 @@ int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 		glPopMatrix();
 	}
 
+	debug_vertex( bb_plus_p_loc, "VERTEX of BB");
+
 	for( p = 0; p < 6; p++ )
 	{
 		d = Scene->frustum[p][0] * x + Scene->frustum[p][1] * y + Scene->frustum[p][2] * z + Scene->frustum[p][3];
