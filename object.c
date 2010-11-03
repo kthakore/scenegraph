@@ -193,7 +193,7 @@ void obj_render( object* obj)
 	
 		glTranslate_vertex( obj->r_location);
 	
-//		glRotate_vertex( obj->r_location, obj->r_rotation, obj->is_root);	
+		glRotate_vertex( obj->r_location, obj->r_rotation, obj->is_root);	
 	
 //		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
 //GET FINAL MATRIX
