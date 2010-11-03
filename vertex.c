@@ -71,6 +71,14 @@ void  debug_vertex( vertex b, const char* c )
 void glTranslate_vertex( vertex a )
 {
 	glTranslated( a.x, a.y, a.z );
+	/*GLdouble* m = get_clipping_space_transform();
+	GLdouble* b = mat_transform( a);
+	GLdouble c[16];
+	mat_mul(m, b, c );
+	glLoadMatrixd( c );
+	free(b);
+	free(m);
+*/
 }
 
 
@@ -147,25 +155,6 @@ void draw_vertex_axis( vertex* bb, GLfloat rad, vertex c )
 
 
 
-GLdouble* get_clipping_space_transform( )
-{
-
-   GLdouble* m = (GLdouble*)malloc( sizeof( GLdouble ) * 16 );
-   glGetDoublev( GL_MODELVIEW_MATRIX, m );
-
-    GLdouble* p = (GLdouble*)malloc( sizeof( GLdouble ) * 16 );
-   glGetDoublev( GL_PROJECTION_MATRIX, p);
-
-    GLdouble* d = (GLdouble*)malloc( sizeof( GLdouble ) * 16 );
-   Matrix4x4MultiplyBy4x4( (GLdouble (*)[4])m, (GLdouble (*)[4])p, (GLdouble (*)[4])d );
-
-    free(m); free(p);
-    
-  return d;
-
-
-}
-
 GLdouble* modelview_inv_get(  )
 {
 
@@ -199,12 +188,12 @@ GLdouble modelview_multiply( vertex* s, GLdouble** inv, vertex t)
 	convert16_4( m, m_ );
 	convert16_4( *inv, inv_ );
 
-	GLdouble out[4][4];
+	GLdouble out[16];
 //	GLdouble c;
-	Matrix4x4MultiplyBy4x4( m_, inv_, out);
-	s->x    = out[0][0]*t.x + out[0][1]*t.y + out[0][2]*t.z + out[0][3]*a;
-	s->y    = out[1][0]*t.x + out[1][1]*t.y + out[1][2]*t.z + out[1][3]*a;
-	s->z    = out[2][0]*t.x + out[2][1]*t.y + out[2][2]*t.z + out[2][3]*a;
+	mat_mul( m, *inv, out);
+	s->x    = out[0]*t.x + out[4]*t.y + out[8]*t.z + out[12]*a;
+	s->y    = out[1]*t.x + out[5]*t.y + out[9]*t.z + out[11]*a;
+	s->z    = out[2]*t.x + out[6]*t.y + out[10]*t.z + out[12]*a;
 //	c    = out[0][0]*t.x + out[0][1]*t.y + out[0][2]*t.z + out[0][3]*a;
 
 //	divide_vertex( s, c);

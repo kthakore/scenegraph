@@ -31,12 +31,24 @@ void convert16_4( GLdouble in[16], GLdouble out[4][4])
 }
 
 
+void mat_mul( GLdouble* src, GLdouble* src2, GLdouble* out)
+{
+
+Matrix4x4MultiplyBy4x4( (GLdouble (*)[4])src, (GLdouble (*)[4])src2, (GLdouble (*)[4])out);
+
+}
 
 
 GLdouble* mat_transform( vertex g)
 {
+	GLdouble* t = (GLdouble*)malloc( sizeof(GLdouble) * 16 );
 
-	return NULL;
+	t[0] = 1; t[4] = 0; t[8] = 0; t[12] = g.x;
+	t[1] = 0; t[5] = 1; t[9] = 0; t[13] = g.x;
+	t[2] = 0; t[6] = 0; t[10] = 1; t[14] = g.x;
+	t[3] = 0; t[7] = 0; t[11] = 0; t[15] = 1;
+
+	return t;
 }
 
 GLdouble* mat_rotate( vertex g, GLdouble angle)
@@ -108,4 +120,24 @@ bool mat_inv(const GLdouble m[16], GLdouble invOut[16])
 		invOut[i] = inv[i] * det;
 
 	return true;
+}
+
+
+GLdouble* get_clipping_space_transform( )
+{
+
+   GLdouble* m = (GLdouble*)malloc( sizeof( GLdouble ) * 16 );
+   glGetDoublev( GL_MODELVIEW_MATRIX, m );
+
+    GLdouble* p = (GLdouble*)malloc( sizeof( GLdouble ) * 16 );
+   glGetDoublev( GL_PROJECTION_MATRIX, p);
+
+    GLdouble* d = (GLdouble*)malloc( sizeof( GLdouble ) * 16 );
+   Matrix4x4MultiplyBy4x4( (GLdouble (*)[4])m, (GLdouble (*)[4])p, (GLdouble (*)[4])d );
+
+    free(m); free(p);
+    
+  return d;
+
+
 }

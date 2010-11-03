@@ -9,7 +9,10 @@ bool mat_inv(const GLdouble m[16], GLdouble invOut[16]);
 
 void convert16_4( GLdouble in[16], GLdouble out[4][4]);
 
-void Matrix4x4MultiplyBy4x4 (GLdouble src1[4][4], GLdouble src2[4][4], GLdouble dest[4][4]);
+void mat_mul (GLdouble* src1, GLdouble* src2, GLdouble* dest);
+
+GLdouble*  get_clipping_space_transform( );
+
 
 
 #endif
