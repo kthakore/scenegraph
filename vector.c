@@ -159,20 +159,19 @@ GLdouble* modelview_inv_get(  )
 GLdouble modelview_multiply( vector* s, GLdouble** inv, vector t)
 {
 
+	// Get Wc the clipping difference
 	GLdouble r_c[4];
 	glGetDoublev( GL_CURRENT_RASTER_POSITION, r_c );
-	GLdouble* m = get_clipping_space_transform();
-
 	GLdouble a = r_c[3];
+
+	// Get our new modelview matrix
+	GLdouble* m = get_clipping_space_transform();
 	GLdouble out[16];
-//	GLdouble c;
+
 	mat_mul( *inv, m,  out);
 	s->x    = out[0]*t.x + out[4]*t.y + out[8]*t.z + out[12]*a;
 	s->y    = out[1]*t.x + out[5]*t.y + out[9]*t.z + out[11]*a;
 	s->z    = out[2]*t.x + out[6]*t.y + out[10]*t.z + out[12]*a;
-//	c    = out[0][0]*t.x + out[0][1]*t.y + out[0][2]*t.z + out[0][3]*a;
-
-//	divide_vector( s, c);
 	free(m);
 	free(*inv);
 	return 0.0;

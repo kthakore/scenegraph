@@ -1,9 +1,10 @@
 #include "scenegraph.h"
 
-
+//Initialize the object structure
 object* obj_create( scene_manager* sm)
 {
 
+	//We use the object form the object register to adress locality
 	object* obj = sc_get_object( sm, sm->registered  );
 	obj->scene = sm;
 	obj->id = sm->registered++;
@@ -11,6 +12,7 @@ object* obj_create( scene_manager* sm)
 	obj->bound_sphere_rad = 0;
 	obj->children = 0;
 
+	// Everything but the scale is zero
 	zero_vector( & obj->bound_sphere_loc );
 	zero_vector( & obj->r_bound_sphere_loc );
 	zero_vector( & obj->location );
@@ -22,6 +24,7 @@ object* obj_create( scene_manager* sm)
 	return obj;
 }
 
+//Adding an object to another object as a child
 void obj_add( object* parent, object* child )
 {
 	if( parent->children == 7 )
@@ -32,10 +35,7 @@ void obj_add( object* parent, object* child )
 }
 
 
-/* Load data (polygons), the mode to draw them with during render
- *
- * Additionally set the bounding box 
- */
+//Load data (polygons), the mode to draw them with during render
 void obj_load( object* obj, int mode, void* data, int vector_count, int poly_count)
 {
 	//We alread have data loaded
@@ -50,6 +50,8 @@ void obj_load( object* obj, int mode, void* data, int vector_count, int poly_cou
 	obj_update_bounding_sphere( obj );
 }
 
+
+//Calculate the bounding sphere location and radius
 void obj_update_bounding_sphere( object* obj)
 {	
 	if( obj->polygon_count <= 0) 
@@ -123,6 +125,7 @@ void obj_rotate( object* obj, GLfloat x, GLfloat y, GLfloat z)
 
 }
 
+// Set the color
 void obj_color( object* obj, GLfloat x, GLfloat y, GLfloat z)
 {
 	obj->polygon_color.x = x;
@@ -141,7 +144,7 @@ void obj_scale( object* obj, GLfloat x, GLfloat y, GLfloat z)
 }
 
 
-
+//Get our parent 
 object* obj_get_parent( object* obj )
 {
 	if( obj->is_root )
@@ -151,11 +154,14 @@ object* obj_get_parent( object* obj )
 
 }
 
-
+//Calculate the bb using the transforms that would happen if we are drawing the object
 void obj_displace_bb( object* obj)
 {
 
-
+ /*   This commented could shows how this should have been 
+  *   done using the software and not openGL. However there 
+  *   are some bugs.
+  */
 /*
 	GLdouble* model_view = get_clipping_space_transform();
 
@@ -184,9 +190,11 @@ void obj_displace_bb( object* obj)
 
 */
 
-
+	//Get the inverse of our current matrix. 
+	// M_inv
 	GLdouble* out_r = modelview_inv_get(   );
 
+	//Do the transforms
 	glPushMatrix();
 
 	glTranslate_vector( obj->r_location);
@@ -196,9 +204,14 @@ void obj_displace_bb( object* obj)
 	glPopMatrix();
 	//debug_vector( obj->r_rotation, "ROTATION");
 
+	//Set up our vector 
 	vector displace;
 	add_vector( &displace, obj->r_location, obj->bound_sphere_loc );
 
+	//Since ModelView x Transform = NewModelview
+	// we can do NewModelView x ModelViewInv = Transform
+	// Then we apply the transform to our bounding box to get the new 
+	// location
 	modelview_multiply( &obj->model_proj_bb, &out_r, displace);
 
 }
@@ -241,15 +254,12 @@ void obj_destroy( object* obj)
 	free( obj );
 }
 
+/* Update our new coord from the parent */
 void increment_relative_mats( object* p, object* c )
 {
 
-
 	add_vector(&(c->r_location), p->r_location, c->location);
-
 	add_vector(&(c->r_rotation), p->r_rotation, c->rotation);
-	//	add_vector(&(c->r_bound_sphere_loc), p->r_bound_sphere_loc, c->bound_sphere_loc);
-	//	add_vector(&(c->r_bound_sphere_loc), p->r_location, c->bound_sphere_loc);
 }
 
 
@@ -259,25 +269,22 @@ void obj_operate( scene_manager* sm,  object* parent)
 
 	unsigned int child;
 
+	// For the root, our relative coords are in the same coordinate systems
 	if( parent->is_root )
 	{
 		copy_vector( & parent->r_location, & parent->location);		
 		copy_vector( & parent->r_bound_sphere_loc, & parent->bound_sphere_loc);
 		copy_vector( & parent->r_rotation, & parent->rotation);
 	}
-
+	// Send it to the Render Marshall to be render
 	sc_set_object_to_render( sm, parent );
 
-
-	//fprintf( stderr, "Parent %d, %d \n", parent->id, parent->children);
+	//Recursively do the same for each children
 	for( child = 0; child < parent->children; child++)
 	{
 
-
 		object* o =  sc_get_object(sm, parent->children_id[child]);
-		//	fprintf( stderr, "Parent %d, Child %d \n", parent->id, o->id );
 		increment_relative_mats( parent, o );
-
 		obj_operate( sm, o);
 
 	}
