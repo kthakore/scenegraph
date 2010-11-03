@@ -82,26 +82,18 @@ void glTranslate_vector( vector a )
 }
 
 
-void glRotate_vector( vector r_loc, vector r_rot, int root)
+void glRotate_vector( vector r_loc, vector r_rot)
 {
 
-	
-	   if( root == 0 )	
-	   {
 	   divide_vector( &r_loc, -1 );
 	   glTranslate_vector( r_loc );	
-	   }
-	 
+
 	glRotated( r_rot.x, 1, 0, 0 );
 	glRotated( r_rot.y, 0, 1, 0 );
 	glRotated( r_rot.z, 0, 0, 1 ); 
 
-	   if( root == 0 )	
-	   {
 	   divide_vector( &r_loc, -1 );
 	   glTranslate_vector( r_loc );	
-	   }
-
 }
 
 

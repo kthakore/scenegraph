@@ -190,11 +190,11 @@ void obj_displace_bb( object* obj)
 	glPushMatrix();
 
 	glTranslate_vector( obj->r_location);
-	glRotate_vector( obj->r_location, obj->r_rotation, 0);	
+	glRotate_vector( obj->r_location,  obj->r_rotation);	
 	glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
 
 	glPopMatrix();
-	debug_vector( obj->r_rotation, "ROTATION");
+	//debug_vector( obj->r_rotation, "ROTATION");
 
 	vector displace;
 	add_vector( &displace, obj->r_location, obj->bound_sphere_loc );
@@ -212,7 +212,7 @@ void obj_render( object* obj)
 
 		glPushMatrix();
 		glTranslate_vector( obj->r_location);
-		glRotate_vector( obj->r_location, obj->r_rotation, 0);	
+		glRotate_vector( obj->r_location, obj->r_rotation);	
 		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
 		glColor3f( obj->polygon_color.x, obj->polygon_color.y, obj->polygon_color.z);
 		glBegin( obj->render_mode );	

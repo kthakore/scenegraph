@@ -14,7 +14,7 @@ void debug_vector_p( vector* a, const char* );
 void  debug_vector( vector b, const char* );
 
 void glTranslate_vector( vector a );
-void glRotate_vector( vector a, vector b,  int d);
+void glRotate_vector( vector a, vector b);
 
 GLfloat vector_dist( vector a, vector b);
 

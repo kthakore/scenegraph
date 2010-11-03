@@ -17,12 +17,13 @@
 //Defining the scenemanager struct early for useage before the declaration
 struct SM;
 
-
+// We will be using vector to hold positional and any 3 dim data
 typedef struct VER
 {
    GLdouble x, y, z;
 } vector;
 
+// An object defines a set of polygons, bounding box and spatial coord
 typedef struct OBJ
 {
 
@@ -65,6 +66,7 @@ typedef struct OBJ
 } object;
 
 
+//A simple node for our linked list for the render marshall
 typedef struct LOBJ
 {
 
