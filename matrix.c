@@ -38,6 +38,14 @@ Matrix4x4MultiplyBy4x4( (GLdouble (*)[4])src, (GLdouble (*)[4])src2, (GLdouble (
 
 }
 
+GLdouble* mat_mul( GLdouble* src, GLdouble* src2)
+{
+
+GLdouble* out = (GLdouble* ) malloc( sizeof( GLdouble ) * 16 );
+
+Matrix4x4MultiplyBy4x4( (GLdouble (*)[4])src, (GLdouble (*)[4])src2, (GLdouble (*)[4])out);
+
+}
 
 GLdouble* mat_translate( vertex g)
 {
