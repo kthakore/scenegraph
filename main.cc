@@ -1,5 +1,5 @@
 /* ============================================================================
- **
+ ** MAIN.CC based on 
  ** Demonstration of display lists
  ** Copyright (C) 2005  Julien Guertault 
  ** Modifications (very minor) by Brian Srivastava 2010 for University of Western Ontario
@@ -22,8 +22,14 @@
 
  ** ========================================================================= */
 
+
+/*
+ * Attempt at scenegraph by Kartik Thakore 2010 
+ *
+ */ 
+
 #include "scenegraph.h"
-#include "scene.h"
+
 
 static int	rotate_list_id = 0;
 static int	rotate_teapot_list_id = 0;
@@ -34,9 +40,6 @@ static int	xold;
 static int	yold;
 static float	rotate_x = -30;
 static float	rotate_y = 15;
-static float	alpha = 0;
-static float	beta = 10;
-
 
 /*
    SCENEGRAPH
@@ -44,40 +47,52 @@ static float	beta = 10;
 
 static scene_manager* Scene;
 
-void make_obj_data( object* root )
+/*Function to load our object pointer data*/
+void make_obj_data( object* obj )
 {
  
-        int a;
-	int pol;
-	vector* s = read_poly_file( "data/test_objects.txt", &a, &pol );
-	root->polygon_color.x = 1;
-	root->polygon_color.y = 0;
-	root->polygon_color.z = 0;
-	obj_load( root, GL_LINE_LOOP, (void*)s, a, pol);
+        int vertices;
+	int polygons;
+	vector* vector_data = read_poly_file( "data/test_objects.txt", &vertices, &polygons );
+	//Default color is read for the object.
+	obj->polygon_color.x = 1;
+	obj->polygon_color.y = 0;
+	obj->polygon_color.z = 0;
+	
+	//All our objects are being drawn with GL_LINE_LOOP
+	obj_load( obj, GL_LINE_LOOP, (void*)vector_data, vertices, polygons);
 
 }
 
+/* Fill up the scene with test data */
 void make_obj(int argc, char **argv)
 {
+
+	//Make and setup the root node.
 	object* first = obj_create( Scene );	
 
 	make_obj_data( first );
 
 	obj_color( first, 1, 0, 0 );
 	obj_translate( first, 0, 0, 0 );
-	int i;
-	object* head = first;
+	sc_set_root( Scene, first );
 
+	int i;
+
+	//Add about 100 objects in various direction for rendering
+	object* head = first;
 
 	for( i =0; i < 100; i++)
 	{
+
+
 		object* a = obj_create( Scene );
 		make_obj_data( a );
 		obj_color( a, 0, 0, 1 );
 		obj_translate( a,  0, 0, -0.1);
 		
 		obj_add( head, a );
-		if( i % 3)
+		//Add each subsequent object to itself, to make a huge tree for the scene to use.
 		head = a;
 
 	}
@@ -159,7 +174,6 @@ void make_obj(int argc, char **argv)
 
 	}
 
-	sc_set_root( Scene, first );
 }
 
 
@@ -175,74 +189,24 @@ void		compile_rotate_list(void)
 	glEndList();
 }
 
-/*
- ** The instructions to rotate each teapot, according to the mouse
- */
-void		compile_rotate_teapot_list(void)
-{
-	glNewList(rotate_teapot_list_id, GL_COMPILE);
-	glRotatef(beta, 1, 0, 0);
-	glRotatef(alpha, 0, 1, 0);
-	glEndList();
-}
-
-/*
- ** The instructions to render a teapot
- */
-void		compile_teapot_list(void)
-{
-	glNewList(teapot_list_id, GL_COMPILE);
-	glPushMatrix();
-
-	/* Nested call to another display list */
-	glCallList(rotate_teapot_list_id);
-
-	glutWireTorus(0.1, 0.3, 20, 20);
-	/*  Code for teapot.  The extra two lines are because of a bug in
-	    how teapots are drawn you can use torus, teapot or whatever else
-	    glFrontFace(GL_CW);
-	    glutSolidTeapot(0.3);
-	    glFrontFace(GL_CCW);
-	 */ 
-	glPopMatrix();
-	glEndList();
-}
 
 /*
  ** Function called to update rendering
  */
 void		DisplayFunc(void)
 {
-
-	sc_update_frustum( Scene );
-	int i;
-	int j;
-	int k;
-	int dim;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	glTranslatef(0, 0, -10.);
 
 	glCallList(rotate_list_id);
-
-	//could also set these to 3 for an easier to see scene or 5 so there's definitely stuff off screen.  Up to you guys
-	// there will be one of the objects that's black, and therefore hard to see.  
-	/*	dim =4;
-		for (i = 0; i < dim; ++i)
-		for (j = 0; j < dim; ++j)
-		for (k = 0; k < dim; ++k)
-		{
-		glPushMatrix();
-		glTranslatef(i - 1, j - 1, k - 1);
-		glColor3f(i / 2., j / 2., k / 2.);
-
-		glCallList(teapot_list_id);
-
-		glPopMatrix();
-		}
-	 */
 	if( DEBUG )
 		fprintf( stderr, "\nDoing ROOT\n" );
+
+	// Get our frustum 
+	sc_update_frustum( Scene );
+
+	//Render the whole scene
 	sc_render( Scene );
 	/* End */
 	glFlush();
@@ -276,6 +240,8 @@ void		KeyboardFunc(unsigned char key, int x, int y)
 		glDeleteLists(rotate_list_id, 1);
 		exit(0);
 	}
+
+	//Use the keys to play with the root location and rotation a bit
 	else if( 'w' == key || 'W' == key )
 	{
 		
@@ -341,16 +307,6 @@ void		MotionFunc(int x, int y)
 
 		glutPostRedisplay();
 	}
-	if (GLUT_DOWN == right_click)
-	{
-		beta = beta + (y - yold) / 2.f;
-		alpha = alpha + (x - xold) / 2.f;
-
-		/* Update the rotations */
-		compile_rotate_teapot_list();
-
-		glutPostRedisplay();
-	}
 	xold = x;
 	yold = y;
 
@@ -373,22 +329,13 @@ int		main(int argc, char **argv)
 
 	/* Compilation of the instructions lists */
 	rotate_list_id = glGenLists(1);
-	//rotate_teapot_list_id = glGenLists(1);
-	//teapot_list_id = glGenLists(1);
 	compile_rotate_list();
-	//compile_rotate_teapot_list();
-	//compile_teapot_list();
 
 	/* Initialize the Scenegraph */
 
-	Scene = sc_init( 100000 ); 
+	Scene = sc_init( 601 ); 
 
 	make_obj(argc, argv);
-
-	sc_render( Scene );
-
-	sc_update_frustum( Scene );
-
 
 	/* Declaration of the callbacks */
 	glutDisplayFunc(&DisplayFunc);
