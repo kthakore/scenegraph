@@ -228,18 +228,18 @@ static inline void convert16_4( GLdouble in[16], GLdouble out[4][4])
 GLdouble* get_clipping_space_transform( )
 {
 
-   GLdouble* m = malloc( sizeof( GLdouble ) * 16 );
+   GLdouble* m = (GLdouble*)malloc( sizeof( GLdouble ) * 16 );
    glGetDoublev( GL_MODELVIEW_MATRIX, m );
 
-    GLdouble* p = malloc( sizeof( GLdouble ) * 16 );
-   glGetDoublev( GL_PROJECT_MATRIX, p);
+    GLdouble* p = (GLdouble*)malloc( sizeof( GLdouble ) * 16 );
+   glGetDoublev( GL_PROJECTION_MATRIX, p);
 
-    GLdouble* d = malloc( sizeof( GLdouble ) * 16 );
-   Matrix4x4MultiplyBy4x4( m, p, d );
+    GLdouble* d = (GLdouble*)malloc( sizeof( GLdouble ) * 16 );
+   Matrix4x4MultiplyBy4x4( (GLdouble (*)[4])m, (GLdouble (*)[4])p, (GLdouble (*)[4])d );
 
-
+    free(m); free(p);
     
-   
+  return d;
 
 
 }
@@ -247,8 +247,7 @@ GLdouble* get_clipping_space_transform( )
 GLdouble* modelview_inv_get(  )
 {
 
-	double m[16];
-	glGetDoublev( GL_MODELVIEW_MATRIX, m );
+	GLdouble* m = get_clipping_space_transform();
 
 	///Take m and send to MatrixInversion
 	GLdouble* out = (GLdouble*)malloc( sizeof( GLdouble) * 16 );
@@ -268,8 +267,9 @@ GLdouble modelview_multiply( vertex* s, GLdouble** inv, vertex t)
 
 
 
-	GLdouble m[16];
-	glGetDoublev( GL_MODELVIEW_MATRIX, m );
+
+	GLdouble* m = get_clipping_space_transform();
+
 	GLdouble a = 0;
 	GLdouble m_[4][4];
 	GLdouble inv_[4][4];
