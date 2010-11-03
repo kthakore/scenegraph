@@ -37,7 +37,7 @@ void  sc_set_root( scene_manager* scene, object* root)
 	scene->root_object_id = root->id;
 	root->is_root = 1;	
 
-	copy_vertex( &(root->r_location) , &(root->location) ); 	
+	copy_vector( &(root->r_location) , &(root->location) ); 	
 }
 
 object* sc_get_object( scene_manager* sm, int id )
@@ -215,12 +215,12 @@ int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 	int p;
 	int c = 0;
 	GLfloat d;
-	vertex bb_plus_p_loc;
+	vector bb_plus_p_loc;
 
-	copy_vertex(& bb_plus_p_loc, &obj->model_proj_bb);
+	copy_vector(& bb_plus_p_loc, &obj->model_proj_bb);
 
 	GLfloat x, y, z;
-	extract_vertex( bb_plus_p_loc, &x, &y, &z );
+	extract_vector( bb_plus_p_loc, &x, &y, &z );
 
 	GLfloat radius = obj->bound_sphere_rad;
 	if( obj->bound_rad_from == 0 )
@@ -241,12 +241,12 @@ int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 	if(DEBUG)
 	{
 		glPushMatrix();
-		draw_vertex_axis( & bb_plus_p_loc, radius, obj->polygon_color );
+		draw_vector_axis( & bb_plus_p_loc, radius, obj->polygon_color );
 		glPopMatrix();
 	}
 
 
-	//debug_vertex( bb_plus_p_loc, "VERTEX of BB");
+	//debug_vector( bb_plus_p_loc, "VERTEX of BB");
 
 	for( p = 0; p < 6; p++ )
 	{
@@ -326,12 +326,12 @@ void sc_set_object_to_render( scene_manager* sm, object* obj )
 	else
 	{
 
-		GLfloat distance = vertex_dist( sm->camera, obj->model_proj_bb ); 
+		GLfloat distance = vector_dist( sm->camera, obj->model_proj_bb ); 
 
 		linked_object* temp = sc_get_rm_object( sm, obj->id );
 		linked_object* head = sm->rm_first;
 		do{
-			GLfloat head_d = vertex_dist( sm->camera, head->object_ptr->model_proj_bb );	
+			GLfloat head_d = vector_dist( sm->camera, head->object_ptr->model_proj_bb );	
 
 			linked_object* after  = head->next;
 			linked_object* before = head->previous;

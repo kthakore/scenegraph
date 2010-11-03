@@ -11,13 +11,13 @@ object* obj_create( scene_manager* sm)
 	obj->bound_sphere_rad = 0;
 	obj->children = 0;
 
-	zero_vertex( & obj->bound_sphere_loc );
-	zero_vertex( & obj->r_bound_sphere_loc );
-	zero_vertex( & obj->location );
-	zero_vertex( & obj->rotation );
-	flood_vertex( & obj->scale, 1 );
+	zero_vector( & obj->bound_sphere_loc );
+	zero_vector( & obj->r_bound_sphere_loc );
+	zero_vector( & obj->location );
+	zero_vector( & obj->rotation );
+	flood_vector( & obj->scale, 1 );
 	obj->polygon_count = 0;
-	obj->vertex_count = 0;
+	obj->vector_count = 0;
 	obj->is_root = 0;
 	return obj;
 }
@@ -36,7 +36,7 @@ void obj_add( object* parent, object* child )
  *
  * Additionally set the bounding box 
  */
-void obj_load( object* obj, int mode, void* data, int vertex_count, int poly_count)
+void obj_load( object* obj, int mode, void* data, int vector_count, int poly_count)
 {
 	//We alread have data loaded
 	if( obj->polygon_count > 0 )
@@ -44,9 +44,9 @@ void obj_load( object* obj, int mode, void* data, int vertex_count, int poly_cou
 		free( obj->polygon_data );
 
 	obj->render_mode = mode;
-	obj->polygon_data = (vertex*)data;
+	obj->polygon_data = (vector*)data;
 	obj->polygon_count = poly_count;
-	obj->vertex_count = vertex_count;
+	obj->vector_count = vector_count;
 	obj_update_bounding_sphere( obj );
 }
 
@@ -55,16 +55,16 @@ void obj_update_bounding_sphere( object* obj)
 	if( obj->polygon_count <= 0) 
 		return;
 	//Iterate through the polygons to find the min and max x,y,z
-	vertex min;
+	vector min;
 	min.x = 0; min.y = 0; min.z = 0;
-	vertex max; 
+	vector max; 
 	max.x = 0; max.y = 0; max.z = 0;
 
 	int i;
-	for( i = 0; i < obj->vertex_count; i++ )
+	for( i = 0; i < obj->vector_count; i++ )
 	{
 
-		vertex p = (obj->polygon_data)[i];
+		vector p = (obj->polygon_data)[i];
 		if( p.x <= min.x)
 			min.x = p.x;
 		if( p.y <= min.y)
@@ -84,8 +84,8 @@ void obj_update_bounding_sphere( object* obj)
 
 
 	// Calculate the middle point and place the bounding sphere there
-	vertex diff;
-	sub_vertex(&diff, max, min );
+	vector diff;
+	sub_vector(&diff, max, min );
 	obj->bound_sphere_loc.x = diff.x/2.0;
 	obj->bound_sphere_loc.y = diff.y/2.0;
 	obj->bound_sphere_loc.z = diff.z/2.0;
@@ -154,14 +154,14 @@ object* obj_get_parent( object* obj )
 
 void obj_displace_bb( object* obj, GLfloat x, GLfloat y, GLfloat z)
 {
-	vertex bb_plus_p_loc;
-	add_vertex(& bb_plus_p_loc, obj->r_location, obj->bound_sphere_loc );
+	vector bb_plus_p_loc;
+	add_vector(& bb_plus_p_loc, obj->r_location, obj->bound_sphere_loc );
 
 	glPushMatrix();
-	vertex displace;
-	add_vertex( &displace, obj->r_location, obj->bound_sphere_loc );
-	glTranslate_vertex( obj->r_location);
-	glRotate_vertex( obj->r_location, obj->r_rotation, obj->is_root);	
+	vector displace;
+	add_vector( &displace, obj->r_location, obj->bound_sphere_loc );
+	glTranslate_vector( obj->r_location);
+	glRotate_vector( obj->r_location, obj->r_rotation, obj->is_root);	
 	glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
 	//modelview_multiply( &obj->model_proj_bb, bb_plus_p_loc);
 	glPopMatrix();
@@ -176,25 +176,25 @@ void obj_render( object* obj)
 	{
 		int i;
 
-		vertex bb_plus_p_loc;
-		//add_vertex(& bb_plus_p_loc, obj->location, obj->bound_sphere_loc );
-		copy_vertex( &bb_plus_p_loc, &obj->location);
+		vector bb_plus_p_loc;
+		//add_vector(& bb_plus_p_loc, obj->location, obj->bound_sphere_loc );
+		copy_vector( &bb_plus_p_loc, &obj->location);
 		GLdouble* out_r = modelview_inv_get(   );
 
 		glPushMatrix();
-		vertex displace;
-		add_vertex( &displace, obj->r_location, obj->bound_sphere_loc );
-		glTranslate_vertex( obj->r_location);
+		vector displace;
+		add_vector( &displace, obj->r_location, obj->bound_sphere_loc );
+		glTranslate_vector( obj->r_location);
 
-		glRotate_vertex( obj->r_location, obj->r_rotation, 0);	
+		glRotate_vector( obj->r_location, obj->r_rotation, 0);	
 
 		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
 		glColor3f( obj->polygon_color.x, obj->polygon_color.y, obj->polygon_color.z);
 		glBegin( obj->render_mode );	
 
-		for( i = 0; i < obj->vertex_count; i++ )
+		for( i = 0; i < obj->vector_count; i++ )
 		{
-			vertex p = (obj->polygon_data)[i];
+			vector p = (obj->polygon_data)[i];
 			glVertex3f( p.x, p.y, p.z);
 
 
@@ -221,11 +221,11 @@ void increment_relative_mats( object* p, object* c )
 {
 
 
-	add_vertex(&(c->r_location), p->r_location, c->location);
+	add_vector(&(c->r_location), p->r_location, c->location);
 
-	add_vertex(&(c->r_rotation), p->r_rotation, c->rotation);
-	//	add_vertex(&(c->r_bound_sphere_loc), p->r_bound_sphere_loc, c->bound_sphere_loc);
-	//	add_vertex(&(c->r_bound_sphere_loc), p->r_location, c->bound_sphere_loc);
+	add_vector(&(c->r_rotation), p->r_rotation, c->rotation);
+	//	add_vector(&(c->r_bound_sphere_loc), p->r_bound_sphere_loc, c->bound_sphere_loc);
+	//	add_vector(&(c->r_bound_sphere_loc), p->r_location, c->bound_sphere_loc);
 }
 
 
@@ -237,9 +237,9 @@ void obj_operate( scene_manager* sm,  object* parent)
 
 	if( parent->is_root )
 	{
-		copy_vertex( & parent->r_location, & parent->location);		
-		copy_vertex( & parent->r_bound_sphere_loc, & parent->bound_sphere_loc);
-		copy_vertex( & parent->r_rotation, & parent->rotation);
+		copy_vector( & parent->r_location, & parent->location);		
+		copy_vector( & parent->r_bound_sphere_loc, & parent->bound_sphere_loc);
+		copy_vector( & parent->r_rotation, & parent->rotation);
 	}
 
 	sc_set_object_to_render( sm, parent );

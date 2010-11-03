@@ -49,7 +49,7 @@ void make_obj_data( object* root )
  
         int a;
 	int pol;
-	vertex* s = read_poly_file( "data/test_objects.txt", &a, &pol );
+	vector* s = read_poly_file( "data/test_objects.txt", &a, &pol );
 	root->polygon_color.x = 1;
 	root->polygon_color.y = 0;
 	root->polygon_color.z = 0;

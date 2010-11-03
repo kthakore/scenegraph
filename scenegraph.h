@@ -19,7 +19,7 @@ struct SM;
 typedef struct VER
 {
    GLdouble x, y, z;
-} vertex;
+} vector;
 
 typedef struct OBJ
 {
@@ -29,23 +29,23 @@ typedef struct OBJ
   /* We are using a sphere, as we only have to recalculate on translate 
      and not rotate. Also it takes less memory to hold a bounding sphere.
      Additionally it takes less checks to do the frustum intersections. */
-  vertex    bound_sphere_loc;
+  vector    bound_sphere_loc;
   GLfloat   bound_sphere_rad;  
   int	    bound_rad_from; /* Which axis is providing the radius, for scaling purposes */
 
-  vertex    location; 
-  vertex    rotation;
-  vertex    scale;
+  vector    location; 
+  vector    rotation;
+  vector    scale;
 
-  /* relative vertexes to hold state of scenegraph traversal so far */
-  vertex    r_location; 
-  vertex    r_rotation;
-  vertex    r_bound_sphere_loc;
+  /* relative vectores to hold state of scenegraph traversal so far */
+  vector    r_location; 
+  vector    r_rotation;
+  vector    r_bound_sphere_loc;
 
-  vertex* polygon_data;
-  vertex  polygon_color;
+  vector* polygon_data;
+  vector  polygon_color;
 
-  int vertex_count;
+  int vector_count;
   int polygon_count; /* Number of polygons */
   int render_mode; /* GL_TRIANGLE_STRIPS ... so on */
 
@@ -56,7 +56,7 @@ typedef struct OBJ
 
   unsigned int children; /*Number of children*/  
 
-  vertex model_proj_bb;
+  vector model_proj_bb;
 
   int render_call_list;  
 
@@ -95,7 +95,7 @@ typedef struct SM
 
   GLfloat frustum[6][4];
 
-  vertex camera;
+  vector camera;
 
   int polygon_rendered;
 
@@ -105,7 +105,7 @@ typedef struct SM
 
 #include "scene.h"
 #include "object.h"
-#include "vertex.h"
+#include "vector.h"
 #include "loader.h"
 #include "matrix.h"
 #endif

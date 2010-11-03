@@ -1,6 +1,6 @@
 #include "scenegraph.h"
 
-void add_vertex(vertex* sum, vertex a, vertex b )
+void add_vector(vector* sum, vector a, vector b )
 {
 	sum->x = a.x + b.x;
 	sum->y = a.y + b.y;
@@ -8,28 +8,28 @@ void add_vertex(vertex* sum, vertex a, vertex b )
 }
 
 
-void sub_vertex(vertex* sum, vertex a, vertex b )
+void sub_vector(vector* sum, vector a, vector b )
 {
 	sum->x = a.x - b.x;
 	sum->y = a.y - b.y;
 	sum->z = a.z - b.z;
 }
 
-void squared_vertex( vertex* sum )
+void squared_vector( vector* sum )
 {
 	sum->x *= sum->x;
 	sum->y *= sum->y;
 	sum->z *= sum->z;
 }
 
-void copy_vertex(vertex* a, vertex* b )
+void copy_vector(vector* a, vector* b )
 {
 	a->x = b->x;
 	a->y = b->y;
 	a->z = b->z;
 }
 
-void divide_vertex(vertex* diff, GLfloat div)
+void divide_vector(vector* diff, GLfloat div)
 {
 
 	diff->x /= div;
@@ -38,19 +38,19 @@ void divide_vertex(vertex* diff, GLfloat div)
 
 }
 
-GLfloat vertex_dist( vertex a, vertex b)
+GLfloat vector_dist( vector a, vector b)
 {
 
-	vertex val;
+	vector val;
 
-	sub_vertex( &val, a, b );
-	squared_vertex( &val );
+	sub_vector( &val, a, b );
+	squared_vector( &val );
 
 	return sqrt( val.x + val.y + val.z  );
 
 }
 
-void multiply_vertex(vertex* c, vertex a, vertex b)
+void multiply_vector(vector* c, vector a, vector b)
 {
 
 	c->x = a.x * b.x;
@@ -58,17 +58,17 @@ void multiply_vertex(vertex* c, vertex a, vertex b)
 	c->z = a.z * b.z;
 }
 
-void debug_vertex_p( vertex* a, const char* c )
+void debug_vector_p( vector* a, const char* c )
 {
 	fprintf( stderr, "%s (%f,%f,%f) \n", c, a->x, a->y, a->z );
 }
 
-void  debug_vertex( vertex b, const char* c )
+void  debug_vector( vector b, const char* c )
 {
-	debug_vertex_p( &b, c);	
+	debug_vector_p( &b, c);	
 }
 
-void glTranslate_vertex( vertex a )
+void glTranslate_vector( vector a )
 {
 	glTranslated( a.x, a.y, a.z );
 	/*GLdouble* m = get_clipping_space_transform();
@@ -82,14 +82,14 @@ void glTranslate_vertex( vertex a )
 }
 
 
-void glRotate_vertex( vertex r_loc, vertex r_rot, int root)
+void glRotate_vector( vector r_loc, vector r_rot, int root)
 {
 
 	
 	   if( root == 0 )	
 	   {
-	   divide_vertex( &r_loc, -1 );
-	   glTranslate_vertex( r_loc );	
+	   divide_vector( &r_loc, -1 );
+	   glTranslate_vector( r_loc );	
 	   }
 	 
 	glRotated( r_rot.x, 1, 0, 0 );
@@ -98,19 +98,19 @@ void glRotate_vertex( vertex r_loc, vertex r_rot, int root)
 
 	   if( root == 0 )	
 	   {
-	   divide_vertex( &r_loc, -1 );
-	   glTranslate_vertex( r_loc );	
+	   divide_vector( &r_loc, -1 );
+	   glTranslate_vector( r_loc );	
 	   }
 
 }
 
 
-void zero_vertex( vertex* z)
+void zero_vector( vector* z)
 {
-	flood_vertex(z , 0 );
+	flood_vector(z , 0 );
 }
 
-void flood_vertex(  vertex* z, GLfloat v )
+void flood_vector(  vector* z, GLfloat v )
 {
 	z->x = v;
 	z->y = v;
@@ -119,7 +119,7 @@ void flood_vertex(  vertex* z, GLfloat v )
 }
 
 
-void extract_vertex( vertex a, GLfloat* x, GLfloat* y, GLfloat* z)
+void extract_vector( vector a, GLfloat* x, GLfloat* y, GLfloat* z)
 {
 
 	*x = (GLfloat)a.x;
@@ -128,7 +128,7 @@ void extract_vertex( vertex a, GLfloat* x, GLfloat* y, GLfloat* z)
 
 }
 
-void draw_vertex_axis( vertex* bb, GLfloat rad, vertex c )
+void draw_vector_axis( vector* bb, GLfloat rad, vector c )
 {
 	glColor3f ( c.x,c.y,c.z);
 	glBegin( GL_LINES );
@@ -172,7 +172,7 @@ GLdouble* modelview_inv_get(  )
 
 
 
-GLdouble modelview_multiply( vertex* s, GLdouble** inv, vertex t)
+GLdouble modelview_multiply( vector* s, GLdouble** inv, vector t)
 {
 
 
@@ -195,7 +195,7 @@ GLdouble modelview_multiply( vertex* s, GLdouble** inv, vertex t)
 	s->z    = out[2]*t.x + out[6]*t.y + out[10]*t.z + out[12]*a;
 //	c    = out[0][0]*t.x + out[0][1]*t.y + out[0][2]*t.z + out[0][3]*a;
 
-//	divide_vertex( s, c);
+//	divide_vector( s, c);
 	free(m);
 	free(*inv);
 	return 0.0;

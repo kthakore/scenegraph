@@ -47,7 +47,7 @@ Matrix4x4MultiplyBy4x4( (GLdouble (*)[4])src, (GLdouble (*)[4])src2, (GLdouble (
 
 }
 
-GLdouble* mat_translate( vertex g)
+GLdouble* mat_translate( vector g)
 {
 	GLdouble* t = (GLdouble*)malloc( sizeof(GLdouble) * 16 );
 
@@ -59,7 +59,7 @@ GLdouble* mat_translate( vertex g)
 	return t;
 }
 
-GLdouble* mat_rotate( vertex g, vertex l, GLdouble angle)
+GLdouble* mat_rotate( vector g, vector l, GLdouble angle)
 {
 	GLdouble c = cos( angle );
         GLdouble s = sin( angle );
@@ -83,7 +83,7 @@ GLdouble* mat_rotate( vertex g, vertex l, GLdouble angle)
 	return t;
 }
 
-GLdouble* mat_scale(  vertex g )
+GLdouble* mat_scale(  vector g )
 {
 	GLdouble* t = (GLdouble*)malloc( sizeof(GLdouble) * 16 );
 
@@ -174,7 +174,7 @@ GLdouble* get_clipping_space_transform( )
 }
 
 
-void mat_transform_vertex( vertex* out, GLdouble* m, vertex in)
+void mat_transform_vector( vector* out, GLdouble* m, vector in)
 {
 
  GLdouble r_c[4]; 

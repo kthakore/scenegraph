@@ -1,6 +1,6 @@
 #include "scenegraph.h"
 
-vertex* read_poly_file( const char* file, int* v_count, int* polygons )
+vector* read_poly_file( const char* file, int* v_count, int* polygons )
 {
 
 	char line[255];
@@ -15,18 +15,18 @@ vertex* read_poly_file( const char* file, int* v_count, int* polygons )
 	fgets( line, 255, in );
 	data_lines = atoi( line );
 
-	int vertex_count;
+	int vector_count;
 	//Get the number of data lines
 	fgets( line, 255, in );
-	vertex_count = atoi( line );
+	vector_count = atoi( line );
 
 	int poly_count;
 	fgets( line, 255, in );
 	poly_count = atoi( line );
 
-	vertex* data; 
+	vector* data; 
 
-	data = (vertex*)( malloc( sizeof(vertex) * (vertex_count+2) ) );
+	data = (vector*)( malloc( sizeof(vector) * (vector_count+2) ) );
 
 	if( in )
 	{
@@ -65,7 +65,7 @@ vertex* read_poly_file( const char* file, int* v_count, int* polygons )
 	}  
 	fclose( in );
 
-	*v_count = vertex_count;
+	*v_count = vector_count;
 	*polygons = poly_count;
 	return data;
 } 
