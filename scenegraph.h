@@ -107,4 +107,5 @@ typedef struct SM
 #include "object.h"
 #include "vertex.h"
 #include "loader.h"
+#include "matrix.h"
 #endif
