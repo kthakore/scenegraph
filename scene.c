@@ -107,7 +107,7 @@ void sc_update_frustum( scene_manager* Scene )
 		    );
 
 	if( DEBUG )
-		fprintf(stderr, "Camera at %f %f %f", Scene->camera.x, Scene->camera.y, Scene->camera.z );
+		fprintf(stderr, "Camera at %f %f %f \n", Scene->camera.x, Scene->camera.y, Scene->camera.z );
 
 	/* Combine the two matrices (multiply projection_matrixection by modelview)    */
 	clip_matrix[ 0] = model_matrix[ 0] * projection_matrix[ 0] + model_matrix[ 1] * projection_matrix[ 4] + model_matrix[ 2] * projection_matrix[ 8] +    model_matrix[ 3] * projection_matrix[12];
