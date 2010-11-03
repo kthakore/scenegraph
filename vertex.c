@@ -225,7 +225,24 @@ static inline void convert16_4( GLdouble in[16], GLdouble out[4][4])
 };
 
 
+GLdouble* get_clipping_space_transform( )
+{
 
+   GLdouble* m = malloc( sizeof( GLdouble ) * 16 );
+   glGetDoublev( GL_MODELVIEW_MATRIX, m );
+
+    GLdouble* p = malloc( sizeof( GLdouble ) * 16 );
+   glGetDoublev( GL_PROJECT_MATRIX, p);
+
+    GLdouble* d = malloc( sizeof( GLdouble ) * 16 );
+   Matrix4x4MultiplyBy4x4( m, p, d );
+
+
+    
+   
+
+
+}
 
 GLdouble* modelview_inv_get(  )
 {
