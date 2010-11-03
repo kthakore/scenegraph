@@ -71,14 +71,7 @@ void  debug_vector( vector b, const char* c )
 void glTranslate_vector( vector a )
 {
 	glTranslated( a.x, a.y, a.z );
-	/*GLdouble* m = get_clipping_space_transform();
-	GLdouble* b = mat_transform( a);
-	GLdouble c[16];
-	mat_mul(m, b, c );
-	glLoadMatrixd( c );
-	free(b);
-	free(m);
-*/
+
 }
 
 
@@ -150,9 +143,8 @@ void draw_vector_axis( vector* bb, GLfloat rad, vector c )
 GLdouble* modelview_inv_get(  )
 {
 
+	//Get the clipping matrix that we will invert
 	GLdouble* m = get_clipping_space_transform();
-
-	///Take m and send to MatrixInversion
 	GLdouble* out = (GLdouble*)malloc( sizeof( GLdouble) * 16 );
         if( mat_inv( m, out) )
 	{
@@ -163,25 +155,18 @@ GLdouble* modelview_inv_get(  )
 }
 
 
-
+//Transform the matrix using the inv
 GLdouble modelview_multiply( vector* s, GLdouble** inv, vector t)
 {
-
-
 
 	GLdouble r_c[4];
 	glGetDoublev( GL_CURRENT_RASTER_POSITION, r_c );
 	GLdouble* m = get_clipping_space_transform();
 
 	GLdouble a = r_c[3];
-	GLdouble m_[4][4];
-	GLdouble inv_[4][4];
-	convert16_4( m, m_ );
-	convert16_4( *inv, inv_ );
-
 	GLdouble out[16];
 //	GLdouble c;
-	mat_mul( m, *inv, out);
+	mat_mul( *inv, m,  out);
 	s->x    = out[0]*t.x + out[4]*t.y + out[8]*t.z + out[12]*a;
 	s->y    = out[1]*t.x + out[5]*t.y + out[9]*t.z + out[11]*a;
 	s->z    = out[2]*t.x + out[6]*t.y + out[10]*t.z + out[12]*a;
