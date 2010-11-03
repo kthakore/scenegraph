@@ -39,13 +39,13 @@ Matrix4x4MultiplyBy4x4( (GLdouble (*)[4])src, (GLdouble (*)[4])src2, (GLdouble (
 }
 
 
-GLdouble* mat_transform( vertex g)
+GLdouble* mat_translate( vertex g)
 {
 	GLdouble* t = (GLdouble*)malloc( sizeof(GLdouble) * 16 );
 
 	t[0] = 1; t[4] = 0; t[8] = 0; t[12] = g.x;
-	t[1] = 0; t[5] = 1; t[9] = 0; t[13] = g.x;
-	t[2] = 0; t[6] = 0; t[10] = 1; t[14] = g.x;
+	t[1] = 0; t[5] = 1; t[9] = 0; t[13] = g.y;
+	t[2] = 0; t[6] = 0; t[10] = 1; t[14] = g.z;
 	t[3] = 0; t[7] = 0; t[11] = 0; t[15] = 1;
 
 	return t;
@@ -59,9 +59,14 @@ GLdouble* mat_rotate( vertex g, GLdouble angle)
 
 GLdouble* mat_scale(  vertex g )
 {
+	GLdouble* t = (GLdouble*)malloc( sizeof(GLdouble) * 16 );
 
+	t[0] = g.x; t[4] = 0; t[8] = 0; t[12] = 0;
+	t[1] = 0; t[5] = g.y; t[9] = 0; t[13] = 0;
+	t[2] = 0; t[6] = 0; t[10] = g.z; t[14] = 0;
+	t[3] = 0; t[7] = 0; t[11] = 0; t[15] = 1;
 
-	return NULL;
+	return t;
 }
 
 GLdouble* mat_combine( GLdouble* t, GLdouble* r, GLdouble* s)
@@ -139,5 +144,20 @@ GLdouble* get_clipping_space_transform( )
     
   return d;
 
+
+}
+
+
+void mat_transform_vertex( vertex* out, GLdouble* m, vertex in)
+{
+
+ GLdouble r_c[4]; 
+ glGetDoublev( GL_CURRENT_RASTER_POSITION, r_c ); 
+ 
+ GLdouble wc = r_c[3];
+ 
+ out->x =  m[0]*in.x + m[4]*in.y + m[8]*in.z + m[12]*wc;
+ out->y =  m[1]*in.x + m[5]*in.y + m[9]*in.z + m[13]*wc;
+ out->z =  m[2]*in.x + m[6]*in.y + m[10]*in.z + m[14]*wc;
 
 }
