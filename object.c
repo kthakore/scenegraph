@@ -158,17 +158,17 @@ object* obj_get_parent( object* obj )
 
 void obj_displace_bb( object* obj, GLfloat x, GLfloat y, GLfloat z)
 {
-		vertex bb_plus_p_loc;
-		add_vertex(& bb_plus_p_loc, obj->r_location, obj->bound_sphere_loc );
+	vertex bb_plus_p_loc;
+	add_vertex(& bb_plus_p_loc, obj->r_location, obj->bound_sphere_loc );
 
-		glPushMatrix();
-		vertex displace;
-		add_vertex( &displace, obj->r_location, obj->bound_sphere_loc );
-		glTranslate_vertex( obj->r_location);
-		glRotate_vertex( obj->r_location, obj->r_rotation, obj->is_root);	
-		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
-		//modelview_multiply( &obj->model_proj_bb, bb_plus_p_loc);
-		glPopMatrix();
+	glPushMatrix();
+	vertex displace;
+	add_vertex( &displace, obj->r_location, obj->bound_sphere_loc );
+	glTranslate_vertex( obj->r_location);
+	glRotate_vertex( obj->r_location, obj->r_rotation, obj->is_root);	
+	glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
+	//modelview_multiply( &obj->model_proj_bb, bb_plus_p_loc);
+	glPopMatrix();
 
 
 }
@@ -188,19 +188,19 @@ void obj_render( object* obj)
 		glPushMatrix();
 		vertex displace;
 		add_vertex( &displace, obj->r_location, obj->bound_sphere_loc );
-//GET INITIAL MATRIX
+		//GET INITIAL MATRIX
 		//COMPUTE INVERSE 
-	
+
 		glTranslate_vertex( obj->r_location);
-	
+
 		glRotate_vertex( obj->r_location, obj->r_rotation, obj->is_root);	
-	
+
 		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
-//GET FINAL MATRIX
+		//GET FINAL MATRIX
 
-// INV_IN_MAT * FIN_MATRIX * [ x, y, z, 1] = [ b_x, b_y, b_z, 1]
+		// INV_IN_MAT * FIN_MATRIX * [ x, y, z, 1] = [ b_x, b_y, b_z, 1]
 
-		
+
 		// Get the local modelview matrix of this object and multiply 
 
 
@@ -261,16 +261,16 @@ void obj_operate( scene_manager* sm,  object* parent)
 	}
 
 	sc_set_object_to_render( sm, parent );
-	
+
 	fprintf( stderr, "Parent %d, %d \n", parent->id, parent->children);
 	for( child = 0; child < parent->children; child++)
 	{
-		
+
 
 		object* o =  sc_get_object(sm, parent->children_id[child]);
 		fprintf( stderr, "Parent %d, Child %d \n", parent->id, o->id );
 		increment_relative_mats( parent, o );
-	
+
 		obj_operate( sm, o);
 
 	}
