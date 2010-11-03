@@ -154,21 +154,52 @@ object* obj_get_parent( object* obj )
 
 void obj_displace_bb( object* obj)
 {
-	vector displace;
-	add_vector( &displace, obj->r_location, obj->bound_sphere_loc );
+
+
+/*
+	GLdouble* model_view = get_clipping_space_transform();
+
+	GLdouble* translate_first = mat_translate( obj->r_location );
+
+	vector inv_r_location;
+	copy_vector( &inv_r_location, &obj->r_location );
+	divide_vector( &inv_r_location, -1 );
+
+	GLdouble* rot_translate   = mat_translate( inv_r_location );
+	
+	vector x_unit; zero_vector( &x_unit ); x_unit.x = 1;
+	GLdouble* rot_x  = mat_rotate(  x_unit, x_unit, obj->r_rotation.x );
+	vector y_unit; zero_vector( &y_unit ); y_unit.y = 1;
+	GLdouble* rot_y  = mat_rotate(  y_unit, y_unit, obj->r_rotation.y );
+	vector z_unit; zero_vector( &z_unit ); z_unit.z = 1;
+	GLdouble* rot_z  = mat_rotate(  z_unit, z_unit, obj->r_rotation.z );
+
+	GLdouble* scale = mat_scale( obj->scale );
+
+	GLdouble* MT = mat_mul(  translate_first, model_view ); 
+
+	free(scale); free( rot_x ); free( rot_y ); free( rot_z ); 
+	free(rot_translate ); free( model_view ); free( translate_first );
+
+
+*/
+
 
 	GLdouble* out_r = modelview_inv_get(   );
 
 	glPushMatrix();
 
-	add_vector( &displace, obj->r_location, obj->bound_sphere_loc );
 	glTranslate_vector( obj->r_location);
 	glRotate_vector( obj->r_location, obj->r_rotation, 0);	
 	glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
 
 	glPopMatrix();
-	modelview_multiply( &obj->model_proj_bb, &out_r, displace);
+	debug_vector( obj->r_rotation, "ROTATION");
 
+	vector displace;
+	add_vector( &displace, obj->r_location, obj->bound_sphere_loc );
+
+	modelview_multiply( &obj->model_proj_bb, &out_r, displace);
 
 }
 

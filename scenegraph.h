@@ -11,7 +11,7 @@
 #include <GL/glut.h>
 
 #define FRUSTUM 1
-#define DEBUG 0
+#define DEBUG 1
 #define MAX_POLYGONS 400
 
 struct SM;
