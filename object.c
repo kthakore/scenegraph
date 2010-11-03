@@ -195,7 +195,7 @@ void obj_render( object* obj)
 	
 		glRotate_vertex( obj->r_location, obj->r_rotation, obj->is_root);	
 	
-//		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
+		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
 //GET FINAL MATRIX
 
 // INV_IN_MAT * FIN_MATRIX * [ x, y, z, 1] = [ b_x, b_y, b_z, 1]

@@ -254,9 +254,9 @@ GLdouble* modelview_inv_get(  )
         if( gluInvertMatrix( m, out) )
 	{
 		fprintf(stderr, "bah m %f, %f \n", m[5],out[5]);
-
+		free(m);
+		return out;
 	}
-
 	return out;
 }
 
@@ -267,22 +267,27 @@ GLdouble modelview_multiply( vertex* s, GLdouble** inv, vertex t)
 
 
 
-
+	GLdouble r_c[4];
+	glGetDoublev( GL_CURRENT_RASTER_POSITION, r_c );
 	GLdouble* m = get_clipping_space_transform();
 
-	GLdouble a = 0;
+	GLdouble a = r_c[3];
 	GLdouble m_[4][4];
 	GLdouble inv_[4][4];
 	convert16_4( m, m_ );
 	convert16_4( *inv, inv_ );
 
 	GLdouble out[4][4];
-
+//	GLdouble c;
 	Matrix4x4MultiplyBy4x4( m_, inv_, out);
 	s->x    = out[0][0]*t.x + out[0][1]*t.y + out[0][2]*t.z + out[0][3]*a;
 	s->y    = out[1][0]*t.x + out[1][1]*t.y + out[1][2]*t.z + out[1][3]*a;
 	s->z    = out[2][0]*t.x + out[2][1]*t.y + out[2][2]*t.z + out[2][3]*a;
-	//c    = out[0][0]*t.x + out[0][1]*t.y + out[0][2]*t.z + out[0][3]*a;
+//	c    = out[0][0]*t.x + out[0][1]*t.y + out[0][2]*t.z + out[0][3]*a;
+
+//	divide_vertex( s, c);
+	free(m);
+	free(*inv);
 	return 0.0;
 }
 
