@@ -164,7 +164,6 @@ GLdouble* modelview_inv_get(  )
 	GLdouble* out = (GLdouble*)malloc( sizeof( GLdouble) * 16 );
         if( mat_inv( m, out) )
 	{
-		fprintf(stderr, "bah m %f, %f \n", m[5],out[5]);
 		free(m);
 		return out;
 	}

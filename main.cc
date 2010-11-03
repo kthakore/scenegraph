@@ -63,32 +63,101 @@ void make_obj(int argc, char **argv)
 
 	make_obj_data( first );
 
-	object* second =  obj_create( Scene );  
-	make_obj_data( second );	
-
-	object* third =  obj_create( Scene );  
-	make_obj_data( third );	
-
-	object* fourth =  obj_create( Scene );  
-	make_obj_data( fourth );	
-
-	obj_add( first, second );
-	obj_add( first, third );
-//	obj_add( second, fourth );
-
 	obj_color( first, 1, 0, 0 );
-	obj_color( second, 0, 1, 0);
-	obj_color( third, 0, 0, 1);
-//	obj_color( fourth, 1,0.01, 0.1);
+	obj_translate( first, 0, 0, 0 );
+	int i;
+	object* head = first;
 
-	obj_scale( first, 0.5, 0.5, 0.5 );
-	obj_scale( second, 0.5, 0.5, 0.5 );
-	obj_scale( third, 0.5, 0.5, 0.5 );
 
-	obj_translate( first, -1, 0, 0 );
-	obj_translate( second, 1, -2, 0);
-	obj_translate( third, -1, -2, 0);
-//	obj_translate( fourth, 0.1, 0.2, 0 );
+	for( i =0; i < 100; i++)
+	{
+		object* a = obj_create( Scene );
+		make_obj_data( a );
+		obj_color( a, 0, 0, 1 );
+		obj_translate( a,  0, 0, -0.1);
+		
+		obj_add( head, a );
+		if( i % 3)
+		head = a;
+
+	}
+
+	head = first;
+	for( i =0; i < 100; i++)
+	{
+		object* a = obj_create( Scene );
+		make_obj_data( a );
+		obj_color( a, 0, 0, 1 );
+		obj_translate( a,  0, 0, 0.1);
+		
+		obj_add( head, a );
+
+		head = a;
+
+	}
+
+
+
+	 head = first;
+
+
+	for( i =0; i < 100; i++)
+	{
+		object* a = obj_create( Scene );
+		make_obj_data( a );
+		obj_color( a, 1, 0, 0 );
+		obj_translate( a,  -0.1, 0, 0);
+		
+		obj_add( head, a );
+
+		head = a;
+
+	}
+
+	head = first;
+	for( i =0; i < 100; i++)
+	{
+		object* a = obj_create( Scene );
+		make_obj_data( a );
+		obj_color( a, 0, 1, 0 );
+		obj_translate( a,  0.1, 0, 0);
+		
+		obj_add( head, a );
+
+		head = a;
+
+	}
+
+
+	 head = first;
+
+
+	for( i =0; i < 100; i++)
+	{
+		object* a = obj_create( Scene );
+		make_obj_data( a );
+		obj_color( a, 1, 0, 0 );
+		obj_translate( a,  0, 0.1, 0.0);
+		
+		obj_add( head, a );
+
+		head = a;
+
+	}
+
+	head = first;
+	for( i =0; i < 100; i++)
+	{
+		object* a = obj_create( Scene );
+		make_obj_data( a );
+		obj_color( a, 0, 1, 0 );
+		obj_translate( a,  0, -0.1, 0);
+		
+		obj_add( head, a );
+
+		head = a;
+
+	}
 
 	sc_set_root( Scene, first );
 }
@@ -312,7 +381,7 @@ int		main(int argc, char **argv)
 
 	/* Initialize the Scenegraph */
 
-	Scene = sc_init( 4*4*4 ); 
+	Scene = sc_init( 100000 ); 
 
 	make_obj(argc, argv);
 

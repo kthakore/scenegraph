@@ -10,9 +10,9 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 
-#define FRUSTUM 10
-#define DEBUG 1
-#define MAX_POLYGONS 40
+#define FRUSTUM 1
+#define DEBUG 0
+#define MAX_POLYGONS 400
 
 struct SM;
 

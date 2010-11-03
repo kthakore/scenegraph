@@ -82,14 +82,10 @@ void obj_update_bounding_sphere( object* obj)
 
 	}
 
-	//	debug_vertex( min, "\nMin Vertex" );
-	//	debug_vertex( max, "Max Vertex" );
 
 	// Calculate the middle point and place the bounding sphere there
 	vertex diff;
 	sub_vertex(&diff, max, min );
-	//	debug_vertex( diff, "Diff Vertex");
-	//	divide_vertex(&diff, 2);
 	obj->bound_sphere_loc.x = diff.x/2.0;
 	obj->bound_sphere_loc.y = diff.y/2.0;
 	obj->bound_sphere_loc.z = diff.z/2.0;
@@ -188,25 +184,11 @@ void obj_render( object* obj)
 		glPushMatrix();
 		vertex displace;
 		add_vertex( &displace, obj->r_location, obj->bound_sphere_loc );
-		//GET INITIAL MATRIX
-		//COMPUTE INVERSE 
-
 		glTranslate_vertex( obj->r_location);
 
 		glRotate_vertex( obj->r_location, obj->r_rotation, 0);	
 
 		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
-		//GET FINAL MATRIX
-
-		// INV_IN_MAT * FIN_MATRIX * [ x, y, z, 1] = [ b_x, b_y, b_z, 1]
-
-
-		// Get the local modelview matrix of this object and multiply 
-
-
-		if( DEBUG )
-			fprintf(stderr, "Object Location %p (%f,%f,%f) \n", obj, obj->r_location.x, obj->r_location.y, obj->r_location.z );
-		debug_vertex( obj->r_rotation, "Rotation" );
 		glColor3f( obj->polygon_color.x, obj->polygon_color.y, obj->polygon_color.z);
 		glBegin( obj->render_mode );	
 
@@ -262,13 +244,14 @@ void obj_operate( scene_manager* sm,  object* parent)
 
 	sc_set_object_to_render( sm, parent );
 
-	fprintf( stderr, "Parent %d, %d \n", parent->id, parent->children);
+	
+	//fprintf( stderr, "Parent %d, %d \n", parent->id, parent->children);
 	for( child = 0; child < parent->children; child++)
 	{
 
 
 		object* o =  sc_get_object(sm, parent->children_id[child]);
-		fprintf( stderr, "Parent %d, Child %d \n", parent->id, o->id );
+	//	fprintf( stderr, "Parent %d, Child %d \n", parent->id, o->id );
 		increment_relative_mats( parent, o );
 
 		obj_operate( sm, o);
