@@ -4,7 +4,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
-#include <stdarg.h>
+#include <stdlib.h>
 
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -14,7 +14,9 @@
 #define DEBUG 1
 #define MAX_POLYGONS 400
 
+//Defining the scenemanager struct early for useage before the declaration
 struct SM;
+
 
 typedef struct VER
 {
@@ -57,8 +59,6 @@ typedef struct OBJ
   unsigned int children; /*Number of children*/  
 
   vector model_proj_bb;
-
-  int render_call_list;  
 
   struct SM* scene;
  
