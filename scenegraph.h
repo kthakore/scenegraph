@@ -10,7 +10,7 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 
-#define FRUSTUM 0
+#define FRUSTUM 1
 #define DEBUG 1
 #define MAX_POLYGONS 40
 

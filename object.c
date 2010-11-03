@@ -183,35 +183,25 @@ void obj_render( object* obj)
 		vertex bb_plus_p_loc;
 		//add_vertex(& bb_plus_p_loc, obj->location, obj->bound_sphere_loc );
 		copy_vertex( &bb_plus_p_loc, &obj->location);
+		GLdouble* out_r = modelview_inv_get(   );
+
 		glPushMatrix();
 		vertex displace;
 		add_vertex( &displace, obj->r_location, obj->bound_sphere_loc );
 //GET INITIAL MATRIX
-		GLdouble* out_r = modelview_inv_get(   );
-		fprintf( stderr, "asdsadasdasd %f \n", out_r[0]);
-//COMPUTE INVERSE 
+		//COMPUTE INVERSE 
 	
-		debug_vertex( obj->r_location, "ONLY NORMAL" );
-
 		glTranslate_vertex( obj->r_location);
-/*		
-		debug_vertex( obj->r_location, "ONLY TRANSLATE" );
-		glRotate_vertex( obj->r_location, obj->r_rotation, obj->is_root);	
 	
-		debug_vertex( obj->r_location, "ONLY ROTATION" );
-
-		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
+//		glRotate_vertex( obj->r_location, obj->r_rotation, obj->is_root);	
+	
+//		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
 //GET FINAL MATRIX
 
 // INV_IN_MAT * FIN_MATRIX * [ x, y, z, 1] = [ b_x, b_y, b_z, 1]
-		
-		debug_vertex( obj->r_location, "ONLY SCALE" );
-*/
 
 		
 		// Get the local modelview matrix of this object and multiply 
-		modelview_multiply( &obj->model_proj_bb, &out_r, bb_plus_p_loc);
-
 
 
 		if( DEBUG )
@@ -230,6 +220,9 @@ void obj_render( object* obj)
 
 		glEnd();
 		glPopMatrix();
+		modelview_multiply( &obj->model_proj_bb, &out_r, displace);
+
+
 	}
 }
 
