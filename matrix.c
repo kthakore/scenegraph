@@ -59,10 +59,28 @@ GLdouble* mat_translate( vertex g)
 	return t;
 }
 
-GLdouble* mat_rotate( vertex g, GLdouble angle)
+GLdouble* mat_rotate( vertex g, vertex l, GLdouble angle)
 {
+	GLdouble c = cos( angle );
+        GLdouble s = sin( angle );
 
-	return NULL;
+	GLdouble c_ = 1-c;
+
+	GLdouble* t = (GLdouble*)malloc( sizeof(GLdouble) * 16 );
+
+	t[0] = g.x*g.x*c_ + c;     t[4] = g.x*g.y*c_ - g.z*s; t[8]  = g.x*g.z*c_+g.y*s; t[12] = 0;
+	t[1] = g.y*g.x*c_ + g.z*s; t[5] = g.y*g.y*c_ + c;     t[9]  = g.y*g.z*c_-g.x*s; t[13] = 0;
+	t[2] = g.x*g.z*c_ - g.y*s; t[6] = g.y*g.z*c_ + g.x*s; t[10] = g.z*g.z*c_ + c;   t[14] = 0;
+	t[3] = 0;                  t[7] = 0;                  t[11] = 0;                t[15] = 1;
+/*		  ( xx(1-c)+c	xy(1-c)-zs  xz(1-c)+ys	 0  )
+		  |					    |
+		  | yx(1-c)+zs	yy(1-c)+c   yz(1-c)-xs	 0  |
+		  | xz(1-c)-ys	yz(1-c)+xs  zz(1-c)+c	 0  |
+		  |					    |
+		  (	 0	     0		 0	 1  )
+*/
+
+	return t;
 }
 
 GLdouble* mat_scale(  vertex g )
@@ -77,11 +95,11 @@ GLdouble* mat_scale(  vertex g )
 	return t;
 }
 
-GLdouble* mat_combine( GLdouble* t, GLdouble* r, GLdouble* s)
+GLdouble* mat_combine( GLdouble* tr, GLdouble* r, GLdouble* s)
 {
+	GLdouble* t = (GLdouble*)malloc( sizeof(GLdouble) * 16 );
 
-
-	return NULL;
+	return t;
 }
 
 
