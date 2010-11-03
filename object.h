@@ -8,6 +8,7 @@ void obj_add( object* parent, object* child);
 void obj_calculate_bounding_sphere( object* obj );
 void obj_operate( scene_manager* sm,  object* parent);
 void obj_render( object* o );
+void obj_displace_bb( object* obj);
 
 void obj_color( object* obj, GLfloat x, GLfloat y, GLfloat z );
 void obj_scale( object* obj, GLfloat x, GLfloat y, GLfloat z );

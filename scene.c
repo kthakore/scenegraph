@@ -288,11 +288,13 @@ void sc_traverse_rm( scene_manager* sm )
 		if( sm->polygon_rendered >= MAX_POLYGONS )
 		{
 			//fprintf(stderr, "MAX POLYGONS REACHED\n" );
-	
+
 			fprintf(stderr, "TOTAL POLYGONS RENDERED %d \n",  sm->polygon_rendered);
 
 			return;
 		}
+
+		obj_displace_bb( object );
 		obj_render( object );
 		sm->polygon_rendered += object->polygon_count;
 
@@ -300,11 +302,11 @@ void sc_traverse_rm( scene_manager* sm )
 
 
 	} 
-	
-	
-			fprintf(stderr, "TOTAL POLYGONS RENDERED %d \n",  sm->polygon_rendered);
 
-			return;
+
+	fprintf(stderr, "TOTAL POLYGONS RENDERED %d \n",  sm->polygon_rendered);
+
+	return;
 
 }
 

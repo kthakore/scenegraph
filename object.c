@@ -152,19 +152,22 @@ object* obj_get_parent( object* obj )
 }
 
 
-void obj_displace_bb( object* obj, GLfloat x, GLfloat y, GLfloat z)
+void obj_displace_bb( object* obj)
 {
-	vector bb_plus_p_loc;
-	add_vector(& bb_plus_p_loc, obj->r_location, obj->bound_sphere_loc );
-
-	glPushMatrix();
 	vector displace;
 	add_vector( &displace, obj->r_location, obj->bound_sphere_loc );
+
+	GLdouble* out_r = modelview_inv_get(   );
+
+	glPushMatrix();
+
+	add_vector( &displace, obj->r_location, obj->bound_sphere_loc );
 	glTranslate_vector( obj->r_location);
-	glRotate_vector( obj->r_location, obj->r_rotation, obj->is_root);	
+	glRotate_vector( obj->r_location, obj->r_rotation, 0);	
 	glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
-	//modelview_multiply( &obj->model_proj_bb, bb_plus_p_loc);
+
 	glPopMatrix();
+	modelview_multiply( &obj->model_proj_bb, &out_r, displace);
 
 
 }
@@ -176,18 +179,9 @@ void obj_render( object* obj)
 	{
 		int i;
 
-		vector bb_plus_p_loc;
-		//add_vector(& bb_plus_p_loc, obj->location, obj->bound_sphere_loc );
-		copy_vector( &bb_plus_p_loc, &obj->location);
-		GLdouble* out_r = modelview_inv_get(   );
-
 		glPushMatrix();
-		vector displace;
-		add_vector( &displace, obj->r_location, obj->bound_sphere_loc );
 		glTranslate_vector( obj->r_location);
-
 		glRotate_vector( obj->r_location, obj->r_rotation, 0);	
-
 		glScalef( obj->scale.x, obj->scale.y, obj->scale.z );	
 		glColor3f( obj->polygon_color.x, obj->polygon_color.y, obj->polygon_color.z);
 		glBegin( obj->render_mode );	
@@ -202,8 +196,7 @@ void obj_render( object* obj)
 
 		glEnd();
 		glPopMatrix();
-		modelview_multiply( &obj->model_proj_bb, &out_r, displace);
-
+		
 
 	}
 }
@@ -244,14 +237,14 @@ void obj_operate( scene_manager* sm,  object* parent)
 
 	sc_set_object_to_render( sm, parent );
 
-	
+
 	//fprintf( stderr, "Parent %d, %d \n", parent->id, parent->children);
 	for( child = 0; child < parent->children; child++)
 	{
 
 
 		object* o =  sc_get_object(sm, parent->children_id[child]);
-	//	fprintf( stderr, "Parent %d, Child %d \n", parent->id, o->id );
+		//	fprintf( stderr, "Parent %d, Child %d \n", parent->id, o->id );
 		increment_relative_mats( parent, o );
 
 		obj_operate( sm, o);
