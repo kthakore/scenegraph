@@ -1,5 +1,7 @@
-#ifndef _SCENEGRAPH_
-#define _SCENEGRAPH_
+#ifndef _MATRIX_
+#define _MATRIX_
+
+/* Functions to operate on Matrices */
 
 GLdouble* mat_translate( vector g);
 GLdouble* mat_rotate( vector g, vector l, GLdouble angle);
