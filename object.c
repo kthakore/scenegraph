@@ -34,6 +34,36 @@ void obj_add( object* parent, object* child )
 	child->parent = parent->id;
 }
 
+//Remove an object from the scenegraph
+void obj_remove( object* child )
+{
+	object* parent = sc_get_object( child->scene, child->parent );
+	
+	if( parent == NULL)
+	   return;
+	
+	int i = 0;
+	int new_children[7];
+	int count;
+	for( i = 0; i < 7; i++)
+	{
+	 if(parent->children_id[ i ] == child->id)
+	     {
+		parent->children--;
+	     }
+	  else
+	    {	
+		new_children[count++] = child->id;
+	    }
+	}
+
+	for( i = 0; i < count; i++)
+	  parent->children_id[i] = new_children[i];
+	
+
+
+}
+
 
 //Load data (polygons), the mode to draw them with during render
 void obj_load( object* obj, int mode, void* data, int vector_count, int poly_count)

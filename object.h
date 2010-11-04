@@ -5,6 +5,7 @@ object* obj_create ( scene_manager* sm);
 void obj_load( object* obj, int mode, void* data, int vert_count, int poly_count);
 void obj_update_bounding_sphere( object* obj);
 void obj_add( object* parent, object* child);
+void obj_remove( object* child );
 void obj_calculate_bounding_sphere( object* obj );
 void obj_operate( scene_manager* sm,  object* parent);
 void obj_render( object* o );

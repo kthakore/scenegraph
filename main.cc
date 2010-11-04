@@ -174,6 +174,9 @@ void make_obj(int argc, char **argv)
 
 	}
 
+	//Just to show functionality
+	obj_remove( head);
+
 }
 
 
