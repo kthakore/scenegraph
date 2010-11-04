@@ -7,23 +7,22 @@
 \author{Kartik Thakore | kthakore@uwo.ca}
 \maketitle
 
-\begin{abstract}
-
-\end{abstract}
-
 \section{Completed Features}
-\begin{enumerate}
-\item Dynamic Scene graph
+\begin{description}
+\item [Dynamic Scene graph]
 The scene graph is used only to update object locations and rotations based on the parent. This allows distance based frustum culling as mentioned below.
 All nodes have their own spatial locations, and relative locations. This allows a user to change a node based on local coordinates. 
-\item Frustum Culling
+\item [Frustum Culling]
 The frustum culling is done using a bounding sphere. Currently I use the inverse of the model view matrix to get the transformation matrix, which is then 
 applied to the bounding sphere location. However this can be done by having a software matrix stack, which I began to implement in matrix.c, and can be seen 
 in \verb object.c \verb obj_displace_bb() . 
-\item Locality of Information
+\item [Locality of Information]
 Additionally all objects are store in an indexed linear array to give O(1) retrieval performance gain. However this sacrifices memory a bit, but that is fine for 
 a desktop PC, which was the aim of this scene graph. Additionally after the scene graph traversals are done, objects are 'registered' into a linked list that is
-ordered by distance. This allows me to render object closest to the camera up to the polygon limit. The Frustum C
+ordered by distance. This allows me to render object closest to the camera up to the polygon limit. 
+\item [Usage]
+Drag the mouse with left click button, press WASD.
+\item{description}
 
 \end{enumerate}
 
