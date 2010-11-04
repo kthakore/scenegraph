@@ -34,17 +34,18 @@ void convert16_4( GLdouble in[16], GLdouble out[4][4])
 void mat_mul( GLdouble* src, GLdouble* src2, GLdouble* out)
 {
 
-Matrix4x4MultiplyBy4x4( (GLdouble (*)[4])src, (GLdouble (*)[4])src2, (GLdouble (*)[4])out);
+	Matrix4x4MultiplyBy4x4( (GLdouble (*)[4])src, (GLdouble (*)[4])src2, (GLdouble (*)[4])out);
 
 }
 
 GLdouble* mat_mul( GLdouble* src, GLdouble* src2)
 {
 
-GLdouble* out = (GLdouble* ) malloc( sizeof( GLdouble ) * 16 );
+	GLdouble* out = (GLdouble* ) malloc( sizeof( GLdouble ) * 16 );
 
-Matrix4x4MultiplyBy4x4( (GLdouble (*)[4])src, (GLdouble (*)[4])src2, (GLdouble (*)[4])out);
+	Matrix4x4MultiplyBy4x4( (GLdouble (*)[4])src, (GLdouble (*)[4])src2, (GLdouble (*)[4])out);
 
+	return out;
 }
 
 GLdouble* mat_translate( vector g)
@@ -62,7 +63,7 @@ GLdouble* mat_translate( vector g)
 GLdouble* mat_rotate( vector g, vector l, GLdouble angle)
 {
 	GLdouble c = cos( angle );
-        GLdouble s = sin( angle );
+	GLdouble s = sin( angle );
 
 	GLdouble c_ = 1-c;
 
@@ -72,13 +73,13 @@ GLdouble* mat_rotate( vector g, vector l, GLdouble angle)
 	t[1] = g.y*g.x*c_ + g.z*s; t[5] = g.y*g.y*c_ + c;     t[9]  = g.y*g.z*c_-g.x*s; t[13] = 0;
 	t[2] = g.x*g.z*c_ - g.y*s; t[6] = g.y*g.z*c_ + g.x*s; t[10] = g.z*g.z*c_ + c;   t[14] = 0;
 	t[3] = 0;                  t[7] = 0;                  t[11] = 0;                t[15] = 1;
-/*		  ( xx(1-c)+c	xy(1-c)-zs  xz(1-c)+ys	 0  )
-		  |					    |
-		  | yx(1-c)+zs	yy(1-c)+c   yz(1-c)-xs	 0  |
-		  | xz(1-c)-ys	yz(1-c)+xs  zz(1-c)+c	 0  |
-		  |					    |
-		  (	 0	     0		 0	 1  )
-*/
+	/*		  ( xx(1-c)+c	xy(1-c)-zs  xz(1-c)+ys	 0  )
+			  |					    |
+			  | yx(1-c)+zs	yy(1-c)+c   yz(1-c)-xs	 0  |
+			  | xz(1-c)-ys	yz(1-c)+xs  zz(1-c)+c	 0  |
+			  |					    |
+			  (	 0	     0		 0	 1  )
+	 */
 
 	return t;
 }
@@ -157,18 +158,18 @@ bool mat_inv(const GLdouble m[16], GLdouble invOut[16])
 GLdouble* get_clipping_space_transform( )
 {
 
-   GLdouble* m = (GLdouble*)malloc( sizeof( GLdouble ) * 16 );
-   glGetDoublev( GL_MODELVIEW_MATRIX, m );
+	GLdouble* m = (GLdouble*)malloc( sizeof( GLdouble ) * 16 );
+	glGetDoublev( GL_MODELVIEW_MATRIX, m );
 
-    GLdouble* p = (GLdouble*)malloc( sizeof( GLdouble ) * 16 );
-   glGetDoublev( GL_PROJECTION_MATRIX, p);
+	GLdouble* p = (GLdouble*)malloc( sizeof( GLdouble ) * 16 );
+	glGetDoublev( GL_PROJECTION_MATRIX, p);
 
-    GLdouble* d = (GLdouble*)malloc( sizeof( GLdouble ) * 16 );
-   Matrix4x4MultiplyBy4x4( (GLdouble (*)[4])m, (GLdouble (*)[4])p, (GLdouble (*)[4])d );
+	GLdouble* d = (GLdouble*)malloc( sizeof( GLdouble ) * 16 );
+	Matrix4x4MultiplyBy4x4( (GLdouble (*)[4])m, (GLdouble (*)[4])p, (GLdouble (*)[4])d );
 
-    free(m); free(p);
-    
-  return d;
+	free(m); free(p);
+
+	return d;
 
 
 }
@@ -177,13 +178,13 @@ GLdouble* get_clipping_space_transform( )
 void mat_transform_vector( vector* out, GLdouble* m, vector in)
 {
 
- GLdouble r_c[4]; 
- glGetDoublev( GL_CURRENT_RASTER_POSITION, r_c ); 
- 
- GLdouble wc = r_c[3];
- 
- out->x =  m[0]*in.x + m[4]*in.y + m[8]*in.z + m[12]*wc;
- out->y =  m[1]*in.x + m[5]*in.y + m[9]*in.z + m[13]*wc;
- out->z =  m[2]*in.x + m[6]*in.y + m[10]*in.z + m[14]*wc;
+	GLdouble r_c[4]; 
+	glGetDoublev( GL_CURRENT_RASTER_POSITION, r_c ); 
+
+	GLdouble wc = r_c[3];
+
+	out->x =  m[0]*in.x + m[4]*in.y + m[8]*in.z + m[12]*wc;
+	out->y =  m[1]*in.x + m[5]*in.y + m[9]*in.z + m[13]*wc;
+	out->z =  m[2]*in.x + m[6]*in.y + m[10]*in.z + m[14]*wc;
 
 }

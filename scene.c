@@ -1,5 +1,4 @@
 #include "scenegraph.h"
-#include <math.h>
 
 scene_manager* sc_init(int objects) {
 
@@ -36,8 +35,6 @@ void  sc_set_root( scene_manager* scene, object* root)
 {
 	scene->root_object_id = root->id;
 	root->is_root = 1;	
-
-	copy_vector( &(root->r_location) , &(root->location) ); 	
 }
 
 object* sc_get_object( scene_manager* sm, int id )
@@ -47,6 +44,7 @@ object* sc_get_object( scene_manager* sm, int id )
 		fprintf(stderr, "Invalid object id: %d .", id );
 		return NULL;
 	}
+	//Grab it from the registry using the id
 	return &( (sm->object_registry)[id] );
 }
 
@@ -68,9 +66,11 @@ void sc_render( scene_manager* sm)
 	sm->to_render = 0;
 	//	sc_update_frustum( sm );
 	object* root = sc_get_object( sm, sm->root_object_id );
-
+	
+	// operate recursively and get the things we want to render
 	obj_operate( sm, root);
 
+	// The render marshall should be ready (sorted) by distance now
 	sc_traverse_rm( sm );
 
 }
@@ -87,6 +87,8 @@ void sc_update_frustum( scene_manager* Scene )
 
 	GLint viewport[4];
 	GLdouble t;
+
+	/* Acquired from NEHE lesson, as I am still learning OpenGL in my graphics code, and we haven't learned this yet */
 
 	/* Get the current VIEWPORT plane */
 	glGetIntegerv(GL_VIEWPORT, viewport);
@@ -217,11 +219,15 @@ int sc_obj_in_frustum( scene_manager* Scene, object* obj )
 	GLfloat d;
 	vector bb_plus_p_loc;
 
+	//Get a copy cause we don't want to mess
+	//with the model_proj_bb
 	copy_vector(& bb_plus_p_loc, &obj->model_proj_bb);
 
 	GLfloat x, y, z;
 	extract_vector( bb_plus_p_loc, &x, &y, &z );
 
+	// The radius will be different each time if the scaling has 
+	// changed
 	GLfloat radius = obj->bound_sphere_rad;
 	if( obj->bound_rad_from == 0 )
 	{	
@@ -271,30 +277,26 @@ void sc_traverse_rm( scene_manager* sm )
 	while(head != NULL) {
 
 		object* object = head->object_ptr;
+		//Update the bounding box location
+		obj_displace_bb( object );
 
-
-
+		//If we intersect don't draw it
+		//However still draw the children as it can still be 
+		//in the scene
 		if( sc_obj_in_frustum( sm, object ) == 0 && FRUSTUM )
 		{
-
-
-			//fprintf(stderr, "\n##################################\nNot printing %d \n#################################\n", object->id);
+			
 			head = head->next;
 			continue;
 		}
-
-
-
+		//Stop rendering once we hit maximum poly gons
 		if( sm->polygon_rendered >= MAX_POLYGONS )
 		{
-			//fprintf(stderr, "MAX POLYGONS REACHED\n" );
 
 			fprintf(stderr, "TOTAL POLYGONS RENDERED %d \n",  sm->polygon_rendered);
 
 			return;
 		}
-
-		obj_displace_bb( object );
 		obj_render( object );
 		sm->polygon_rendered += object->polygon_count;
 
@@ -335,7 +337,6 @@ void sc_set_object_to_render( scene_manager* sm, object* obj )
 		do{
 			GLfloat head_d = vector_dist( sm->camera, head->object_ptr->model_proj_bb );	
 
-			linked_object* after  = head->next;
 			linked_object* before = head->previous;
 
 			//Put the object before if it is less
