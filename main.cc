@@ -122,7 +122,6 @@ void make_obj(int argc, char **argv)
 		make_obj_data( a );
 		obj_color( a, 1, 0, 0 );
 		obj_translate( a,  -0.1, 0, 0);
-		obj_rotate( a, i*0.5, 0, 0 );	
 		obj_add( head, a );
 
 		head = a;
@@ -136,7 +135,6 @@ void make_obj(int argc, char **argv)
 		make_obj_data( a );
 		obj_color( a, 0, 1, 0 );
 		obj_translate( a,  0.1, 0, 0);
-		obj_rotate( a, -i*0.5, 0, 0 );		
 		obj_add( head, a );
 
 		head = a;
