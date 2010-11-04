@@ -1,0 +1,82 @@
+\documentclass{article}
+\usepackage{graphics,graphicx}
+\usepackage{hyperref}
+\usepackage{fullpage}
+\begin{document}
+\title{CS4482: Assignment 3}
+\author{Kartik Thakore | kthakore@uwo.ca}
+\maketitle
+
+\begin{abstract}
+
+\end{abstract}
+
+\section{Completed Features}
+\begin{enumerate}
+\item Dynamic Scene graph
+The scene graph is used only to update object locations and rotations based on the parent. This allows distance based frustum culling as mentioned below.
+All nodes have their own spatial locations, and relative locations. This allows a user to change a node based on local coordinates. 
+\item Frustum Culling
+The frustum culling is done using a bounding sphere. Currently I use the inverse of the model view matrix to get the transformation matrix, which is then 
+applied to the bounding sphere location. However this can be done by having a software matrix stack, which I began to implement in matrix.c, and can be seen 
+in \verb object.c \verb obj_displace_bb() . 
+\item Locality of Information
+Additionally all objects are store in an indexed linear array to give O(1) retrieval performance gain. However this sacrifices memory a bit, but that is fine for 
+a desktop PC, which was the aim of this scene graph. Additionally after the scene graph traversals are done, objects are 'registered' into a linked list that is
+ordered by distance. This allows me to render object closest to the camera up to the polygon limit. The Frustum C
+
+\end{enumerate}
+
+\section{Game Files Locality on DVD/CD devices} 
+
+\begin{description}
+\item[Information Required:]
+First I would require the information on the seeking algorithm of a DVD device. I need to know what points of data take the least time to traverse between, and what 
+takes more time. Next I would need to analyze the times files are accessed in a typical game play. Also when the files are loaded in terms of game loop setup and running
+is very important to know. The algorithm should also take into consideration the size of the file to be loaded, and will the DISC medium fragment it to store it across
+tracks.  
+
+\item[Acquiring the Information:]
+The DVD/CD information will probably be acquired from the manufacturer of the DVD rom, assuming we have control over where the game disc is used. In terms of how
+often and when a game file is loaded, static analysis of the program will need to be done. 
+\item[Calculations Required:]
+First the bare acceptable speed for file loading in the game loop. This should be our aim, however it doesn't necessarily have to be by time, but rather CPU operations.
+Additionally we will need the comparable CPU clock rates require to load our files. At which time we can decided to stuff like worker threads or straight loading.
+\item[Algorithm Overview:]
+So with this information here is the following Algorithm:
+\end{description}
+
+\begin{verbatim}
+
+FOR GAME CALLS TO FILE:
+	IF FILE == GAME_LOOP_FILE
+	    FILE.PRIORITY++ 
+	ELSE
+	    FILE.PRIORITY--
+	IF FILE.SIZE <= ONE_TRACK.SIZE
+	    FILE.PRIORITY--
+	ELSE
+	    FILE.PRIORITY++
+
+SORT FILES BY FILE.PRIORITY
+
+SORT TRACKS BY TRACK.READ_SPEED
+
+REVERSE TRACKS
+
+TRACKS[0].QUEUE = FILES
+
+FOREACH TRACK in DISC
+    FOREACH FILE in TRACK.QUEUE
+        TRACK.ADD( QUEUE.FILE )
+        IF TRACK.FULL
+            NEXT_TRACK.QUEUE.ADD = TRACK.QUEUE
+	IF FILE.SIZE >= TRACK
+            NEXT_TRACK.QUEUE.ADD = FILE
+	ELSE
+            TRACK.ADD(FILE)
+
+\end{verbatim}
+
+
+\end{document}

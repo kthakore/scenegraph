@@ -277,18 +277,6 @@ void sc_traverse_rm( scene_manager* sm )
 	while(head != NULL) {
 
 		object* object = head->object_ptr;
-		//Update the bounding box location
-		obj_displace_bb( object );
-
-		//If we intersect don't draw it
-		//However still draw the children as it can still be 
-		//in the scene
-		if( sc_obj_in_frustum( sm, object ) == 0 && FRUSTUM )
-		{
-			
-			head = head->next;
-			continue;
-		}
 		//Stop rendering once we hit maximum poly gons
 		if( sm->polygon_rendered >= MAX_POLYGONS )
 		{

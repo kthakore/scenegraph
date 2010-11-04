@@ -11,7 +11,7 @@
 #include <GL/glut.h>
 
 #define FRUSTUM 1
-#define DEBUG 1
+#define DEBUG 0
 #define MAX_POLYGONS 400
 
 //Defining the scenemanager struct early for useage before the declaration

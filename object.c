@@ -38,28 +38,28 @@ void obj_add( object* parent, object* child )
 void obj_remove( object* child )
 {
 	object* parent = sc_get_object( child->scene, child->parent );
-	
+
 	if( parent == NULL)
-	   return;
-	
+		return;
+
 	int i = 0;
 	int new_children[7];
 	int count;
 	for( i = 0; i < 7; i++)
 	{
-	 if(parent->children_id[ i ] == child->id)
-	     {
-		parent->children--;
-	     }
-	  else
-	    {	
-		new_children[count++] = child->id;
-	    }
+		if(parent->children_id[ i ] == child->id)
+		{
+			parent->children--;
+		}
+		else
+		{	
+			new_children[count++] = child->id;
+		}
 	}
 
 	for( i = 0; i < count; i++)
-	  parent->children_id[i] = new_children[i];
-	
+		parent->children_id[i] = new_children[i];
+
 
 
 }
@@ -188,37 +188,37 @@ object* obj_get_parent( object* obj )
 void obj_displace_bb( object* obj)
 {
 
- /*   This commented could shows how this should have been 
-  *   done using the software and not openGL. However there 
-  *   are some bugs.
-  */
-/*
-	GLdouble* model_view = get_clipping_space_transform();
+	/*   This commented could shows how this should have been 
+	 *   done using the software and not openGL. However there 
+	 *   are some bugs.
+	 */
+	/*
+	   GLdouble* model_view = get_clipping_space_transform();
 
-	GLdouble* translate_first = mat_translate( obj->r_location );
+	   GLdouble* translate_first = mat_translate( obj->r_location );
 
-	vector inv_r_location;
-	copy_vector( &inv_r_location, &obj->r_location );
-	divide_vector( &inv_r_location, -1 );
+	   vector inv_r_location;
+	   copy_vector( &inv_r_location, &obj->r_location );
+	   divide_vector( &inv_r_location, -1 );
 
-	GLdouble* rot_translate   = mat_translate( inv_r_location );
-	
-	vector x_unit; zero_vector( &x_unit ); x_unit.x = 1;
-	GLdouble* rot_x  = mat_rotate(  x_unit, x_unit, obj->r_rotation.x );
-	vector y_unit; zero_vector( &y_unit ); y_unit.y = 1;
-	GLdouble* rot_y  = mat_rotate(  y_unit, y_unit, obj->r_rotation.y );
-	vector z_unit; zero_vector( &z_unit ); z_unit.z = 1;
-	GLdouble* rot_z  = mat_rotate(  z_unit, z_unit, obj->r_rotation.z );
+	   GLdouble* rot_translate   = mat_translate( inv_r_location );
 
-	GLdouble* scale = mat_scale( obj->scale );
+	   vector x_unit; zero_vector( &x_unit ); x_unit.x = 1;
+	   GLdouble* rot_x  = mat_rotate(  x_unit, x_unit, obj->r_rotation.x );
+	   vector y_unit; zero_vector( &y_unit ); y_unit.y = 1;
+	   GLdouble* rot_y  = mat_rotate(  y_unit, y_unit, obj->r_rotation.y );
+	   vector z_unit; zero_vector( &z_unit ); z_unit.z = 1;
+	   GLdouble* rot_z  = mat_rotate(  z_unit, z_unit, obj->r_rotation.z );
 
-	GLdouble* MT = mat_mul(  translate_first, model_view ); 
+	   GLdouble* scale = mat_scale( obj->scale );
 
-	free(scale); free( rot_x ); free( rot_y ); free( rot_z ); 
-	free(rot_translate ); free( model_view ); free( translate_first );
+	   GLdouble* MT = mat_mul(  translate_first, model_view ); 
+
+	   free(scale); free( rot_x ); free( rot_y ); free( rot_z ); 
+	   free(rot_translate ); free( model_view ); free( translate_first );
 
 
-*/
+	 */
 
 	//Get the inverse of our current matrix. 
 	// M_inv
@@ -270,7 +270,7 @@ void obj_render( object* obj)
 
 		glEnd();
 		glPopMatrix();
-		
+
 
 	}
 }
@@ -306,8 +306,21 @@ void obj_operate( scene_manager* sm,  object* parent)
 		copy_vector( & parent->r_bound_sphere_loc, & parent->bound_sphere_loc);
 		copy_vector( & parent->r_rotation, & parent->rotation);
 	}
+
+	//Update the bounding box location
+	obj_displace_bb( parent );
+
+	//If we intersect don't draw it and its children
+	if( sc_obj_in_frustum( sm, parent ) == 0 && FRUSTUM )
+	{
+
+		return;
+	}
+
+
 	// Send it to the Render Marshall to be render
 	sc_set_object_to_render( sm, parent );
+
 
 	//Recursively do the same for each children
 	for( child = 0; child < parent->children; child++)
